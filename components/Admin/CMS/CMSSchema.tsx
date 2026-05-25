@@ -10,38 +10,41 @@ const inputClass = `
 `;
 
 const CMSSchema = ({
-  schemaTitle, schemaDescription, onChange,
+  schemaTitle, schemaDescription, onChange, editorType
 }: {
   schemaTitle: string;
   schemaDescription: string;
   onChange: any;
-  editorType: "Blog" | "Package" | "Temple" | "Pooja" | "Hotel";
+  editorType: "Blog" | "University" | "Resource" | "Faq";
 }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-[#0B1221] p-6 rounded-xl border border-slate-800 shadow-sm">
       <div>
-        <label className="text-sm text-pink-300/70">Schema Title</label>
+        <label className="text-sm font-medium text-slate-400">
+          Schema Title
+        </label>
         <input
+          
           value={schemaTitle}
           required
-          placeholder="A Human Approach to Meet Krishna"
+          placeholder={`e.g., ${editorType} Overview & Guide`}
           className={inputClass}
           onChange={(e) => onChange("schemaTitle", e.target.value)}
         />
       </div>
 
       <div>
-        <label className="text-sm text-pink-300/70">Schema Description</label>
+        <label className="text-sm font-medium text-slate-400">
+          Schema Description
+        </label>
         <input
           value={schemaDescription}
           required
-          placeholder="Growing Spirtuality In you"
+          placeholder="Enter a brief description for search engine rich results..."
           className={inputClass}
           onChange={(e) => onChange("schemaDescription", e.target.value)}
         />
       </div>
-
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { universitiesData } from "@/data/universities";
+import { universities } from "@/data/universities";
 import UniversityHero from "@/components/universities/detail/UniversityHero";
 import UniversityStats from "@/components/universities/detail/UniversityStats";
 import UniversityContent from "@/components/universities/detail/UniversityContent";
@@ -13,8 +13,8 @@ interface PageProps {
 
 // 1. Generate static paths at build time based on our data
 export function generateStaticParams() {
-  return universitiesData.map((uni) => ({
-    id: uni.id,
+  return universities.map((uni) => ({
+    id: uni.basicInfo.id,
   }));
 }
 
@@ -22,15 +22,15 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps) {
   // Await the params promise before using it
   const resolvedParams = await params;
-  const university = universitiesData.find(
-    (uni) => uni.id === resolvedParams.id,
+  const university = universities.find(
+    (uni) => uni.basicInfo.id === resolvedParams.id,
   );
 
   if (!university) return { title: "Not Found | LNAT Exam India" };
 
   return {
-    title: `${university.name} LNAT Admissions Guide | LNAT Exam India`,
-    description: `Learn about the LNAT requirements, application process, and deadlines for ${university.name}.`,
+    title: `${university.basicInfo.name} LNAT Admissions Guide | LNAT Exam India`,
+    description: `Learn about the LNAT requirements, application process, and deadlines for ${university.basicInfo.name}.`,
   };
 }
 
@@ -38,8 +38,8 @@ export async function generateMetadata({ params }: PageProps) {
 export default async function UniversityDetailPage({ params }: PageProps) {
   // Await the params promise before using it
   const resolvedParams = await params;
-  const university = universitiesData.find(
-    (uni) => uni.id === resolvedParams.id,
+  const university = universities.find(
+    (uni) => uni.basicInfo.id === resolvedParams.id,
   );
 
   if (!university) {
@@ -48,7 +48,7 @@ export default async function UniversityDetailPage({ params }: PageProps) {
 
   return (
     <main className="min-h-screen bg-[#fdfbf7]">
-      <UniversityHero university={university} />
+      <UniversityHero data={university} />
       <UniversityStats university={university} />
       <UniversityContent university={university} />
     </main>

@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Search } from "lucide-react";
-import { universitiesData } from "@/data/universities";
+import { universities } from "@/data/universities";
 import UniversityCard from "./UniversityCard";
 
 const containerVariants = {
@@ -21,12 +21,12 @@ export default function ArchiveClient() {
   const regions = ["All", "United Kingdom", "Singapore", "Spain", "India"];
 
   const filteredUniversities = useMemo(() => {
-    return universitiesData.filter((uni) => {
+    return universities.filter((uni) => {
       const matchesSearch =
-        uni.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        uni.location.toLowerCase().includes(searchQuery.toLowerCase());
+        uni.basicInfo.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        uni.basicInfo.location.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesRegion =
-        activeRegion === "All" || uni.country === activeRegion;
+        activeRegion === "All" || uni.basicInfo.country === activeRegion;
 
       return matchesSearch && matchesRegion;
     });
@@ -77,7 +77,7 @@ export default function ArchiveClient() {
           >
             {filteredUniversities.map((uni) => (
               <motion.div
-                key={uni.id}
+                key={uni.basicInfo.id}
                 variants={{
                   hidden: { opacity: 0, y: 20 },
                   visible: { opacity: 1, y: 0 },

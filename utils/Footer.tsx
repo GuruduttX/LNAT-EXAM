@@ -2,7 +2,7 @@
 
 import { motion, Variants } from "framer-motion";
 import { FiMail, FiInstagram, FiLinkedin, FiTwitter } from "react-icons/fi";
-
+import { usePathname } from "next/navigation";
 const footerLinks = {
   navigation: [
     { label: "Home", href: "#" },
@@ -53,6 +53,11 @@ const itemVariants: Variants = {
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const pathName = usePathname();
+
+  if(pathName.startsWith("/admin")) {
+    return null;
+  }
 
   return (
     <footer className="bg-[#070B14] border-t border-white/5 pt-12 pb-6 text-slate-300">

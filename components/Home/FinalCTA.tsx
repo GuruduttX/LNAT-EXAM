@@ -1,7 +1,13 @@
 "use client";
 
 import { motion, Variants } from "framer-motion";
-import { ArrowRight, BookOpen, GraduationCap } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpen,
+  GraduationCap,
+  MessageCircle,
+  ShieldCheck,
+} from "lucide-react";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -112,6 +118,33 @@ export default function FinalCTA() {
               Explore Timeline
             </span>
           </a>
+
+          <a
+            href="https://wa.me/YOUR_NUMBER_HERE"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-3.5 bg-[#0D1B3E] border border-[#C8AA76]/30 text-[#C8AA76] transition-all duration-300 hover:bg-[#15293e]"
+          >
+            <MessageCircle className="w-4 h-4" strokeWidth={1.5} />
+            <span className="text-sm font-medium tracking-wide">
+              WhatsApp an Expert
+            </span>
+          </a>
+        </motion.div>
+
+        {/* Trust Anchors immediately adjacent to CTA */}
+        <motion.div
+          variants={itemVariants}
+          className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 opacity-75"
+        >
+          <div className="flex items-center gap-2 text-slate-300 text-xs tracking-wide">
+            <ShieldCheck size={14} className="text-[#C8AA76]" /> Official 2026
+            Curriculum
+          </div>
+          <div className="flex items-center gap-2 text-slate-300 text-xs tracking-wide">
+            <ShieldCheck size={14} className="text-[#C8AA76]" /> 95% Top-Tier
+            Placement Rate
+          </div>
         </motion.div>
       </motion.div>
     </section>

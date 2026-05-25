@@ -25,6 +25,16 @@ const universitySchema = new Schema(
       trim: true,
       index: true, // Indexed for fast filtering by country
     },
+    slug: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    metaTitle: { type: String },
+    metaDescription: { type: String },
+
+    schemaTitle: { type: String },
+    schemaDescription: { type: String },
     established: {
       type: String,
       required: true,

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import HomeHero from "@/components/Home/Homehero";
 import TrustedUniversities from "@/components/Home/Trusteduniversities";
 import LNATOverview from "@/components/Home/LNATOverview";
@@ -12,7 +11,7 @@ import FinalCTA from "@/components/Home/FinalCTA";
 
 export default function Home() {
   return (
-    <>
+    <main>
       <HomeHero />
       <TrustedUniversities />
       <LNATOverview />
@@ -23,6 +22,6 @@ export default function Home() {
       <FreeResourcesPreview />
       <FAQPreview />
       <FinalCTA />
-    </>
+    </main>
   );
 }

@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { usePathname } from "next/navigation";
 import {
   ChevronDown,
   X,
@@ -389,7 +390,7 @@ function NavbarCTA({setIsOpen}: NavbarCTAProps) {
               textTransform: "uppercase",
             }}
           >
-            Updated 2026
+            Updated 2027
           </span>
         </div>
 
@@ -803,6 +804,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
   useEffect(() => {
     function onScroll() {
       setScrolled(window.scrollY > 18);
@@ -810,6 +812,10 @@ export default function Navbar() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+if(pathname.startsWith("/admin")) {
+  return null;
+}
 
   return (
     <>
@@ -822,9 +828,7 @@ export default function Navbar() {
       <header
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-400"
         style={{
-          background: scrolled
-            ? "rgba(247, 243, 236, 0.94)"
-            : "rgba(247, 243, 236, 0.82)",
+          background: "#ffffff",
           backdropFilter: scrolled ? "blur(18px) saturate(1.3)" : "blur(10px)",
           WebkitBackdropFilter: scrolled
             ? "blur(18px) saturate(1.3)"

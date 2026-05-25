@@ -1,6 +1,6 @@
 "use client";
 
-import RichTextEditor from "@/components/Admin/shared/RichTextEditor";
+import RichTextEditor from "@/shared/RichTextEditor";
 
 const CMSContentSection = ({
   subContent,
@@ -10,48 +10,46 @@ const CMSContentSection = ({
   subContent: string;
   content: string;
   onChange: any;
-  editorType: "Blog" | "Package" | "Temple";
+  editorType: string;
 }) => {
   return (
-    <div className="space-y-6">
-
+    <div className="space-y-6 bg-[#0B1221] border border-slate-800 rounded-xl w-full p-6 shadow-sm">
       {/* ================= SUB CONTENT ================= */}
       <div>
-        <label className="text-sm text-pink-400/70">
-          Sub Content
+        <label className="text-sm font-medium text-slate-400">
+          Sub Content / Excerpt
         </label>
 
         <textarea
           required
-          rows={5}
+          rows={4}
           value={subContent}
           onChange={(e) => onChange("subContent", e.target.value)}
-          placeholder="Let's be real for a second..."
+          placeholder="A brief summary for the preview card..."
           className="mt-2 w-full px-5 py-3 rounded-xl
-          bg-pink-950/40 text-pink-200
-          border border-pink-900/40
-          focus:ring-2 focus:ring-pink-600/40
+          bg-slate-900/50 text-[#FDFBF7] placeholder-slate-600
+          border border-slate-800
+          focus:outline-none focus:ring-1 focus:ring-[#C4A47C]/50 focus:border-[#C4A47C]/50
           transition resize-none"
         />
       </div>
 
       {/* ================= EDITOR ================= */}
-      <div
-        className="relative rounded-2xl p-4
-        bg-[#1e0d14]
-        border border-pink-900/40
-        shadow-[0_0_30px_rgba(236,72,153,0.08)]
-        transition"
-      >
-        {/* Glow Effect */}
-        <div className="absolute -top-10 left-10 w-40 h-40 bg-pink-600/10 blur-3xl pointer-events-none hover:bg-pink-700" />
+      <div>
+        <label className="text-sm font-medium text-slate-400 mb-2 block">
+          Main Content Body
+        </label>
 
-        <RichTextEditor
-          value={content}
-          onChange={(val) => onChange("content", val)}
-          minHeight="60vh"
-          maxHeight="65vh"
-        />
+        {/* Note: The RichTextEditor itself handles its own white background styling internally. 
+            We just wrap it in text-gray-900 to ensure the text typed inside is dark. */}
+        <div className="text-gray-900 rounded-xl border border-slate-800 overflow-hidden">
+          <RichTextEditor
+            value={content}
+            onChange={(val) => onChange("content", val)}
+            minHeight="60vh"
+            maxHeight="65vh"
+          />
+        </div>
       </div>
     </div>
   );

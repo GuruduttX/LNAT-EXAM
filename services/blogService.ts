@@ -6,14 +6,16 @@ export async function getBlogsArchive({
   page = 1,
   limit = 9,
   category,
+  status
 }: {
   page?: number;
   limit?: number;
   category?: string;
+  status?: string;
 }) {
   await connectDB();
 
-  const query: any = { status: "published" };
+  const query: any = status == "all" ? {} : { status: status };
   if (category) query.category = category;
 
   const skip = (page - 1) * limit;
