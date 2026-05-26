@@ -1,15 +1,20 @@
 // app/api/blogs/[slug]/route.ts
-import { NextResponse } from "next/server";
+
+import { NextRequest, NextResponse } from "next/server";
 import { getBlogBySlug } from "@/services/blogService";
 
 export async function GET(
-  request: Request,
-  { params }: { params: { slug: string } },
+  request: NextRequest,
+  { params }: { params: Promise<{ slug: string }> },
 ) {
   try {
-    const blog = await getBlogBySlug(params.slug);
-    if (!blog)
+    const { slug } = await params;
+
+    const blog = await getBlogBySlug(slug);
+
+    if (!blog) {
       return NextResponse.json({ error: "Not Found" }, { status: 404 });
+    }
 
     return NextResponse.json(blog);
   } catch (error) {

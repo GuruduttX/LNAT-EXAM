@@ -1,5 +1,4 @@
 import { BlogCategory } from "../types/blog";
-import { IBlog } from "@/types/backend.types";
 export const blogCategories: BlogCategory[] = [
   "All",
   "LNAT Preparation",
@@ -9,9 +8,9 @@ export const blogCategories: BlogCategory[] = [
   "UCAS Guidance",
 ];
 
-export const blogs: IBlog[] = [
+export const blogs = [
   {
-    _id: "blog-1",
+    _id: "blog-1", 
     slug: "best-lnat-preparation-strategy",
     title: "The Ultimate LNAT Preparation Strategy for Top UK Universities",
     excerpt:
@@ -41,7 +40,7 @@ export const blogs: IBlog[] = [
         The essay section does not contribute to your numerical score but is forwarded directly to the universities. Admissions tutors read it to assess your capacity to construct a compelling, logically sound narrative under timed conditions.
       </p>
     `,
-    author: "LNAT Editorial Desk",
+    author: { name: "LNAT Editorial Desk" },
     publishedAt: "10 Jan 2026",
     readTime: 8,
   },

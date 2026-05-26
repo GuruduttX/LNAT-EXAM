@@ -1,26 +1,39 @@
 // components/Admin/Components/Topbar.tsx
 "use client";
 
-import { Menu, Search } from "lucide-react";
+import { Menu, PanelLeftClose, PanelLeftOpen, Search } from "lucide-react";
 
 export default function Topbar({
+  isSidebarOpen,
   toggleSidebar,
 }: {
+  isSidebarOpen: boolean;
   toggleSidebar: () => void;
 }) {
   return (
     <header
-      className="fixed top-0 left-0 w-full z-40
+      className={`fixed top-0 left-0 w-full z-40
       bg-[#0B1221] border-b border-slate-800
-      h-16 px-6 flex items-center justify-between lg:pl-64 transition-all duration-300"
+      h-16 px-6 flex items-center justify-between transition-all duration-300
+      ${isSidebarOpen ? "lg:pl-64" : "lg:pl-6"}`}
     >
       {/* Left: Mobile Menu Toggle & Search */}
       <div className="flex items-center gap-4 w-full max-w-md">
         <button
           onClick={toggleSidebar}
-          className="text-slate-400 hover:text-[#FDFBF7] lg:hidden transition-colors"
+          className="text-slate-400 hover:text-[#FDFBF7] transition-colors"
+          aria-label={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
         >
-          <Menu size={20} />
+          <span className="lg:hidden">
+            <Menu size={20} />
+          </span>
+          <span className="hidden lg:block">
+            {isSidebarOpen ? (
+              <PanelLeftClose size={18} />
+            ) : (
+              <PanelLeftOpen size={18} />
+            )}
+          </span>
         </button>
 
         <div className="relative w-full hidden sm:block">

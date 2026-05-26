@@ -2,7 +2,7 @@ import React from "react";
 
 interface CMSActionsProps {
   actionType: "create" | "update";
-  editorType: "Blog" | "University" | "FAQ" | "Resource";
+  editorType: "Blog" | "University" | "FAQ" | "Resource" | "Category";
   onSaveDraft: () => void;
   loading?: boolean;
 }

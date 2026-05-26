@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import {  motion, TargetAndTransition, Variants } from "framer-motion";
+import { motion, TargetAndTransition, Variants } from "framer-motion";
+import { University } from "@/data/universities";
 import {
   MapPin,
   Award,
@@ -169,9 +170,8 @@ const floatAnimation: TargetAndTransition = {
 // MAIN COMPONENT
 // --------------------------------------------------
 export default function UniversityHero({
-  university = mockuniversity,
-}: {
-  university?: UniversityHerouniversity;
+  university }: {
+  university: University;
 }) {
   return (
     <section className="relative w-full min-h-screen bg-[#0D1B3E] text-[#F7F3EC] overflow-hidden selection:bg-[#C9A84C] selection:text-[#0D1B3E]">

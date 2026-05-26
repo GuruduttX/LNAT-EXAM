@@ -10,12 +10,17 @@ export interface Blog {
   title: string;
   category: string;
   slug: string;
-  author: string;
+  author: {
+    name: string;
+  }; 
+  excerpt: string;
   meta: {
     title: string;
     description: string;
   };
-  image: string;
+  tags: string[];
+  publishedAt: string;
+  featuredImage: string;
   alt: string;
   subContent: string;
   content: string;

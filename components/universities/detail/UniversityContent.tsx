@@ -28,7 +28,7 @@ export default function UniversityContent({
               Academic Overview
             </h2>
             <div className="prose prose-lg prose-p:font-light prose-p:text-gray-600 prose-p:leading-relaxed max-w-none">
-              <p>{university.overview}</p>
+              <p>{university.overview.shortIntro}</p>
               <p>
                 Admission to this institution demands more than exceptional
                 academic grades; it requires a demonstrated capacity for
@@ -97,11 +97,11 @@ export default function UniversityContent({
                 Testing Requirements
               </span>
               <h3 className="text-2xl font-serif mb-6">
-                LNAT Status: {university.lnatRequirement}
+                LNAT Status: {university.lnat.required}
               </h3>
 
               <p className="text-sm text-white/70 font-light leading-relaxed mb-8">
-                {university.name} uses the LNAT to assess your aptitude for the
+                {university.basicInfo.name} uses the LNAT to assess your aptitude for the
                 skills required to study law. A competitive score in both the
                 multiple-choice and essay sections is imperative for your
                 application to be considered.
@@ -119,7 +119,7 @@ export default function UniversityContent({
               </h4>
               <p className="text-sm text-gray-600 font-light mb-6">
                 Our elite mentorship team can help you map out an application
-                strategy specifically tailored to {university.name}.
+                strategy specifically tailored to {university.basicInfo.name}.
               </p>
               <button className="text-[10px] uppercase tracking-widest font-bold text-[#0a0f1c] border-b border-[#0a0f1c] pb-1 hover:text-[#c5a059] hover:border-[#c5a059] transition-all">
                 Speak to a Mentor

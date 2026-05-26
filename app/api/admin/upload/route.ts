@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server";
-import { uploadImageService } from "@/services/admin/uploadImageServices";
+import { uploadAssetService } from "@/services/admin/uploadAssetService";
 
 export async function POST(req: Request) {
   try {
     const formData = await req.formData();
     const file = formData.get("file") as File;
-    // Default to 'LNAT_EXAM' if no folder is specified by the frontend
     const folder = (formData.get("folder") as string) || "LNAT_EXAM";
 
     if (!file) {
@@ -15,16 +14,18 @@ export async function POST(req: Request) {
       );
     }
 
-    const imageUrl = await uploadImageService(file, folder);
+    const uploadedAsset = await uploadAssetService(file, folder);
 
     return NextResponse.json({
       success: true,
-      url: imageUrl,
+      ...uploadedAsset,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Failed to upload asset";
     console.error("Upload error:", error);
     return NextResponse.json(
-      { success: false, error: error.message || "Failed to upload image" },
+      { success: false, error: message },
       { status: 500 },
     );
   }

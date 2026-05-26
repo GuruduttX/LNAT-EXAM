@@ -10,18 +10,22 @@ interface UniversityStatsProps {
 
 export default function UniversityStats({ university }: UniversityStatsProps) {
   const stats = [
-    { label: "Global Ranking", value: university.globalRanking, icon: Globe2 },
-    { label: "Tuition Fee", value: university.tuitionFee, icon: Coins },
+    {
+      label: "Global Ranking",
+      value: university.academics.globalRanking,
+      icon: Globe2,
+    },
+    {
+      label: "Tuition Fee",
+      value: university.finance.tuitionFee,
+      icon: Coins,
+    },
     {
       label: "Application Deadline",
-      value: university.applicationDeadline,
+      value: university.timeline.finalDeadline,
       icon: Calendar,
     },
-    {
-      label: "Acceptance Rate",
-      value: university.acceptanceRate,
-      icon: Percent,
-    },
+    
   ];
 
   return (

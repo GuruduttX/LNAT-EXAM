@@ -1,105 +1,125 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { motion } from "framer-motion";
+import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
-import { universities } from "@/data/universities";
+
 import UniversityCard from "./UniversityCard";
+import { IUniversity } from "@/types/backend.types";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 },
-  },
-};
+interface ArchiveClientProps {
+  universities: IUniversity[];
+}
 
-export default function ArchiveClient() {
+export default function ArchiveClient({ universities }: ArchiveClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeRegion, setActiveRegion] = useState("All");
 
-  const regions = ["All", "United Kingdom", "Singapore", "Spain", "India"];
+  const regions = useMemo(() => {
+    const countrySet = new Set(
+      universities.map((university) => university.country).filter(Boolean),
+    );
+
+    return ["All", ...Array.from(countrySet).sort((a, b) => a.localeCompare(b))];
+  }, [universities]);
 
   const filteredUniversities = useMemo(() => {
-    return universities.filter((uni) => {
-      const matchesSearch =
-        uni.basicInfo.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        uni.basicInfo.location.toLowerCase().includes(searchQuery.toLowerCase());
+    return universities.filter((university) => {
+      const haystack = [
+        university.name,
+        university.shortName,
+        university.country,
+        university.city,
+        university.location,
+        university.locationLabel,
+        university.focusKeyword,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+      const matchesSearch = haystack.includes(searchQuery.toLowerCase());
       const matchesRegion =
-        activeRegion === "All" || uni.basicInfo.country === activeRegion;
+        activeRegion === "All" || university.country === activeRegion;
 
       return matchesSearch && matchesRegion;
     });
-  }, [searchQuery, activeRegion]);
+  }, [activeRegion, searchQuery, universities]);
 
   return (
-    <section className="py-20 bg-[#fdfbf7] px-6 min-h-screen">
-      <div className="max-w-7xl mx-auto">
-        {/* Editorial Controls */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-16 pb-8 border-b border-gray-200">
-          {/* Custom Search Input */}
-          <div className="relative w-full md:w-96">
-            <Search className="absolute left-0 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search universities..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-transparent border-b border-gray-300 pl-8 pr-4 py-2 text-sm text-[#0a0f1c] placeholder-gray-400 focus:border-[#c5a059] focus:outline-none transition-colors"
-            />
+    <section className="bg-[#fbfaf7] px-6 pb-24 pt-8">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-10 flex flex-col gap-6 rounded-[28px] border border-[#e4dccf] bg-white p-6 shadow-[0_16px_36px_rgba(20,31,45,0.05)] lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-2xl">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#b08d4f]">
+              Directory
+            </p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-[#0e1b2a]">
+              Browse universities by fit, geography, and LNAT relevance
+            </h2>
+            <p className="mt-4 text-base leading-7 text-slate-600">
+              Use this directory after reading the hub above. Shortlist universities,
+              compare environments, and then open each profile for admissions strategy,
+              city-life context, and source-backed details.
+            </p>
           </div>
 
-          {/* Region Filters */}
-          <div className="flex flex-wrap gap-4">
-            {regions.map((region) => (
-              <button
-                key={region}
-                onClick={() => setActiveRegion(region)}
-                className={`text-[10px] uppercase tracking-widest font-semibold px-4 py-2 border transition-all duration-300 ${
-                  activeRegion === region
-                    ? "bg-[#0a0f1c] text-white border-[#0a0f1c]"
-                    : "bg-transparent text-gray-500 border-gray-300 hover:border-[#0a0f1c] hover:text-[#0a0f1c]"
-                }`}
-              >
-                {region}
-              </button>
-            ))}
+          <div className="w-full lg:max-w-sm">
+            <label className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+              Search universities
+            </label>
+            <div className="relative mt-3">
+              <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Oxford, London, Bristol..."
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                className="w-full rounded-full border border-[#ddd3c3] bg-[#fbfaf7] py-3 pl-11 pr-4 text-sm text-[#0e1b2a] outline-none transition focus:border-[#b08d4f]"
+              />
+            </div>
           </div>
         </div>
 
-        {/* Grid Container */}
-        {filteredUniversities.length > 0 ? (
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-          >
-            {filteredUniversities.map((uni) => (
-              <motion.div
-                key={uni.basicInfo.id}
-                variants={{
-                  hidden: { opacity: 0, y: 20 },
-                  visible: { opacity: 1, y: 0 },
-                }}
-              >
-                <UniversityCard university={uni} />
-              </motion.div>
+        <div className="mb-10 flex flex-wrap gap-3">
+          {regions.map((region) => (
+            <button
+              key={region}
+              type="button"
+              onClick={() => setActiveRegion(region)}
+              className={`rounded-full border px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] transition ${
+                activeRegion === region
+                  ? "border-[#0e1b2a] bg-[#0e1b2a] text-white"
+                  : "border-[#d9d2c4] bg-white text-slate-600 hover:border-[#b08d4f] hover:text-[#0e1b2a]"
+              }`}
+            >
+              {region}
+            </button>
+          ))}
+        </div>
+
+        {filteredUniversities.length ? (
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
+            {filteredUniversities.map((university) => (
+              <UniversityCard
+                key={university.slug || university.name}
+                university={university}
+              />
             ))}
-          </motion.div>
+          </div>
         ) : (
-          <div className="text-center py-24">
-            <p className="text-gray-400 font-serif text-xl">
-              No institutions match your refined criteria.
+          <div className="rounded-[28px] border border-dashed border-[#d8cebe] bg-white px-6 py-16 text-center">
+            <p className="font-serif text-2xl text-[#0e1b2a]">
+              No universities match your current filters.
             </p>
             <button
+              type="button"
               onClick={() => {
                 setSearchQuery("");
                 setActiveRegion("All");
               }}
-              className="mt-6 text-[10px] uppercase tracking-widest text-[#c5a059] font-bold hover:text-[#0a0f1c] transition-colors"
+              className="mt-4 text-sm font-semibold text-[#b08d4f] transition hover:text-[#0e1b2a]"
             >
-              Clear Filters
+              Clear search and filters
             </button>
           </div>
         )}

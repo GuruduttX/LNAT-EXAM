@@ -1,6 +1,30 @@
 // models/Blog.ts
 import mongoose, { Schema } from "mongoose";
 
+const heroImageSchema = new Schema(
+  {
+    url: { type: String, required: true, trim: true },
+    alt: { type: String, required: true, trim: true },
+    caption: { type: String, trim: true },
+    credit: { type: String, trim: true },
+    width: { type: Number },
+    height: { type: Number },
+    category: {
+      type: String,
+      enum: ["hero", "campus", "city", "student-life", "academic", "og"],
+    },
+  },
+  { _id: false },
+);
+
+const faqSchema = new Schema(
+  {
+    question: { type: String, required: true, trim: true },
+    answer: { type: String, required: true, trim: true },
+  },
+  { _id: false },
+);
+
 const blogSchema = new Schema(
   {
     title: {
@@ -14,6 +38,21 @@ const blogSchema = new Schema(
       index: true,
       trim: true,
     },
+    primaryCategorySlug: {
+      type: String,
+      trim: true,
+      index: true,
+    },
+    excerpt: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    tldr: {
+      type: String,
+      trim: true,
+    },
+    keyTakeaways: [{ type: String, trim: true }],
     slug: {
       type: String,
       required: true,
@@ -22,9 +61,25 @@ const blogSchema = new Schema(
       trim: true,
     },
     author: {
-      type: String,
-      required: true,
-      trim: true,
+      name: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+      role: {
+        type: String,
+        trim: true,
+      },
+    },
+    reviewedBy: {
+      name: {
+        type: String,
+        trim: true,
+      },
+      role: {
+        type: String,
+        trim: true,
+      },
     },
     meta: {
       title: {
@@ -42,12 +97,10 @@ const blogSchema = new Schema(
       type: String,
       required: true,
     },
-    alt: {
-      type: String,
-      required: true,
-      trim: true,
+    heroImage: {
+      type: heroImageSchema,
     },
-    subContent: {
+    alt: {
       type: String,
       required: true,
       trim: true,
@@ -55,6 +108,24 @@ const blogSchema = new Schema(
     content: {
       type: String,
       required: true,
+    },
+    faqs: [faqSchema],
+    sources: [{ type: String, trim: true }],
+    relatedPostSlugs: [{ type: String, trim: true }],
+    isCornerstone: {
+      type: Boolean,
+      default: false,
+    },
+    freshnessReviewDue: {
+      type: Date,
+    },
+    wordCountTarget: {
+      type: Number,
+      min: 0,
+    },
+    wordCount: {
+      type: Number,
+      min: 0,
     },
     structuredData: {
       title: {
@@ -76,6 +147,10 @@ const blogSchema = new Schema(
     readTime: {
       type: Number,
       required: true, // Enforces that the CMS must send this value
+    },
+    publishedAt: {
+      type: String,
+      trim: true,
     },
   },
   {

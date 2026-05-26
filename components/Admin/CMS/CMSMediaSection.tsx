@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import toast from "react-hot-toast";
 
-type EditorType = "Blog" | "University" | "FAQ" | "Resource";
+type EditorType = "Blog" | "University" | "FAQ" | "Resource" | "Category";
 
 interface CMSMediaSectionProps {
   image: string;
@@ -53,7 +54,7 @@ const CMSMediaSection = ({
 
       onChange("image", data.url);
       toast.success("Image uploaded successfully");
-    } catch (error) {
+    } catch {
       toast.error("Upload failed");
     } finally {
       setLoading(false);
@@ -81,10 +82,12 @@ const CMSMediaSection = ({
           )}
 
           {image ? (
-            <img
+            <Image
               src={image}
               alt={alt}
-              className="mx-auto max-h-40 rounded-lg object-contain"
+              width={640}
+              height={320}
+              className="mx-auto max-h-40 w-auto rounded-lg object-contain"
             />
           ) : (
             <>

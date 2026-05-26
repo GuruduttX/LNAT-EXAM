@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { startTransition, useEffect, useState } from "react";
 import Link from "next/link";
 import {
   Plus,
@@ -20,7 +20,9 @@ interface IBlog {
   _id: string;
   title: string;
   category: string;
-  author: string;
+  author: {
+    name: string;
+  };
   image: string;
   status: "draft" | "published";
   readTime: number;
@@ -46,31 +48,33 @@ export default function BlogArchivePage() {
   });
   const [isDeleting, setIsDeleting] = useState(false);
 
-  useEffect(() => {
-    fetchBlogs();
-  }, []);
-
   const fetchBlogs = async () => {
     try {
-      // Append status=all so the API returns drafts as well as published blogs
       const res = await fetch("/api/blogs?limit=50&status=all");
       if (!res.ok) throw new Error("Failed to fetch blogs");
       const data = await res.json();
-        console.log(data, "admin/blogs archive");
-      setBlogs(data.blogs || []);
-    } catch (error) {
+      startTransition(() => {
+        setBlogs(data.blogs || []);
+      });
+    } catch {
       toast.error("Error loading blogs");
     } finally {
-      setIsLoading(false);
+      startTransition(() => {
+        setIsLoading(false);
+      });
     }
   };
+
+  useEffect(() => {
+    void fetchBlogs();
+  }, []);
 
   const executeDelete = async () => {
     if (!deleteModal.id) return;
     setIsDeleting(true);
 
     try {
-      const res = await fetch(`/api/blogs/${deleteModal.id}`, {
+      const res = await fetch(`/api/blogs/admin/${deleteModal.id}`, {
         method: "DELETE",
       });
 
@@ -78,7 +82,7 @@ export default function BlogArchivePage() {
 
       setBlogs((prev) => prev.filter((b) => b._id !== deleteModal.id));
       toast.success("Blog deleted successfully");
-    } catch (error) {
+    } catch {
       toast.error("Failed to delete blog");
     } finally {
       setIsDeleting(false);
@@ -228,7 +232,7 @@ export default function BlogArchivePage() {
                           {blog.title}
                         </p>
                         <p className="text-xs text-slate-500 flex items-center gap-1 mt-1">
-                          <User size={12} /> {blog.author}
+                          <User size={12} /> {blog.author?.name || "Editorial Team"}
                         </p>
                       </div>
                     </td>
@@ -326,7 +330,7 @@ export default function BlogArchivePage() {
 
                 <div className="flex items-center gap-3 text-slate-400 text-xs mt-auto">
                   <span className="flex items-center gap-1.5">
-                    <User size={14} /> {blog.author}
+                    <User size={14} /> {blog.author?.name || "Editorial Team"}
                   </span>
                   <span className="flex items-center gap-1.5">
                     <Clock size={14} /> {blog.readTime || 0} min
@@ -372,7 +376,7 @@ export default function BlogArchivePage() {
             <p className="text-slate-300 text-sm mb-6">
               Are you sure you want to delete{" "}
               <span className="font-semibold text-[#FDFBF7]">
-                "{deleteModal.title}"
+                &quot;{deleteModal.title}&quot;
               </span>
               ? This action cannot be undone.
             </p>

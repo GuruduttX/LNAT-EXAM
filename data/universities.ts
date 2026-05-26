@@ -26,6 +26,10 @@ export interface University {
     weightageDescription: string;
     preparationAdvice: string[];
   };
+  overview: {
+    shortIntro: string;
+    whyChoose: string[];
+  };
   admissions: {
     applicationPlatform: string;
     class12Requirements: {
@@ -148,6 +152,16 @@ export const universities: University[] = [
         "Focus on argument analysis.",
         "Practice timed essays weekly.",
         "Read editorial journalism daily.",
+      ],
+    },
+    overview: {
+      shortIntro:
+        "The University of Oxford offers one of the world’s most prestigious law programs with tutorial-based teaching, exceptional academic rigor, and global legal recognition.",
+      whyChoose: [
+        "World-renowned tutorial teaching system",
+        "Exceptional placement opportunities in top global law firms",
+        "Historic academic environment with elite peer network",
+        "Strong focus on analytical and critical reasoning",
       ],
     },
 
@@ -298,6 +312,16 @@ export const universities: University[] = [
         "Practice logical inference questions.",
       ],
     },
+    overview: {
+      shortIntro:
+        "UCL Law combines global academic prestige with modern legal education in the heart of London, offering strong international exposure and career opportunities.",
+      whyChoose: [
+        "Located in central London near major legal institutions",
+        "Highly respected internationally for law and public policy",
+        "Strong research-driven legal education",
+        "Excellent career opportunities with Magic Circle firms",
+      ],
+    },
 
     admissions: {
       applicationPlatform: "UCAS",
@@ -441,6 +465,16 @@ export const universities: University[] = [
         "Practice under timed conditions.",
       ],
     },
+    overview: {
+      shortIntro:
+        "LSE Law is globally recognized for its academically rigorous and commercially focused legal education with strong emphasis on analytical thinking.",
+      whyChoose: [
+        "Exceptional reputation in corporate and commercial law",
+        "Strong academic and research-oriented curriculum",
+        "Located in London’s global financial ecosystem",
+        "Excellent employability among top international firms",
+      ],
+    },
 
     admissions: {
       applicationPlatform: "UCAS",
@@ -573,6 +607,16 @@ export const universities: University[] = [
       preparationAdvice: [
         "Read legal commentary regularly.",
         "Strengthen argument structure.",
+      ],
+    },
+    overview: {
+      shortIntro:
+        "King’s College London offers a globally respected legal education with strong international recognition, practical learning opportunities, and central London exposure.",
+      whyChoose: [
+        "Strong global reputation in legal studies",
+        "Excellent mooting and practical law opportunities",
+        "Access to major legal institutions in London",
+        "Balanced academic and career-focused approach",
       ],
     },
 
@@ -710,6 +754,16 @@ export const universities: University[] = [
       preparationAdvice: [
         "Practice logical reasoning daily.",
         "Improve reading comprehension speed.",
+      ],
+    },
+    overview: {
+      shortIntro:
+        "The University of Bristol provides a research-intensive law education with strong commercial law reputation and excellent student satisfaction.",
+      whyChoose: [
+        "Strong commercial and international law programs",
+        "Research-driven academic environment",
+        "Excellent graduate employability outcomes",
+        "Vibrant student life in a leading UK student city",
       ],
     },
 
@@ -856,6 +910,16 @@ export const universities: University[] = [
         "Build strong personal statement depth.",
       ],
     },
+    overview: {
+      shortIntro:
+        "Durham University offers a prestigious collegiate learning experience with strong academic tradition and highly respected law programs.",
+      whyChoose: [
+        "Collegiate system similar to Oxford and Cambridge",
+        "Strong reputation for academic excellence in law",
+        "Supportive student community and tutorial-style learning",
+        "Excellent balance of prestige and student experience",
+      ],
+    },
 
     admissions: {
       applicationPlatform: "UCAS",
@@ -991,6 +1055,16 @@ export const universities: University[] = [
         "Highlight extracurricular leadership.",
       ],
     },
+    overview: {
+      shortIntro:
+        "The University of Glasgow offers a globally respected Scottish law education with strong international diversity and practical legal training.",
+      whyChoose: [
+        "Historic institution with strong international reputation",
+        "Excellent pathway into Scottish and international law",
+        "Affordable living costs compared to London universities",
+        "Strong focus on practical and interdisciplinary learning",
+      ],
+    },
 
     admissions: {
       applicationPlatform: "UCAS",
@@ -1123,6 +1197,16 @@ export const universities: University[] = [
       preparationAdvice: [
         "Demonstrate global awareness.",
         "Build strong written communication.",
+      ],
+    },
+    overview: {
+      shortIntro:
+        "SOAS offers a globally focused and interdisciplinary legal education with unique strengths in international, Asian, and human rights law.",
+      whyChoose: [
+        "Unique specialization in international and Asian legal systems",
+        "Strong emphasis on global justice and human rights",
+        "Highly diverse international student community",
+        "Ideal for globally focused legal and policy careers",
       ],
     },
 

@@ -23,7 +23,14 @@ interface IUniversity {
   image: string;
   lnatRequirement: string;
   globalRanking: string;
+  status?: "draft" | "published";
 }
+
+const getStatusBadgeClass = (status?: "draft" | "published") => {
+  return status === "published"
+    ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+    : "bg-amber-500/10 text-amber-300 border-amber-500/20";
+};
 
 export default function UniversityArchivePage() {
   const [universities, setUniversities] = useState<IUniversity[]>([]);
@@ -171,6 +178,9 @@ export default function UniversityArchivePage() {
                     LNAT Req.
                   </th>
                   <th className="px-6 py-4 font-medium whitespace-nowrap">
+                    Status
+                  </th>
+                  <th className="px-6 py-4 font-medium whitespace-nowrap">
                     Ranking
                   </th>
                   <th className="px-6 py-4 font-medium text-right">Actions</th>
@@ -206,6 +216,15 @@ export default function UniversityArchivePage() {
                         }`}
                       >
                         {uni.lnatRequirement}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span
+                        className={`px-2.5 py-1 rounded-full text-xs border capitalize ${getStatusBadgeClass(
+                          uni.status,
+                        )}`}
+                      >
+                        {uni.status || "draft"}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-slate-300">
@@ -252,6 +271,13 @@ export default function UniversityArchivePage() {
                   alt={uni.name}
                   className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
                 />
+                <div
+                  className={`absolute top-3 left-3 px-2.5 py-1 rounded-md border text-[11px] font-medium capitalize backdrop-blur-sm ${getStatusBadgeClass(
+                    uni.status,
+                  )}`}
+                >
+                  {uni.status || "draft"}
+                </div>
                 <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-sm px-2.5 py-1 rounded-md border border-white/10 text-xs font-medium text-white">
                   Rank: #{uni.globalRanking}
                 </div>

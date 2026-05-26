@@ -1,6 +1,7 @@
 // services/universityService.ts
 import { University } from "@/models/University";
 import connectDB from "@/lib/db";
+import { IUniversity } from "@/types/backend.types";
 
 interface GetUniversitiesParams {
   page?: number;
@@ -8,6 +9,7 @@ interface GetUniversitiesParams {
   country?: string;
   lnatRequirement?: string;
   search?: string;
+  status?: "draft" | "published";
 }
 
 export async function getUniversitiesArchive({
@@ -16,10 +18,15 @@ export async function getUniversitiesArchive({
   country,
   lnatRequirement,
   search,
+  status,
 }: GetUniversitiesParams) {
   await connectDB();
 
-  const query: any = {};
+  const query: Record<string, unknown> = {};
+
+  if (status) {
+    query.status = status;
+  }
 
   // Dynamic Filtering
   if (country && country !== "all") {
@@ -34,6 +41,8 @@ export async function getUniversitiesArchive({
     query.$or = [
       { name: { $regex: search, $options: "i" } },
       { location: { $regex: search, $options: "i" } },
+      { city: { $regex: search, $options: "i" } },
+      { locationLabel: { $regex: search, $options: "i" } },
     ];
   }
 
@@ -44,7 +53,7 @@ export async function getUniversitiesArchive({
       .sort({ name: 1 }) // Alphabetic sorting default for luxury archive directories
       .skip(skip)
       .limit(limit)
-      .select("-overview"), // Drops the heavy rich text HTML payload for standard cards
+      .select("-overview -hero -gallery -strengths -cityLife -studentExperience -admissions -careers -faqs"), // Drops heavy page-builder style payloads for archive cards
     University.countDocuments(query),
   ]);
 
@@ -59,12 +68,36 @@ export async function getUniversitiesArchive({
   };
 }
 
+export async function getPublishedUniversities() {
+  await connectDB();
+
+  return University.find({ status: "published" })
+    .sort({ featured: -1, sortOrder: 1, name: 1 })
+    .lean();
+}
+
 export async function getUniversityById(id: string) {
   await connectDB();
   return University.findById(id);
 }
 
-export async function updateUniversity(id: string, data: any) {
+export async function getUniversityBySlug(slug: string) {
+  await connectDB();
+  return University.findOne({ slug });
+}
+
+export async function getPublishedUniversitySlugs() {
+  await connectDB();
+  const universities = await University.find({ status: "published" })
+    .select("slug")
+    .lean();
+
+  return universities
+    .map((university) => university.slug)
+    .filter(Boolean);
+}
+
+export async function updateUniversity(id: string, data: Partial<IUniversity>) {
   await connectDB();
   return University.findByIdAndUpdate(
     id,
