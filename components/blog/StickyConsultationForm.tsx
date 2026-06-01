@@ -35,23 +35,26 @@ export default function StickyConsultationForm() {
     <motion.div
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#0A1320]/80 p-6 shadow-[0_20px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] as const }}
+      className="relative overflow-hidden rounded-2xl bg-[#0D1B3E] p-6 border border-[#C9A84C]/15 shadow-[0_16px_40px_rgba(13,27,62,0.2)]"
     >
-      {/* Subtle premium light bloom */}
-      <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-[#C2A35E]/5 blur-3xl pointer-events-none" />
+      {/* Subtle premium gold bloom */}
+      <div
+        className="absolute -right-10 -top-10 h-32 w-32 rounded-full pointer-events-none blur-3xl"
+        style={{ background: "rgba(201,168,76,0.15)" }}
+      />
 
-      <div className="relative z-10 mb-5 border-b border-white/5 pb-5">
+      <div className="relative z-10 mb-6 border-b border-white/10 pb-5">
         <div className="mb-3 flex items-center gap-2">
-          <ShieldCheck size={16} className="text-[#C2A35E]" />
-          <span className="text-[10px] font-semibold tracking-[0.2em] text-[#C2A35E] uppercase">
+          <ShieldCheck size={14} className="text-[#C9A84C]" />
+          <span className="text-[10px] font-bold tracking-[0.18em] text-[#C9A84C] uppercase">
             Academic Support
           </span>
         </div>
-        <h3 className="font-serif text-xl text-[#F8F5EE] tracking-tight">
+        <h3 className="font-bold text-[1.25rem] text-white tracking-tight">
           Talk to an LNAT Mentor
         </h3>
-        <p className="mt-2 text-xs font-light leading-relaxed text-[#7F8A99]">
+        <p className="mt-2 text-[13px] leading-relaxed text-white/50">
           Get expert support for LNAT preparation and UK law admissions. Speak
           with our mentors for personalized guidance.
         </p>
@@ -64,9 +67,9 @@ export default function StickyConsultationForm() {
         <div>
           <label
             htmlFor="name"
-            className="mb-1.5 block text-[11px] font-medium uppercase tracking-wider text-[#B8C1CC]"
+            className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.18em] text-white/70"
           >
-            Full Name <span className="text-[#C2A35E]">*</span>
+            Full Name <span className="text-[#C9A84C]">*</span>
           </label>
           <input
             id="name"
@@ -76,16 +79,16 @@ export default function StickyConsultationForm() {
             placeholder="Enter your name"
             value={formData.name}
             onChange={handleChange}
-            className="w-full rounded-xl border border-white/10 bg-[#050B14]/60 px-4 py-2.5 text-sm text-[#F8F5EE] placeholder:text-[#7F8A99]/40 focus:border-[#C2A35E]/50 focus:outline-none focus:ring-1 focus:ring-[#C2A35E]/50 transition-colors"
+            className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-[13px] text-white placeholder:text-white/30 focus:border-[#C9A84C]/50 focus:outline-none focus:ring-1 focus:ring-[#C9A84C]/50 transition-colors"
             disabled={isSubmitting}
           />
         </div>
         <div>
           <label
             htmlFor="phone"
-            className="mb-1.5 block text-[11px] font-medium uppercase tracking-wider text-[#B8C1CC]"
+            className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.18em] text-white/70"
           >
-            Phone Number <span className="text-[#C2A35E]">*</span>
+            Phone Number <span className="text-[#C9A84C]">*</span>
           </label>
           <input
             id="phone"
@@ -95,31 +98,39 @@ export default function StickyConsultationForm() {
             placeholder="Enter your phone number"
             value={formData.phone}
             onChange={handleChange}
-            className="w-full rounded-xl border border-white/10 bg-[#050B14]/60 px-4 py-2.5 text-sm text-[#F8F5EE] placeholder:text-[#7F8A99]/40 focus:border-[#C2A35E]/50 focus:outline-none focus:ring-1 focus:ring-[#C2A35E]/50 transition-colors"
+            className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-[13px] text-white placeholder:text-white/30 focus:border-[#C9A84C]/50 focus:outline-none focus:ring-1 focus:ring-[#C9A84C]/50 transition-colors"
             disabled={isSubmitting}
           />
         </div>
+
+        {/* Design System Primary CTA Button Pattern */}
         <button
           type="submit"
           disabled={isSubmitting}
-          className="group mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-[#C2A35E] px-4 py-3 text-sm font-medium text-[#050B14] transition-all hover:bg-[#E7D3A2] hover:shadow-[0_0_20px_rgba(194,163,94,0.3)] disabled:opacity-70 disabled:cursor-not-allowed"
+          className="group mt-2 inline-flex w-full items-center justify-center gap-2.5 rounded-xl px-6 py-3 font-bold text-sm text-[#0D1B3E] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:hover:scale-100 disabled:cursor-not-allowed"
+          style={{
+            background:
+              "linear-gradient(135deg, #C9A84C 0%, #E8C96A 60%, #C9A84C 100%)",
+            boxShadow: "0 4px 20px rgba(201,168,76,0.45)",
+          }}
         >
           {isSubmitting ? (
             <>
-              <Loader2 size={16} className="animate-spin" />
+              <Loader2 size={16} className="animate-spin text-[#0D1B3E]" />
               Submitting...
             </>
           ) : (
             <>
               Book Consultation
               <ArrowRight
-                size={16}
-                className="transition-transform group-hover:translate-x-1"
+                size={14}
+                className="transition-transform duration-200 group-hover:translate-x-1"
               />
             </>
           )}
         </button>
-        <p className="mt-1 text-center text-[10px] font-light tracking-wide text-[#7F8A99]">
+
+        <p className="mt-1 text-center text-[11px] font-medium text-white/40">
           Our mentors will contact you shortly.
         </p>
       </form>

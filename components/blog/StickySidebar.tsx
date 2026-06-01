@@ -38,7 +38,7 @@ export default function StickySidebar({
       transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
       className="flex w-full flex-col gap-5 lg:sticky lg:top-24"
     >
-      {tocItems.length ? (
+      {/* {tocItems.length ? (
         <div className="rounded-[28px] border border-[#D9D0C1] bg-white p-6 shadow-[0_14px_32px_rgba(20,31,45,0.05)]">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#C9A84C]/10 text-[#9A7B4F]">
@@ -70,18 +70,19 @@ export default function StickySidebar({
             ))}
           </nav>
         </div>
-      ) : null}
+      ) : null} */}
 
-      <div className="rounded-[28px] border border-[#D9D0C1] bg-[#07111F] p-6 text-white shadow-[0_16px_38px_rgba(7,17,31,0.22)]">
+      <div className="rounded-2xl border border-[#C9A84C]/15 bg-[#0D1B3E] p-6 text-white shadow-[0_16px_40px_rgba(13,27,62,0.2)] overflow-hidden">
         <div className="flex items-start gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#C9A84C]/12 text-[#D8BE7D]">
-            <ShieldCheck className="h-5 w-5" />
+          {/* Design System standard icon container */}
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#C9A84C]/10 text-[#C9A84C]">
+            <ShieldCheck size={18} strokeWidth={1.5} />
           </div>
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#D8BE7D]">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#C9A84C]">
               Trust + Freshness
             </p>
-            <p className="mt-2 text-sm leading-7 text-[#D8E0EA]">
+            <p className="mt-1.5 text-[13px] leading-relaxed text-white/60">
               Reviewed for clarity, updated for current LNAT-related guidance,
               and connected to the wider topic hub structure for easier
               research.
@@ -89,24 +90,25 @@ export default function StickySidebar({
           </div>
         </div>
 
-        <div className="mt-5 space-y-3 rounded-[24px] border border-white/10 bg-white/5 p-4 text-sm text-[#DDE4EC]">
+        {/* Inner data block using standard rounded-xl and opacity layers */}
+        <div className="mt-5 space-y-3 rounded-xl border border-white/10 bg-white/[0.04] p-4 text-[13px]">
           <div className="flex items-center justify-between gap-3">
-            <span className="text-[#9EABB8]">Last reviewed</span>
-            <span className="font-medium text-[#F8F5EE]">
+            <span className="font-medium text-white/50">Last reviewed</span>
+            <span className="font-bold text-white">
               {displayUpdatedAt || "Recently"}
             </span>
           </div>
           {blog.reviewedBy?.name ? (
             <div className="flex items-center justify-between gap-3">
-              <span className="text-[#9EABB8]">Reviewer</span>
-              <span className="text-right font-medium text-[#F8F5EE]">
+              <span className="font-medium text-white/50">Reviewer</span>
+              <span className="text-right font-bold text-white">
                 {blog.reviewedBy.name}
               </span>
             </div>
           ) : null}
           <div className="flex items-center justify-between gap-3">
-            <span className="text-[#9EABB8]">Category</span>
-            <span className="text-right font-medium text-[#F8F5EE]">
+            <span className="font-medium text-white/50">Category</span>
+            <span className="text-right font-bold text-white">
               {blog.category}
             </span>
           </div>
@@ -140,7 +142,11 @@ export default function StickySidebar({
       </div>
 
       <Link
-        href={blog.primaryCategorySlug ? `/topics/${blog.primaryCategorySlug}` : "/topics"}
+        href={
+          blog.primaryCategorySlug
+            ? `/topics/${blog.primaryCategorySlug}`
+            : "/topics"
+        }
         className="group flex items-center justify-between rounded-[24px] border border-[#D9D0C1] bg-white p-5 shadow-[0_12px_26px_rgba(20,31,45,0.05)] transition-all hover:border-[#C9A84C]/35 hover:bg-[#FCFBF8]"
       >
         <div className="flex items-center gap-3">

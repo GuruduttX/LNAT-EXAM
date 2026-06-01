@@ -3,9 +3,20 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { CalendarDays, Clock3, ShieldCheck } from "lucide-react";
+import {
+  CalendarDays,
+  Clock3,
+  ShieldCheck,
+  User,
+  CheckCircle2,
+  ListRestart,
+} from "lucide-react";
 
 import { IBlog } from "@/types/backend.types";
+
+// ─────────────────────────────────────────────────────────────
+// Types
+// ─────────────────────────────────────────────────────────────
 
 interface BreadcrumbItem {
   label: string;
@@ -19,186 +30,355 @@ interface BlogDetailsHeroProps {
   displayUpdatedAt: string | null;
 }
 
+// ─────────────────────────────────────────────────────────────
+// Subcomponent: BlogBreadcrumbs
+// ─────────────────────────────────────────────────────────────
+
+function BlogBreadcrumbs({ items }: { items: BreadcrumbItem[] }) {
+  return (
+    <nav
+      aria-label="Breadcrumb"
+      className="mb-5 flex flex-wrap items-center justify-center gap-2 lg:mb-6 lg:justify-start"
+    >
+      {items.map((item, index) => {
+        const isLast = index === items.length - 1;
+        return (
+          <div
+            key={`${item.href}-${index}`}
+            className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-[0.2em] md:text-[10px]"
+          >
+            {isLast ? (
+              <span className="text-[#C9A84C] text-center">{item.label}</span>
+            ) : (
+              <Link
+                href={item.href}
+                className="text-slate-400 transition-colors hover:text-[#0D1B3E]"
+              >
+                {item.label}
+              </Link>
+            )}
+            {!isLast && <span className="text-slate-300">/</span>}
+          </div>
+        );
+      })}
+    </nav>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Subcomponent: BlogHeroMeta
+// ─────────────────────────────────────────────────────────────
+
+function BlogHeroMeta({ blog }: { blog: IBlog }) {
+  return (
+    <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
+      <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#C9A84C]/20 bg-[#C9A84C]/[0.08] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-[#C9A84C]">
+        <span className="h-1.5 w-1.5 rounded-full bg-[#C9A84C]" />
+        {blog.category}
+      </div>
+
+      {/* Design System Hero Heading Sizing */}
+      <h1 className="mb-4 text-[clamp(1.9rem,4.8vw,3.8rem)] font-extrabold leading-[1.1] tracking-tight text-[#0D1B3E] lg:mb-6">
+        {blog.title}
+      </h1>
+
+      <p className="max-w-xl text-[14px] leading-relaxed text-slate-600 sm:text-[15px] lg:max-w-2xl lg:text-[16px]">
+        {blog.excerpt}
+      </p>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Subcomponent: BlogTrustStrip (E-E-A-T)
+// ─────────────────────────────────────────────────────────────
+
+function BlogTrustStrip({
+  blog,
+  publishedAt,
+  updatedAt,
+}: {
+  blog: IBlog;
+  publishedAt: string | null;
+  updatedAt: string | null;
+}) {
+  return (
+    <div className="flex w-full flex-col items-center justify-center md:gap-5 rounded-2xl border border-black/[0.07] bg-white p-3 shadow-sm md:flex-row md:flex-wrap md:justify-start lg:gap-6">
+      <div className="flex justify-around gap-5">
+        {/* Author */}
+        <div className="flex items-center gap-3 text-left">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F7F3EC] text-[#0D1B3E]">
+            <User size={16} />
+          </div>
+          <div>
+            <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-slate-400">
+              Written By
+            </p>
+            <p className="text-[13px] font-bold text-[#0D1B3E]">
+              {blog.author.name}
+            </p>
+          </div>
+        </div>
+
+        {/* Reviewer (Strict SOP: Only show if exists) */}
+        {blog.reviewedBy?.name && (
+          <>
+            <div className="hidden h-8 w-px bg-slate-200 md:block" />
+            <div className="flex items-center gap-3 text-left">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#C9A84C]/10 text-[#C9A84C]">
+                <ShieldCheck size={16} />
+              </div>
+              <div>
+                <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-[#C9A84C]">
+                  Reviewed By
+                </p>
+                <p className="text-[13px] font-bold text-[#0D1B3E]">
+                  {blog.reviewedBy.name}
+                </p>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+
+      <div className="hidden h-8 w-px bg-slate-200 lg:block" />
+
+      {/* Dates & Time (Grouped & Centered for Mobile) */}
+      <div className="mt-2 flex flex-wrap items-center justify-center gap-x-6 gap-y-4 border-t border-black/[0.05] pt-4 md:mt-0 md:justify-start md:border-none md:pt-0">
+        <div className="text-center md:text-left">
+          <p className="flex items-center justify-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.18em] text-slate-400 md:justify-start">
+            <CalendarDays size={12} /> Published
+          </p>
+          <p className="mt-0.5 text-[12px] font-medium text-slate-700">
+            {publishedAt || "Recently"}
+          </p>
+        </div>
+
+        {updatedAt && (
+          <div className="text-center md:text-left">
+            <p className="flex items-center justify-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.18em] text-slate-400 md:justify-start">
+              <ListRestart size={12} /> Updated
+            </p>
+            <p className="mt-0.5 text-[12px] font-medium text-slate-700">
+              {updatedAt}
+            </p>
+          </div>
+        )}
+
+        <div className="text-center md:text-left">
+          <p className="flex items-center justify-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.18em] text-slate-400 md:justify-start">
+            <Clock3 size={12} /> Read Time
+          </p>
+          <p className="mt-0.5 text-[12px] font-medium text-[#0D1B3E]">
+            {blog.readTime} min
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Subcomponent: BlogHeroImage
+// ─────────────────────────────────────────────────────────────
+
+function BlogHeroImage({ blog }: { blog: IBlog }) {
+  const src = (blog.heroImage as any)?.url || blog.featuredImage || blog.image;
+  const alt = (blog.heroImage as any)?.alt || blog.alt || blog.title;
+  const caption = (blog.heroImage as any)?.caption;
+
+  return (
+    <figure className="relative h-full w-full">
+      <div className="relative mx-auto aspect-[4/3] w-full max-w-[500px] overflow-hidden rounded-3xl border border-black/[0.06] shadow-[0_16px_40px_rgba(13,27,62,0.08)] lg:max-w-none lg:aspect-[4/3] xl:aspect-[4/3]">
+        <Image
+          src={src}
+          alt={alt}
+          width={1200}
+          height={900}
+          priority // LCP Image
+          className="h-full w-full object-cover object-center"
+          sizes="(max-width: 1024px) 100vw, 50vw"
+        />
+      </div>
+      {caption && (
+        <figcaption className="mt-3 text-center text-[11px] text-slate-400">
+          {caption}
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Subcomponent: BlogTldrSection
+// ─────────────────────────────────────────────────────────────
+
+function BlogTldrSection({
+  tldr,
+  keyTakeaways,
+}: {
+  tldr?: string;
+  keyTakeaways?: string[];
+}) {
+  if (!tldr && (!keyTakeaways || keyTakeaways.length === 0)) return null;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.6,
+        delay: 0.3,
+        ease: [0.22, 1, 0.36, 1] as const,
+      }}
+      className="mt-10 rounded-3xl border border-[#C9A84C]/20 bg-[#FDFBF7] p-6 shadow-sm md:p-8 lg:mt-14"
+    >
+      <div className="mb-5 flex flex-col items-center justify-center gap-3 border-b border-black/[0.05] pb-5 text-center sm:flex-row sm:justify-start sm:text-left">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#C9A84C]/10 text-[#C9A84C]">
+          <CheckCircle2 size={20} />
+        </div>
+        <div>
+          <h2 className="text-[16px] font-bold text-[#0D1B3E] md:text-[18px]">
+            Quick Summary
+          </h2>
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
+            TL;DR & Key Takeaways
+          </p>
+        </div>
+      </div>
+
+      {/* Added min-w-0 here to ensure grid children don't blow out the width */}
+      <div className="grid gap-6 min-w-0 lg:grid-cols-2 lg:gap-12">
+        {tldr && (
+          <div className="flex items-start">
+            <p className="text-[14px] text-center md:text-start font-medium leading-[1.7] text-slate-700 md:text-[15px]">
+              {tldr}
+            </p>
+          </div>
+        )}
+
+        {keyTakeaways && keyTakeaways.length > 0 && (
+          // Added min-w-0 to the wrapper to enforce containment
+          <div className="w-full min-w-0">
+            {/* Added pt-2 and pb-6 so the hover shadows don't get clipped by overflow */}
+            <ul
+              className="flex gap-4 overflow-x-auto pt-2 pb-6 px-1 -mx-1 snap-x snap-mandatory 
+              [scrollbar-width:none] [&::-webkit-scrollbar]:hidden 
+              lg:flex-col lg:overflow-visible lg:p-0 lg:mx-0"
+            >
+              {keyTakeaways.map((point, idx) => (
+                <li
+                  key={idx}
+                  className="flex items-start gap-3.5 shrink-0 snap-start w-[82vw] max-w-[320px] 
+                    rounded-2xl bg-white p-4 transition-all duration-300
+                    lg:w-auto lg:max-w-none"
+                  style={{
+                    border: "1px solid rgba(0,0,0,0.07)",
+                    boxShadow: "0 2px 10px rgba(0,0,0,0.06)",
+                  }}
+                  onMouseEnter={(e) => {
+                    const el = e.currentTarget as HTMLLIElement;
+                    el.style.boxShadow = "0 16px 40px rgba(0,0,0,0.12)";
+                    el.style.transform = "translateY(-4px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    const el = e.currentTarget as HTMLLIElement;
+                    el.style.boxShadow = "0 2px 10px rgba(0,0,0,0.06)";
+                    el.style.transform = "translateY(0)";
+                  }}
+                >
+                  <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-[#C9A84C]" />
+                  <span className="text-[14px] font-medium leading-[1.7] text-slate-700 md:text-[15px]">
+                    {point}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    </motion.div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Main Layout: BlogDetailsHero
+// ─────────────────────────────────────────────────────────────
+
 export default function BlogDetailsHero({
   blog,
   breadcrumbItems,
   displayPublishedAt,
   displayUpdatedAt,
 }: BlogDetailsHeroProps) {
-  const heroImage = blog.heroImage?.url || blog.featuredImage || blog.image;
-  const heroAlt = blog.heroImage?.alt || blog.alt || blog.title;
-
   return (
-    <section className="relative overflow-hidden bg-[#F7F3EC] px-4 pb-12 pt-28 sm:px-6 lg:px-8 lg:pb-16 lg:pt-32">
-      <div className="absolute inset-x-0 top-0 h-[72%] bg-[#07111F]" />
-      <div className="absolute inset-x-0 top-0 h-[72%] bg-[radial-gradient(circle_at_top_right,rgba(201,168,76,0.16),transparent_28%),radial-gradient(circle_at_left,rgba(255,255,255,0.08),transparent_24%)]" />
-      <div className="absolute left-0 right-0 top-[52%] h-40 bg-[linear-gradient(180deg,rgba(7,17,31,0),rgba(247,243,236,1))]" />
+    <header className="relative w-full border-b border-black/[0.05] bg-[#F7F3EC] px-4 pb-12 pt-10 sm:px-6 lg:px-8 lg:pb-16 lg:pt-10">
+      {/* Subtle background texture */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-50
+        [background-image:radial-gradient(circle,rgba(13,27,62,0.04)_1px,transparent_1px)]
+        [background-size:20px_20px]"
+      />
 
-      <div className="relative mx-auto grid max-w-7xl gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)] lg:items-center">
-        <motion.div
-          initial={{ opacity: 0, y: 28 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.65, ease: "easeOut" }}
-          className="max-w-3xl"
-        >
-          <nav
-            aria-label="Breadcrumb"
-            className="mb-6 flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.18em] text-[#D9C89A]"
+      <div className="relative z-10 mx-auto max-w-[1280px]">
+        {/* 
+          Smart Responsive Grid:
+          Mobile: flex-col with order-1 (Meta), order-2 (Image), order-3 (TrustStrip).
+          Desktop: 12-column grid.
+        */}
+        <div className="flex flex-col gap-8 lg:grid lg:grid-cols-12 lg:items-center lg:gap-12 xl:gap-16">
+          {/* 1. Meta (Top on Mobile, Left on Desktop) */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="order-1 flex w-full flex-col lg:col-span-7 lg:col-start-1 lg:row-start-1"
           >
-            {breadcrumbItems.map((item, index) => {
-              const isLast = index === breadcrumbItems.length - 1;
+            <BlogBreadcrumbs items={breadcrumbItems} />
+            <BlogHeroMeta blog={blog} />
+          </motion.div>
 
-              return (
-                <div key={`${item.href}-${index}`} className="flex items-center gap-2">
-                  {isLast ? (
-                    <span className="text-[#F3E8C9]">{item.label}</span>
-                  ) : (
-                    <Link
-                      href={item.href}
-                      className="transition-colors hover:text-[#FFF6DE]"
-                    >
-                      {item.label}
-                    </Link>
-                  )}
-                  {!isLast ? <span className="text-[#8B96A5]">/</span> : null}
-                </div>
-              );
-            })}
-          </nav>
+          {/* 2. Image (Middle on Mobile, Right on Desktop spanning 2 rows) */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+            className="order-2 w-full lg:col-span-5 lg:col-start-8 lg:row-span-2 lg:row-start-1"
+          >
+            <BlogHeroImage blog={blog} />
+          </motion.div>
 
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#C9A84C]/25 bg-[#C9A84C]/10 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#E9D29B]">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#C9A84C]" />
-            {blog.category}
-          </div>
-
-          <h1 className="max-w-3xl text-4xl font-semibold leading-[1.04] tracking-tight text-[#FDFBF5] sm:text-5xl lg:text-6xl">
-            {blog.title}
-          </h1>
-
-          <p className="mt-6 max-w-2xl text-base leading-8 text-[#C8D1DC] sm:text-lg">
-            {blog.excerpt}
-          </p>
-
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <div className="rounded-[24px] border border-white/10 bg-white/5 px-5 py-4 backdrop-blur-sm">
-              <p className="text-[11px] uppercase tracking-[0.18em] text-[#93A0B0]">
-                Written By
-              </p>
-              <p className="mt-2 text-sm font-medium text-[#FDFBF5]">
-                {blog.author.name}
-              </p>
-              {blog.author.role ? (
-                <p className="mt-1 text-sm text-[#B9C3D0]">{blog.author.role}</p>
-              ) : null}
-            </div>
-
-            <div className="rounded-[24px] border border-white/10 bg-white/5 px-5 py-4 backdrop-blur-sm">
-              <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] text-[#93A0B0]">
-                <CalendarDays className="h-3.5 w-3.5 text-[#C9A84C]" />
-                Published
-              </div>
-              <p className="mt-2 text-sm font-medium text-[#FDFBF5]">
-                {displayPublishedAt || "Recently updated"}
-              </p>
-            </div>
-
-            <div className="rounded-[24px] border border-white/10 bg-white/5 px-5 py-4 backdrop-blur-sm">
-              <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] text-[#93A0B0]">
-                <Clock3 className="h-3.5 w-3.5 text-[#C9A84C]" />
-                Read Time
-              </div>
-              <p className="mt-2 text-sm font-medium text-[#FDFBF5]">
-                {blog.readTime} min read
-              </p>
-            </div>
-
-            <div className="rounded-[24px] border border-white/10 bg-white/5 px-5 py-4 backdrop-blur-sm">
-              <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] text-[#93A0B0]">
-                <ShieldCheck className="h-3.5 w-3.5 text-[#C9A84C]" />
-                Trust Check
-              </div>
-              <p className="mt-2 text-sm font-medium text-[#FDFBF5]">
-                {blog.reviewedBy?.name || "Editorially reviewed"}
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-6 flex flex-wrap items-center gap-4 rounded-[28px] border border-white/10 bg-white/5 px-5 py-4 text-sm text-[#D0D8E1] backdrop-blur-sm">
-            <div>
-              <span className="text-[#97A4B4]">Last updated:</span>{" "}
-              <span className="font-medium text-[#FDFBF5]">
-                {displayUpdatedAt || "Recently"}
-              </span>
-            </div>
-            {blog.reviewedBy?.name ? (
-              <div>
-                <span className="text-[#97A4B4]">Reviewed by:</span>{" "}
-                <span className="font-medium text-[#FDFBF5]">
-                  {blog.reviewedBy.name}
-                  {blog.reviewedBy.role ? `, ${blog.reviewedBy.role}` : ""}
-                </span>
-              </div>
-            ) : null}
-            {blog.primaryCategorySlug ? (
-              <Link
-                href={`/topics/${blog.primaryCategorySlug}`}
-                className="rounded-full border border-[#C9A84C]/20 bg-[#C9A84C]/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#E9D29B] transition-colors hover:bg-[#C9A84C]/15"
-              >
-                Explore Topic Hub
-              </Link>
-            ) : null}
-          </div>
-
-          {blog.tags.length ? (
-            <div className="mt-7 flex flex-wrap gap-2">
-              {blog.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs tracking-wide text-[#D4DCE5]"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          ) : null}
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.97 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.75, ease: "easeOut" }}
-          className="relative"
-        >
-          <div className="absolute -left-6 -top-6 h-32 w-32 rounded-full bg-[#C9A84C]/10 blur-3xl" />
-          <div className="absolute -bottom-8 -right-8 h-36 w-36 rounded-full bg-[#0D1B3E]/20 blur-3xl" />
-
-          <div className="relative overflow-hidden rounded-[2rem] border border-[#D8CCB5] bg-[#EFE7D8] shadow-[0_30px_70px_rgba(8,15,25,0.2)]">
-            <div className="absolute inset-0 bg-gradient-to-t from-[#08101D]/65 via-transparent to-transparent" />
-
-            <Image
-              src={heroImage}
-              alt={heroAlt}
-              width={1200}
-              height={900}
-              className="h-[420px] w-full object-cover object-center"
-              priority
+          {/* 3. Trust Strip & Tags (Bottom on Mobile, Left on Desktop under Meta) */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            className="order-3 flex w-full flex-col items-center lg:col-span-7 lg:col-start-1 lg:row-start-2 lg:items-start"
+          >
+            <BlogTrustStrip
+              blog={blog}
+              publishedAt={displayPublishedAt}
+              updatedAt={displayUpdatedAt}
             />
 
-            <div className="absolute inset-x-0 bottom-0 p-6">
-              <div className="rounded-[24px] border border-white/10 bg-[#07111F]/78 p-5 backdrop-blur-md">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#D9C89A]">
-                  Why this page matters
-                </p>
-                <p className="mt-2 text-sm leading-7 text-[#D6DEE8]">
-                  This guide is designed as a structured starting point for
-                  students comparing options, understanding key requirements,
-                  and moving deeper into the LNAT topic hub ecosystem.
-                </p>
+            {blog.tags && blog.tags.length > 0 && (
+              <div className="mt-5 flex flex-wrap justify-center gap-2 lg:justify-start">
+                {blog.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-lg border border-black/[0.04] bg-white px-3 py-1.5 text-[11px] font-medium text-slate-500 shadow-sm"
+                  >
+                    #{tag}
+                  </span>
+                ))}
               </div>
-            </div>
-          </div>
-        </motion.div>
+            )}
+          </motion.div>
+        </div>
+
+        {/* TL;DR Section */}
+        <BlogTldrSection tldr={blog.tldr} keyTakeaways={blog.keyTakeaways} />
       </div>
-    </section>
+    </header>
   );
 }

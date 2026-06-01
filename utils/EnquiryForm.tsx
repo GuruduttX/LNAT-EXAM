@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, FormEvent, useRef } from "react";
-import { motion, AnimatePresence, Variants, Variant } from "framer-motion";
+import { useState, useEffect, FormEvent } from "react";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import { X, ArrowRight } from "lucide-react";
 
 interface EnquiryPopupFormProps {

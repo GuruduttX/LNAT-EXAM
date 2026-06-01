@@ -10,6 +10,12 @@ export const faqCategories = [
   "LNAT Preparation",
   "University Specifics",
   "Logistics & Scoring",
+  "LNAT basics",
+  "registration and dates",
+  "exam format",
+  "essay section",
+  "universities and admissions",
+  "fees / logistics",
 ];
 
 export const faqData: FAQItem[] = [

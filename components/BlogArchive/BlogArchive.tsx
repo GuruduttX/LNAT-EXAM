@@ -8,7 +8,7 @@ import { IBlog } from "@/types/backend.types";
 
 import BlogArchiveHeader from "./BlogArchiveHeader";
 import BlogFilters from "./BlogFilters";
-import BlogGrid from "./BlogGrid";
+import BlogGrid from "./BlogArchiveGrid";
 import BlogPagination from "./BlogPagination";
 import MobilePagination from "./MobilePagination";
 

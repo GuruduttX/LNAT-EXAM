@@ -1,249 +1,251 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { useRef, useState } from "react";
+import { motion, useInView, type Variants } from "framer-motion";
 import {
   ArrowRight,
   Download,
   Calendar,
   FileText,
   CheckCircle2,
-  Shield,
+  ShieldCheck,
 } from "lucide-react";
+import EnquiryPopupForm from "@/utils/EnquiryForm";
 
-// --- Animation Variants ---
+// Design System: Module-level variants
 const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
+  hidden: { opacity: 0, y: 22 },
+  visible: (delay: number = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
-  },
+    transition: {
+      duration: 0.65,
+      delay,
+      ease: [0.22, 1, 0.36, 1] as const,
+    },
+  }),
 };
 
-const staggerContainer: Variants = {
-  hidden: { opacity: 0 },
+const stagger: Variants = {
+  hidden: {},
   visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15, delayChildren: 0.2 },
+    transition: { staggerChildren: 0.09, delayChildren: 0.05 },
   },
 };
 
 const float: Variants = {
-  animate: {
-    y: [0, -10, 0],
+  animate: (delay: number = 0) => ({
+    y: [0, -8, 0],
     transition: {
-      duration: 6,
+      duration: 4.5,
       repeat: Infinity,
       ease: "easeInOut",
+      delay,
     },
-  },
-};
-
-const floatDelayed: Variants = {
-  animate: {
-    y: [0, 10, 0],
-    transition: {
-      duration: 7,
-      repeat: Infinity,
-      ease: "easeInOut",
-      delay: 1,
-    },
-  },
+  }),
 };
 
 export default function ApplyHero() {
-  return (
-    <section className="relative bg-[#0a0f1c] pt-28 pb-20 md:pt-36 md:pb-28 overflow-hidden px-6 lg:px-12 border-b border-white/5">
-      {/* Ambient Atmospheric Background */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Soft left gold glow */}
-        <div className="absolute top-1/4 -left-64 w-[600px] h-[600px] bg-[#c5a059] opacity-[0.04] blur-[120px] rounded-full" />
-        {/* Deep right slate/navy glow */}
-        <div className="absolute bottom-0 right-0 w-[800px] h-[800px] bg-[#1e293b] opacity-[0.2] blur-[150px] rounded-full" />
-      </div>
+  const [isOpen, setIsOpen] = useState(false);
+  const ref = useRef<HTMLElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-8% 0px" });
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-12 items-center">
-          {/* ========================================== */}
-          {/* LEFT CONTENT: Editorial & Typography       */}
-          {/* ========================================== */}
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            animate="visible"
-            className="lg:col-span-5 flex flex-col justify-center text-center lg:text-left"
-          >
-            {/* Premium Badge */}
+  return (
+    <>
+    <EnquiryPopupForm isOpen={isOpen} onClose={()=> setIsOpen(false)}/>
+      <section
+        ref={ref}
+        className="relative w-full overflow-hidden bg-[#F7F3EC] px-4 py-14 sm:px-6 md:py-20 lg:px-8 border-b border-black/[0.07]"
+      >
+        {/* Design System: Light theme dot grid texture */}
+        <div
+          className="absolute inset-0 pointer-events-none
+        [background-image:radial-gradient(circle,rgba(13,27,62,0.04)_1px,transparent_1px)]
+        [background-size:26px_26px]"
+        />
+
+        {/* Subtle ambient light glow (Gold) */}
+        <div
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(ellipse, rgba(201,168,76,0.06) 0%, transparent 70%)",
+          }}
+        />
+
+        <div className="relative z-10 mx-auto max-w-[1280px]">
+          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
+            {/* ========================================== */}
+            {/* LEFT CONTENT: Editorial & Typography       */}
+            {/* ========================================== */}
             <motion.div
-              variants={fadeUp}
-              className="flex justify-center lg:justify-start mb-8"
+              variants={stagger}
+              initial="hidden"
+              animate={inView ? "visible" : "hidden"}
+              className="flex flex-col text-center lg:text-left"
             >
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#c5a059]/30 bg-[#c5a059]/5 backdrop-blur-sm">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#c5a059] animate-pulse" />
-                <span className="text-[#c5a059] text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase">
+              {/* Design System Pill (Light Theme) */}
+              <motion.div
+                variants={fadeUp}
+                className="mb-6 flex justify-center lg:justify-start"
+              >
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#C9A84C]/[0.08] border border-[#C9A84C]/20 px-3 py-1.5 text-[10px] font-bold tracking-[0.12em] uppercase text-[#C9A84C]">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#C9A84C] animate-pulse" />
                   Admissions Protocol
                 </span>
-              </div>
-            </motion.div>
+              </motion.div>
 
-            {/* Cinematic Heading */}
-            <motion.h1
-              variants={fadeUp}
-              className="text-4xl md:text-5xl lg:text-[3.5rem] font-serif text-white mb-6 leading-[1.1] tracking-tight"
-            >
-              Navigate Your <br className="hidden lg:block" />
-              <span className="text-white/50 italic font-light">
-                Application Journey.
-              </span>
-            </motion.h1>
+              {/* Cinematic Heading (Navy + Gold) */}
+              <motion.h1
+                variants={fadeUp}
+                className="text-[clamp(1.9rem,4.8vw,3.8rem)] font-extrabold leading-tight tracking-tight text-[#0D1B3E] mb-5"
+              >
+                Navigate Your <br className="hidden lg:block" />
+                <span className="bg-linear-to-r from-[#C9A84C] to-[#E8C96A] bg-clip-text text-transparent">
+                  Application Journey.
+                </span>
+              </motion.h1>
 
-            {/* Supporting Text */}
-            <motion.p
-              variants={fadeUp}
-              className="text-base md:text-lg text-slate-400 font-light leading-relaxed mb-10 max-w-xl mx-auto lg:mx-0"
-            >
-              A structured, step-by-step framework to demystify the UCAS
-              application, secure your LNAT examination date, and prepare for
-              the rigors of elite UK law admissions.
-            </motion.p>
+              {/* Supporting Text */}
+              <motion.p
+                variants={fadeUp}
+                className="text-[14px] text-slate-500 leading-relaxed mb-8 max-w-xl mx-auto lg:mx-0"
+              >
+                A structured, step-by-step framework to demystify the UCAS
+                application, secure your LNAT examination date, and prepare for
+                the rigors of elite UK law admissions.
+              </motion.p>
 
-            {/* CTA Buttons */}
-            <motion.div
-              variants={fadeUp}
-              className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-10"
-            >
-              <button className="w-full sm:w-auto group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#FDFBF7] text-[#0a0f1c] rounded-full overflow-hidden transition-all duration-500 hover:bg-white hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(253,251,247,0.15)]">
-                <span className="relative z-10 text-sm font-semibold tracking-wide">
+              {/* CTA Buttons */}
+              <motion.div
+                variants={fadeUp}
+                className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-10"
+              >
+                {/* Primary Action */}
+                <button
+                  className="group inline-flex w-full items-center justify-center gap-2.5 rounded-xl px-6 py-3.5 text-[14px] font-bold text-[#0D1B3E] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] sm:w-auto"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, #C9A84C 0%, #E8C96A 60%, #C9A84C 100%)",
+                    boxShadow: "0 4px 20px rgba(201,168,76,0.35)",
+                  }}
+                  onClick={()=> setIsOpen(true)}
+                >
                   Talk to a Mentor
-                </span>
-                <ArrowRight
-                  size={16}
-                  className="relative z-10 group-hover:translate-x-1 transition-transform duration-300"
-                />
-              </button>
+                  <ArrowRight
+                    size={14}
+                    className="transition-transform duration-200 group-hover:translate-x-1"
+                  />
+                </button>
 
-              <button className="w-full sm:w-auto group inline-flex items-center justify-center gap-3 px-8 py-4 bg-transparent border border-white/20 text-white rounded-full transition-all duration-300 hover:bg-white/5 hover:border-white/40">
-                <span className="text-sm font-medium tracking-wide">
+                {/* Secondary Action (Light Card Style) */}
+                <button className="group inline-flex w-full items-center justify-center gap-2.5 rounded-xl border border-black/[0.07] bg-white px-6 py-3.5 text-[14px] font-bold text-[#0D1B3E] shadow-sm transition-all duration-300 hover:bg-slate-50 hover:shadow-md sm:w-auto">
+                  <Download size={14} className="text-[#C9A84C]" />
                   Download Guide
+                </button>
+              </motion.div>
+
+              {/* Trust Indicator */}
+              <motion.div
+                variants={fadeUp}
+                className="flex items-center justify-center lg:justify-start gap-2 pt-6 border-t border-black/[0.05] text-[11px] font-semibold text-slate-400"
+              >
+                <ShieldCheck size={14} className="text-[#C9A84C]" />
+                <span className="uppercase tracking-wider">
+                  Trusted UK Law Admissions Guidance
                 </span>
-                <Download
-                  size={16}
-                  className="text-white/70 group-hover:text-white transition-colors"
-                />
-              </button>
+              </motion.div>
             </motion.div>
 
-            {/* Trust Indicator */}
+            {/* ========================================== */}
+            {/* RIGHT VISUAL: Light Theme Composition      */}
+            {/* ========================================== */}
             <motion.div
-              variants={fadeUp}
-              className="flex items-center justify-center lg:justify-start gap-3 pt-6 border-t border-white/10"
-            >
-              <Shield size={16} className="text-[#c5a059]" />
-              <span className="text-xs text-slate-400 tracking-wide uppercase font-medium">
-                Trusted UK Law Admissions Guidance
-              </span>
-            </motion.div>
-          </motion.div>
-
-          {/* ========================================== */}
-          {/* RIGHT VISUAL: Cinematic Composition        */}
-          {/* ========================================== */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-            className="lg:col-span-7 relative h-[400px] sm:h-[500px] lg:h-[600px] w-full flex items-center justify-center"
-          >
-            {/* Main Image Container */}
-            <div className="relative w-full max-w-[500px] lg:max-w-none aspect-[4/5] lg:aspect-[4/3] rounded-3xl overflow-hidden border border-white/10 shadow-[0_0_60px_rgba(0,0,0,0.5)]">
-              {/* Overlay Gradients for Cinematic Feel */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-[#0a0f1c]/90 via-[#0a0f1c]/40 to-transparent z-10" />
-              <div className="absolute inset-0 bg-[#c5a059]/10 mix-blend-overlay z-10" />
-
-              {/* High-Quality Institutional Image */}
-              <img
-                src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=2070&auto=format&fit=crop"
-                alt="Elite University Architecture"
-                className="w-full h-full object-cover scale-105 transform hover:scale-110 transition-transform duration-[20s] ease-out"
-              />
-
-              {/* Decorative Frame Line */}
-              <div className="absolute inset-4 border border-[#c5a059]/20 rounded-2xl z-20 pointer-events-none" />
-            </div>
-
-            {/* Floating UI Card 1: UCAS */}
-            <motion.div
-              variants={float}
-              animate="animate"
-              className="absolute top-[5%] lg:top-[10%] right-0 lg:-right-6 z-30 w-56 p-4 rounded-2xl bg-[#1e293b]/60 backdrop-blur-xl border border-white/10 shadow-2xl"
-            >
-              <div className="flex items-start gap-4">
-                <div className="p-2 rounded-lg bg-[#c5a059]/10 border border-[#c5a059]/20">
-                  <FileText size={18} className="text-[#c5a059]" />
-                </div>
-                <div>
-                  <p className="text-[10px] text-slate-400 uppercase tracking-wider mb-1">
-                    Step 01
-                  </p>
-                  <p className="text-sm text-white font-medium">
-                    UCAS Application
-                  </p>
-                </div>
-              </div>
-              <div className="mt-4 flex items-center gap-2">
-                <div className="h-1 flex-grow bg-white/10 rounded-full overflow-hidden">
-                  <div className="h-full w-full bg-[#c5a059] rounded-full" />
-                </div>
-                <CheckCircle2 size={14} className="text-[#c5a059]" />
-              </div>
-            </motion.div>
-
-            {/* Floating UI Card 2: LNAT Booking */}
-            <motion.div
-              variants={floatDelayed}
-              animate="animate"
-              className="absolute bottom-[10%] lg:bottom-[15%] left-0 lg:-left-10 z-30 w-64 p-5 rounded-2xl bg-[#0F172A]/80 backdrop-blur-xl border border-white/10 shadow-2xl"
-            >
-              <div className="flex items-center gap-4 mb-4">
-                <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-white">
-                  <Calendar size={20} strokeWidth={1.5} />
-                </div>
-                <div>
-                  <h3 className="text-white text-sm font-medium">
-                    LNAT Registration
-                  </h3>
-                  <p className="text-slate-400 text-xs mt-0.5">
-                    Secure your test date
-                  </p>
-                </div>
-              </div>
-              <div className="pt-4 border-t border-white/10 flex justify-between items-center">
-                <span className="text-xs text-slate-400">Status</span>
-                <span className="text-xs font-medium text-[#c5a059] bg-[#c5a059]/10 px-2 py-1 rounded-md">
-                  Action Required
-                </span>
-              </div>
-            </motion.div>
-
-            {/* Subtle floating decorative dots */}
-            <motion.div
-              animate={{ opacity: [0.3, 0.7, 0.3] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute top-1/2 -right-12 w-2 h-2 rounded-full bg-[#c5a059] blur-[2px] hidden lg:block"
-            />
-            <motion.div
-              animate={{ opacity: [0.2, 0.6, 0.2] }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={
+                inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }
+              }
               transition={{
-                duration: 5,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 1,
+                duration: 0.8,
+                ease: [0.22, 1, 0.36, 1],
+                delay: 0.2,
               }}
-              className="absolute bottom-1/4 -left-16 w-3 h-3 rounded-full bg-white blur-[2px] hidden lg:block"
-            />
-          </motion.div>
+              className="relative h-100 sm:h-125 lg:h-137.5 w-full flex items-center justify-center lg:justify-end"
+            >
+              {/* Main Image Container */}
+              <div className="relative w-full max-w-120 aspect-4/5 lg:aspect-4/5 rounded-3xl overflow-hidden border border-black/[0.07] shadow-[0_16px_40px_rgba(0,0,0,0.08)]">
+                <img
+                  src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&q=80&auto=format&fit=crop"
+                  alt="Elite University Architecture"
+                  draggable={false}
+                  className="w-full h-full object-cover object-center scale-105 transform hover:scale-110 transition-transform duration-[20s] ease-out"
+                />
+
+                {/* Light Theme subtle dark gradient at bottom for contrast */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent z-10 pointer-events-none" />
+              </div>
+
+              {/* Floating UI Card 1: UCAS (Light Glassmorphism) */}
+              <motion.div
+                variants={float}
+                animate="animate"
+                custom={0}
+                className="absolute top-[8%] lg:top-[12%] right-2 lg:-right-6 z-30 w-56 p-4 rounded-2xl bg-white/85 backdrop-blur-xl border border-black/[0.07] shadow-[0_16px_40px_rgba(13,27,62,0.08)]"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#C9A84C]/[0.08] text-[#C9A84C]">
+                    <FileText size={18} strokeWidth={2} />
+                  </div>
+                  <div>
+                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.18em] mb-0.5">
+                      Step 01
+                    </p>
+                    <p className="text-[13px] text-[#0D1B3E] font-bold leading-tight">
+                      UCAS Application
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-4 flex items-center gap-3">
+                  <div className="h-1 flex-grow bg-slate-100 rounded-full overflow-hidden">
+                    <div className="h-full w-full bg-gradient-to-r from-[#C9A84C] to-[#E8C96A] rounded-full" />
+                  </div>
+                  <CheckCircle2 size={14} className="text-[#C9A84C]" />
+                </div>
+              </motion.div>
+
+              {/* Floating UI Card 2: LNAT Booking (Light Glassmorphism) */}
+              <motion.div
+                variants={float}
+                animate="animate"
+                custom={1}
+                className="absolute bottom-[10%] lg:bottom-[15%] left-2 lg:-left-8 z-30 w-60 p-4 rounded-2xl bg-white/90 backdrop-blur-xl border border-black/[0.07] shadow-[0_16px_40px_rgba(13,27,62,0.08)]"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-black/[0.05] bg-[#F7F3EC] text-[#0D1B3E]">
+                    <Calendar size={18} strokeWidth={1.5} />
+                  </div>
+                  <div>
+                    <h3 className="text-[#0D1B3E] text-[13px] font-bold">
+                      LNAT Registration
+                    </h3>
+                    <p className="text-slate-500 text-[11px] mt-0.5">
+                      Secure your test date
+                    </p>
+                  </div>
+                </div>
+                <div className="pt-3 border-t border-black/[0.05] flex justify-between items-center">
+                  <span className="text-[11px] text-slate-500 font-medium">
+                    Status
+                  </span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#C9A84C] bg-[#C9A84C]/10 px-2.5 py-1 rounded-md">
+                    Action Required
+                  </span>
+                </div>
+              </motion.div>
+            </motion.div>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }

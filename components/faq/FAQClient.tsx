@@ -9,7 +9,6 @@ import { motion } from "framer-motion";
 export default function FAQClient() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<string>("All");
-  const [openIndex, setOpenIndex] = useState<string | null>(null);
 
   // Filter logic based on both search and category
   const filteredFAQs = useMemo(() => {
@@ -25,9 +24,23 @@ export default function FAQClient() {
     });
   }, [searchQuery, activeCategory]);
 
-  const handleToggle = (id: string) => {
-    setOpenIndex(openIndex === id ? null : id);
-  };
+  const accordionGroups = useMemo(() => {
+    const categories = Array.from(
+      new Set(filteredFAQs.map((faq) => faq.category)),
+    );
+
+    return categories.map((category) => ({
+      category,
+      faqs: filteredFAQs
+        .filter((faq) => faq.category === category)
+        .map((faq) => ({
+          _id: faq.id,
+          category: faq.category,
+          question: faq.question,
+          answerHtml: faq.answer,
+        })),
+    }));
+  }, [filteredFAQs]);
 
   return (
     <section className="py-24 bg-[#fdfbf7] px-6">
@@ -91,13 +104,11 @@ export default function FAQClient() {
                 transition={{ duration: 0.5 }}
                 className="border-t border-gray-200"
               >
-                {filteredFAQs.map((faq) => (
+                {accordionGroups.map(({ category, faqs }) => (
                   <FAQAccordion
-                    key={faq.id}
-                    question={faq.question}
-                    answer={faq.answer}
-                    isOpen={openIndex === faq.id}
-                    onClick={() => handleToggle(faq.id)}
+                    key={category}
+                    category={category}
+                    faqs={faqs}
                   />
                 ))}
               </motion.div>

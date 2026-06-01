@@ -204,7 +204,7 @@ export default function FAQPreview() {
                           </div>
 
                           <h3
-                            className={`text-lg md:text-[1.45rem] font-serif leading-snug tracking-[-0.02em] transition-colors duration-300 ${
+                            className={`text-sm md:text-[1.45rem] font-serif leading-snug tracking-[-0.02em] transition-colors duration-300 ${
                               isOpen
                                 ? "text-[#0D1B3E]"
                                 : "text-[#132445] group-hover:text-[#0D1B3E]"

@@ -19,7 +19,7 @@ export const uploadAssetService = async (file: File, folder: string) => {
       .upload_stream(
         {
           folder,
-          resource_type: isPdf ? "raw" : "image",
+          resource_type: "image",
           use_filename: true,
           unique_filename: true,
         },

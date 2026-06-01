@@ -1,455 +1,565 @@
 "use client";
 
-import React from "react";
-import { motion, TargetAndTransition, Variants } from "framer-motion";
-import { University } from "@/data/universities";
+import { useEffect, useMemo, useRef, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import {
-  MapPin,
-  Award,
-  Scale,
+  motion,
+  AnimatePresence,
+  useInView,
+  type Variants,
+} from "framer-motion";
+import {
   ArrowRight,
-  BookOpen,
-  Briefcase,
   ChevronRight,
-  ShieldAlert,
+  GraduationCap,
+  Landmark,
+  MapPin,
+  ShieldCheck,
+  Sparkles,
+  Clock,
+  Star,
 } from "lucide-react";
 
-// --------------------------------------------------
-// TYPES (As specified)
-// --------------------------------------------------
-export interface UniversityHerouniversity {
-  basicInfo: {
-    name: string;
-    logo: string;
-    location: string;
-    established: string;
-  };
-  academics: {
-    globalRanking: string;
-    ukLawRanking: string;
-    teachingStyle: string;
-  };
-  overview: {
-    shortIntro: string;
-    whyChoose: string[];
-  };
-  lnat: {
-    required: boolean;
-    averageScore: string;
-    considersEssay: boolean;
-  };
-  admissions: {
-    competitiveness: string;
-    interviewRequired: boolean;
-  };
-  finance: {
-    tuitionFee: string;
-  };
-  studentLife: {
-    internationalStudentPercentage: string;
-    societies: string[];
-    cityType: string;
-  };
-  timeline: {
-    applicationOpens: string;
-    lnatDeadline: string;
-    finalDeadline: string;
-    interviewPeriod?: string;
-  };
-  career: {
-    topRecruiters: string[];
-    averageGraduateSalary: string;
-  };
-  ui: {
-    eliteUniversity: boolean;
-    highlightTag: string;
-  };
-  media: {
-    heroImage: string;
-    gallery: {
-      campus: string[];
-      academics: string[];
-      studentLife: string[];
-      city: string[];
-    };
-  };
+import { IMediaAsset, IUniversity } from "@/types/backend.types";
+
+// ─────────────────────────────────────────────────────────────
+// Types
+// ─────────────────────────────────────────────────────────────
+interface UniversityHeroProps {
+  university: IUniversity;
 }
 
-// --------------------------------------------------
-// MOCK university (For demonstration)
-// --------------------------------------------------
-const mockuniversity: UniversityHerouniversity = {
-  basicInfo: {
-    name: "University of Oxford",
-    logo: "OX",
-    location: "Oxford, United Kingdom",
-    established: "1096",
-  },
-  academics: {
-    globalRanking: "#1 Globally",
-    ukLawRanking: "#1 UK Law",
-    teachingStyle: "Tutorial Based",
-  },
-  overview: {
-    shortIntro:
-      "Join a legacy of legal excellence. The Faculty of Law is one of the largest in the United Kingdom, offering an intellectually demanding curriculum rooted in the unique tutorial system, forging the world's leading legal minds.",
-    whyChoose: ["World-class faculty", "Unparalleled alumni network"],
-  },
-  lnat: {
-    required: true,
-    averageScore: "29+",
-    considersEssay: true,
-  },
-  admissions: {
-    competitiveness: "Highly Competitive (12%)",
-    interviewRequired: true,
-  },
-  finance: {
-    tuitionFee: "£38,540 / yr (Intl)",
-  },
-  studentLife: {
-    internationalStudentPercentage: "45%",
-    societies: ["Oxford Law Society", "Mooting Society"],
-    cityType: "Historic University City",
-  },
-  timeline: {
-    applicationOpens: "Sept 5",
-    lnatDeadline: "Oct 15",
-    finalDeadline: "Oct 15",
-    interviewPeriod: "December",
-  },
-  career: {
-    topRecruiters: ["Magic Circle", "Silver Circle", "Global Elite"],
-    averageGraduateSalary: "£65,000+",
-  },
-  ui: {
-    eliteUniversity: true,
-    highlightTag: "Russell Group",
-  },
-  media: {
-    heroImage:
-      "https://images.unsplash.com/photo-1513686863615-5e0f769024f9?q=80&w=2000&auto=format&fit=crop",
-    gallery: {
-      campus: [
-        "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=400&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1585255474320-b0da31ab0056?q=80&w=400&auto=format&fit=crop",
-      ],
-      academics: [],
-      studentLife: [],
-      city: [],
-    },
-  },
-};
-
-// --------------------------------------------------
-// ANIMATION VARIANTS
-// --------------------------------------------------
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.2 },
-  },
-};
-
+// ─────────────────────────────────────────────────────────────
+// Motion variants
+// ─────────────────────────────────────────────────────────────
 const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  show: {
+  hidden: { opacity: 0, y: 22 },
+  visible: (delay: number = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
+    transition: {
+      duration: 0.65,
+      delay,
+      ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+    },
+  }),
+};
+
+const stagger: Variants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.08, delayChildren: 0.05 },
   },
 };
 
-const floatAnimation: TargetAndTransition = {
-  y: [0, -8, 0],
-  transition: { duration: 6, repeat: Infinity, ease: "easeInOut" },
+const imageFade: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { duration: 0.9, ease: "easeInOut" },
+  },
+  exit: {
+    opacity: 0,
+    transition: { duration: 0.9, ease: "easeInOut" },
+  },
 };
 
-// --------------------------------------------------
-// MAIN COMPONENT
-// --------------------------------------------------
-export default function UniversityHero({
-  university }: {
-  university: University;
-}) {
+// ─────────────────────────────────────────────────────────────
+// Helpers
+// ─────────────────────────────────────────────────────────────
+function getHeroImages(university: IUniversity): IMediaAsset[] {
+  const imageGroups = [
+    university.hero?.carouselImages,
+    university.gallery?.campusImages,
+    university.gallery?.cityLifeImages,
+    university.gallery?.studentLifeImages,
+    university.gallery?.academicImages,
+  ];
+  const seenUrls = new Set<string>();
+  return imageGroups
+    .flatMap((group) => group || [])
+    .filter((image) => {
+      if (!image.url || seenUrls.has(image.url)) return false;
+      seenUrls.add(image.url);
+      return true;
+    });
+}
+
+function getSpecialSummary(university: IUniversity) {
   return (
-    <section className="relative w-full min-h-screen bg-[#0D1B3E] text-[#F7F3EC] overflow-hidden selection:bg-[#C9A84C] selection:text-[#0D1B3E]">
-      {/* Background Ambient Glow */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-[#C9A84C]/5 blur-[150px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-[#C9A84C]/5 blur-[120px]" />
-      </div>
+    university.directAnswers?.whatIsSpecial ||
+    university.whyBestSummary ||
+    university.excerpt40to60 ||
+    university.shortDescription
+  );
+}
 
-      <div className="max-w-350 mx-auto px-6 py-16 lg:py-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 relative z-10 min-h-[90vh] items-center">
-        {/* MOBILE: VISUAL FIRST | DESKTOP: RIGHT COLUMN */}
-        <div className="order-1 lg:order-2 lg:col-span-7 relative h-125 lg:h-200 w-full rounded-4xl overflow-hidden">
-          {/* Main Cinematic Image */}
-          <motion.div
-            initial={{ scale: 1.05, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
-            className="w-full h-full relative"
+// ─────────────────────────────────────────────────────────────
+// Thumbnail strip — clickable image previews at bottom of panel
+// ─────────────────────────────────────────────────────────────
+function ThumbnailStrip({
+  images,
+  current,
+  onSelect,
+}: {
+  images: IMediaAsset[];
+  current: number;
+  onSelect: (i: number) => void;
+}) {
+  // Show max 5 thumbnails, always centred around current
+  const visible = images.slice(0, 5);
+  return (
+    <div className="flex items-end gap-2">
+      {visible.map((img, i) => {
+        const isActive = i === current;
+        return (
+          <button
+            key={img.url}
+            type="button"
+            onClick={() => onSelect(i)}
+            aria-label={img.alt || `Image ${i + 1}`}
+            className="relative overflow-hidden rounded-xl border-2 transition-all duration-300 shrink-0"
+            style={{
+              width: isActive ? 68 : 52,
+              height: isActive ? 52 : 40,
+              borderColor: isActive ? "#C9A84C" : "rgba(255,255,255,0.25)",
+              boxShadow: isActive ? "0 0 0 2px rgba(201,168,76,0.35)" : "none",
+              opacity: isActive ? 1 : 0.65,
+            }}
           >
-            <div className="absolute inset-0 bg-[#0D1B3E]/30 mix-blend-multiply z-10" />
-            <div className="absolute inset-0 bg-linear-to-t from-[#0D1B3E] via-transparent to-transparent opacity-80 z-10" />
-            <img
-              src={university.media.heroImage}
-              alt={`${university.basicInfo.name} campus`}
-              className="w-full h-full object-cover"
+            <Image
+              src={img.url}
+              alt={img.alt || ""}
+              fill
+              unoptimized
+              sizes="70px"
+              className="object-cover transition-transform duration-500 hover:scale-110"
             />
-          </motion.div>
+            {!isActive && <span className="absolute inset-0 bg-[#0D1B3E]/30" />}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
 
-          {/* Floating Card: LNAT Insight */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 1, duration: 1 }}
-            className="absolute top-8 right-8 z-20"
-          >
-            <motion.div
-              animate={floatAnimation}
-              className="bg-[#0D1B3E]/80 backdrop-blur-md border border-[#C9A84C]/20 p-5 rounded-2xl shadow-2xl max-w-55"
-            >
-              <div className="flex items-center space-x-3 mb-2">
-                <ShieldAlert className="w-5 h-5 text-[#C9A84C]" />
-                <span className="font-serif text-sm tracking-wide text-[#C9A84C] uppercase">
-                  LNAT Crucial
-                </span>
-              </div>
-              <p className="text-xs text-[#F7F3EC]/80 leading-relaxed font-sans">
-                Average successful applicant score is{" "}
-                <strong className="text-[#F7F3EC]">
-                  {university.lnat.averageScore}
-                </strong>
-                . Essay rigorously assessed by tutors.
-              </p>
-            </motion.div>
-          </motion.div>
+// ─────────────────────────────────────────────────────────────
+// Main Component
+// ─────────────────────────────────────────────────────────────
+export default function UniversityHero({ university }: UniversityHeroProps) {
+  const ref = useRef<HTMLElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-6% 0px" });
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-          {/* Floating Card: Career */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 1.2, duration: 1 }}
-            className="absolute bottom-16 left-8 z-20 hidden md:block"
-          >
-            <motion.div
-              animate={{
-                y: [0, 8, 0],
-                transition: {
-                  duration: 7,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                },
-              }}
-              className="bg-[#0D1B3E]/80 backdrop-blur-md border border-[#C9A84C]/20 p-5 rounded-2xl shadow-2xl"
-            >
-              <div className="flex items-center space-x-3 mb-1">
-                <Briefcase className="w-4 h-4 text-[#C9A84C]" />
-                <span className="font-serif text-sm text-[#F7F3EC]">
-                  Top Recruiters
-                </span>
-              </div>
-              <p className="text-xs text-[#F7F3EC]/70 font-sans mt-1">
-                {university.career.topRecruiters.join(" • ")}
-              </p>
-            </motion.div>
-          </motion.div>
+  const images = useMemo(() => getHeroImages(university), [university]);
+  const specialSummary = getSpecialSummary(university);
+  const activeImage = images[currentIndex] ?? images[0];
+  const hasCarouselImages = images.length > 0;
 
-          {/* Small Preview Gallery Stack */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.4, duration: 1 }}
-            className="absolute bottom-8 right-8 z-20 flex space-x-3"
-          >
-            {university.media.gallery.campus.slice(0, 2).map((img, i) => (
-              <div
-                key={i}
-                className="w-16 h-20 rounded-lg overflow-hidden border border-[#F7F3EC]/10 shadow-lg group cursor-pointer"
-              >
-                <img
-                  src={img}
-                  alt="Campus preview"
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-                />
-              </div>
-            ))}
-          </motion.div>
-        </div>
+  const locationLabel =
+    university.locationLabel ||
+    [university.city || university.location, university.country]
+      .filter(Boolean)
+      .join(", ");
 
-        {/* MOBILE: CONTENT BELOW | DESKTOP: LEFT COLUMN */}
+  // Auto-advance carousel every 6s
+  useEffect(() => {
+    if (images.length <= 1) return;
+    const id = window.setInterval(
+      () => setCurrentIndex((p) => (p + 1) % images.length),
+      2000,
+    );
+    return () => window.clearInterval(id);
+  }, [images.length]);
+
+  return (
+    <section
+      ref={ref}
+      className="relative w-full max-w-full overflow-x-hidden bg-[#F7F3EC] text-center md:text-start"
+    >
+      {/* Dot grid */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.03]
+          [background-image:radial-gradient(circle,rgba(13,27,62,0.8)_1px,transparent_1px)]
+          [background-size:26px_26px]"
+        aria-hidden
+      />
+
+      {/* Gold ambient glow top-left */}
+      <div
+        className="pointer-events-none absolute -top-20 -left-20 w-[500px] h-[400px]"
+        style={{
+          background:
+            "radial-gradient(ellipse, rgba(201,168,76,0.07) 0%, transparent 65%)",
+        }}
+        aria-hidden
+      />
+
+      {/* ── Two-column grid ── */}
+      <div
+        className={`relative mx-auto grid w-full max-w-[1280px] grid-cols-1 min-h-[70vh] overflow-hidden ${
+          hasCarouselImages ? "lg:grid-cols-[1fr_1fr]" : "lg:grid-cols-1"
+        }`}
+      >
+        {/* ══════════════════════════════════════════
+            LEFT — text content
+        ══════════════════════════════════════════ */}
         <motion.div
-          variants={staggerContainer}
+          variants={stagger}
           initial="hidden"
-          animate="show"
-          className="order-2 lg:order-1 lg:col-span-5 flex flex-col justify-center space-y-10"
+          animate={inView ? "visible" : "hidden"}
+          className="relative z-20 flex min-w-0 flex-col justify-center
+            px-6 py-12 sm:px-10 lg:px-12 lg:py-16 xl:px-16"
         >
-          {/* 1. Identity & Headers */}
-          <div className="space-y-6">
-            <motion.div
-              variants={fadeUp}
-              className="flex items-center space-x-4 text-xs font-sans uppercase tracking-widest text-[#C9A84C]"
+          {/* Breadcrumb */}
+          <motion.nav
+            variants={fadeUp}
+            aria-label="Breadcrumb"
+            className="mb-8 flex items-center gap-2
+              text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400"
+          >
+            <Link
+              href="/universities"
+              className="transition-colors hover:text-[#C9A84C]"
             >
-              <span className="flex items-center">
-                <MapPin className="w-3 h-3 mr-1" />{" "}
-                {university.basicInfo.location}
+              Universities
+            </Link>
+            <ChevronRight size={11} className="text-slate-300" />
+            <span className="text-[#0D1B3E]">
+              {university.shortName || university.name}
+            </span>
+          </motion.nav>
+
+          {/* Badges row */}
+          <motion.div
+            variants={fadeUp}
+            className="mb-5 flex flex-wrap items-center gap-2"
+          >
+            <span
+              className="inline-flex items-center gap-1.5 rounded-full
+              border border-[#0D1B3E]/10 bg-[#0D1B3E]/[0.05]
+              px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-[#0D1B3E]"
+            >
+              <MapPin size={11} className="text-[#C9A84C]" />
+              {locationLabel}
+            </span>
+
+            <span
+              className="inline-flex items-center gap-1.5 rounded-full
+              border border-[#C9A84C]/25 bg-[#C9A84C]/[0.08]
+              px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-[#8B6914]"
+            >
+              <ShieldCheck size={11} className="text-[#C9A84C]" />
+              LNAT {university.lnatRequirement}
+            </span>
+
+            {university.established && (
+              <span
+                className="inline-flex items-center gap-1.5 rounded-full
+                border border-black/[0.07] bg-white
+                px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500"
+              >
+                <Clock size={11} className="text-slate-400" />
+                {university.established}
               </span>
-              <span className="w-1 h-1 bg-[#C9A84C]/50 rounded-full" />
-              <span>Est. {university.basicInfo.established}</span>
-            </motion.div>
+            )}
+          </motion.div>
 
-            <motion.h1
-              variants={fadeUp}
-              className="text-5xl lg:text-7xl font-serif leading-[1.1] tracking-tight"
-            >
-              {university.basicInfo.name}
-            </motion.h1>
-
-            {/* 2. Prestige Tags */}
-            <motion.div variants={fadeUp} className="flex flex-wrap gap-3">
-              <Badge text={university.ui.highlightTag} gold />
-              {university.lnat.required && <Badge text="LNAT Required" />}
-              <Badge text={university.academics.teachingStyle} />
-              {university.ui.eliteUniversity && (
-                <Badge text="Elite Institution" />
-              )}
-            </motion.div>
-          </div>
-
-          {/* 4. Editorial Description */}
+          {/* Eyebrow label */}
           <motion.p
             variants={fadeUp}
-            className="text-lg text-[#F7F3EC]/80 font-serif leading-relaxed pr-4"
+            className="mb-4 flex items-center gap-3
+              text-[10px] font-bold uppercase tracking-[0.2em] text-[#C9A84C]"
           >
-            {university.overview.shortIntro}
+            <span className="h-px w-8 bg-[#C9A84C]/40" />
+            {university.hero?.eyebrow || "University Guide"}
           </motion.p>
 
-          {/* 3. Key Admissions Stats Grid */}
-          <motion.div variants={fadeUp} className="grid grid-cols-2 gap-4">
-            <StatCard
-              label="Law Ranking"
-              value={university.academics.ukLawRanking}
-              icon={<Award className="w-4 h-4" />}
-            />
-            <StatCard
-              label="Acceptance Rate"
-              value={
-                university.admissions.competitiveness.match(
-                  /\(([^)]+)\)/,
-                )?.[1] || university.admissions.competitiveness
-              }
-              icon={<Scale className="w-4 h-4" />}
-            />
-            <StatCard
-              label="Avg LNAT"
-              value={university.lnat.averageScore}
-              icon={<BookOpen className="w-4 h-4" />}
-            />
-            <StatCard
-              label="Intl Students"
-              value={university.studentLife.internationalStudentPercentage}
-              icon={<MapPin className="w-4 h-4" />}
-            />
-          </motion.div>
+          {/* H1 */}
+          <motion.h1
+            variants={fadeUp}
+            className="font-extrabold leading-[1.12] tracking-tight text-[#0D1B3E]
+              text-[clamp(2rem,4vw,3.2rem)] max-w-xl mb-5"
+          >
+            {university.hero?.headline || university.name}
+          </motion.h1>
 
-          {/* 6. Mini Timeline */}
+          {/* Subheadline */}
+          <motion.p
+            variants={fadeUp}
+            className="max-w-lg text-[14px] leading-[1.85] text-slate-500 mb-6"
+          >
+            {university.hero?.subheadline || university.shortDescription}
+          </motion.p>
+
+          {/* "Why special" callout */}
+          {specialSummary && (
+            <motion.div
+              variants={fadeUp}
+              className="mb-6 max-w-lg rounded-2xl border border-[#C9A84C]/25
+                bg-[#C9A84C]/[0.06] p-4"
+            >
+              <div
+                className="mb-1.5 flex items-center gap-2
+                text-[9px] font-bold uppercase tracking-[0.18em] text-[#8B6914]"
+              >
+                <Sparkles size={12} />
+                Why this university stands out
+              </div>
+              <p className="text-[13px] leading-relaxed text-slate-700">
+                {specialSummary}
+              </p>
+            </motion.div>
+          )}
+
+          
+
+          {/* CTAs */}
           <motion.div
             variants={fadeUp}
-            className="py-4 border-y border-[#F7F3EC]/10"
+            className="flex flex-col gap-3 sm:flex-row mb-8"
           >
-            <div className="flex items-center justify-between text-xs font-sans tracking-wider text-[#F7F3EC]/70 uppercase">
-              <TimelineStep
-                date={university.timeline.applicationOpens}
-                label="UCAS"
+            <Link
+              href={university.hero?.primaryCTA?.href || "#admissions"}
+              className="group inline-flex items-center justify-center gap-2.5
+                rounded-xl px-6 py-3 text-sm font-bold text-[#0D1B3E]
+                transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+              style={{
+                background:
+                  "linear-gradient(135deg, #C9A84C 0%, #E8C96A 60%, #C9A84C 100%)",
+                boxShadow: "0 4px 20px rgba(201,168,76,0.4)",
+              }}
+            >
+              {university.hero?.primaryCTA?.label || "Review Admissions Fit"}
+              <ArrowRight
+                size={14}
+                className="transition-transform duration-200 group-hover:translate-x-1"
               />
-              <ArrowRight className="w-3 h-3 text-[#C9A84C]" />
-              <TimelineStep
-                date={university.timeline.lnatDeadline}
-                label="LNAT"
-              />
-              <ArrowRight className="w-3 h-3 text-[#C9A84C]" />
-              <TimelineStep
-                date={university.timeline.finalDeadline}
-                label="Deadline"
-              />
-              {university.timeline.interviewPeriod && (
-                <>
-                  <ArrowRight className="w-3 h-3 text-[#C9A84C]" />
-                  <TimelineStep
-                    date={university.timeline.interviewPeriod}
-                    label="Interview"
-                  />
-                </>
-              )}
-            </div>
+            </Link>
+
+            <Link
+              href={university.hero?.secondaryCTA?.href || "/universities"}
+              className="inline-flex items-center justify-center gap-2.5
+                rounded-xl border border-[#0D1B3E]/12 bg-[#0D1B3E]/[0.04]
+                px-6 py-3 text-sm font-bold text-[#0D1B3E]
+                transition-all duration-300 hover:bg-[#0D1B3E]/[0.09]"
+            >
+              {university.hero?.secondaryCTA?.label || "Compare Universities"}
+            </Link>
           </motion.div>
 
-          {/* 5. CTA Buttons */}
+          {/* Footer meta */}
           <motion.div
             variants={fadeUp}
-            className="flex flex-col sm:flex-row gap-4 pt-2"
+            className="flex flex-wrap gap-4 text-[12px] text-slate-400 font-medium"
           >
-            <button className="group flex items-center justify-center space-x-2 bg-[#C9A84C] text-[#0D1B3E] px-8 py-4 rounded-sm font-sans font-medium tracking-wide transition-all hover:bg-[#D4B55E]">
-              <span>Explore Admissions</span>
-              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </button>
-            <button className="flex items-center justify-center px-8 py-4 rounded-sm font-sans font-medium tracking-wide border border-[#C9A84C]/30 text-[#C9A84C] hover:bg-[#C9A84C]/10 transition-colors">
-              LNAT Requirements
-            </button>
+            <span className="inline-flex items-center gap-1.5">
+              <Landmark size={13} className="text-[#C9A84C]" />
+              {university.country}
+            </span>
+            {university.courseDuration && (
+              <span className="inline-flex items-center gap-1.5">
+                <GraduationCap size={13} className="text-[#C9A84C]" />
+                {university.courseDuration}
+              </span>
+            )}
+            {university.globalRanking && (
+              <span className="inline-flex items-center gap-1.5">
+                <Star size={13} className="text-[#C9A84C]" />
+                {university.globalRanking} globally
+              </span>
+            )}
           </motion.div>
         </motion.div>
+
+        {/* ══════════════════════════════════════════
+            RIGHT — image carousel panel
+        ══════════════════════════════════════════ */}
+        {hasCarouselImages && activeImage ? (
+          <motion.div
+            initial={{ opacity: 0, x: 32 }}
+            animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: 32 }}
+            transition={{
+              duration: 0.8,
+              ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+              delay: 0.12,
+            }}
+            className="relative hidden min-w-0 overflow-hidden bg-[#F7F3EC] lg:mt-0 lg:block lg:h-[600px] lg:rounded-none"
+            style={{
+              boxShadow:
+                "inset 0 0 0 1px rgba(201,168,76,0.12), -20px 0 60px rgba(0,0,0,0.12)",
+            }}
+          >
+          {/* ── Main cycling image ── */}
+          <AnimatePresence mode="sync">
+            <motion.div
+              key={`img-${currentIndex}`}
+              variants={imageFade}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="absolute inset-0"
+            >
+              <Image
+                src={activeImage.url}
+                alt={activeImage.alt || university.name}
+                fill
+                priority
+                unoptimized
+                draggable={false}
+                sizes="(min-width: 1024px) 640px, 100vw"
+                className="object-cover object-center"
+              />
+            </motion.div>
+          </AnimatePresence>
+
+          {/* ── Cinematic overlays ── */}
+          {/* Bottom gradient — gives depth for thumbnails + dots */}
+          <div
+            className="pointer-events-none absolute inset-0 z-10"
+            style={{
+              background:
+                "linear-gradient(to top, rgba(6,10,22,0.88) 0%, rgba(6,10,22,0.3) 35%, transparent 65%)",
+            }}
+          />
+          {/* Top subtle vignette */}
+          <div
+            className="pointer-events-none absolute inset-x-0 top-0 z-10 h-24"
+            style={{
+              background:
+                "linear-gradient(to bottom, rgba(6,10,22,0.35) 0%, transparent 100%)",
+            }}
+          />
+
+          {/* ── Gold top accent line ── */}
+          <div
+            className="absolute top-0 left-0 right-0 h-[3px] z-20"
+            style={{
+              background:
+                "linear-gradient(90deg, transparent 0%, #C9A84C 30%, #E8C96A 50%, #C9A84C 70%, transparent 100%)",
+            }}
+          />
+
+          {/* ── University name overlay — bottom left ── */}
+          <div className="absolute bottom-0 left-0 right-0 z-20 p-6">
+            <div className="flex items-end justify-between gap-4">
+              {/* Name + location */}
+              <div className="flex-1 min-w-0">
+                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#C9A84C] mb-1">
+                  {university.hero?.eyebrow || "University Overview"}
+                </p>
+                <h2 className="text-white font-extrabold text-xl leading-tight truncate">
+                  {university.shortName || university.name}
+                </h2>
+                <div className="flex items-center gap-1.5 mt-1">
+                  <MapPin size={11} className="text-white/50 shrink-0" />
+                  <span className="text-[11px] text-white/55 font-medium">
+                    {locationLabel}
+                  </span>
+                </div>
+              </div>
+
+              {/* Thumbnail strip */}
+              {images.length > 1 && (
+                <div className="shrink-0">
+                  <ThumbnailStrip
+                    images={images}
+                    current={currentIndex}
+                    onSelect={setCurrentIndex}
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Dot indicators */}
+            {images.length > 1 && (
+              <div className="flex items-center gap-1.5 mt-4">
+                {images.map((img, i) => (
+                  <button
+                    key={`${img.url}-dot-${i}`}
+                    type="button"
+                    onClick={() => setCurrentIndex(i)}
+                    aria-label={`Image ${i + 1}`}
+                    className="rounded-full transition-all duration-300"
+                    style={{
+                      width: i === currentIndex ? 28 : 8,
+                      height: 4,
+                      background:
+                        i === currentIndex
+                          ? "#C9A84C"
+                          : "rgba(255,255,255,0.35)",
+                    }}
+                  />
+                ))}
+                <span className="ml-auto text-[10px] text-white/35 font-medium tabular-nums">
+                  {currentIndex + 1} / {images.length}
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* ── Floating LNAT score badge ── */}
+          {university.admissions?.targetLNATScore && (
+            <motion.div
+              initial={{ opacity: 0, y: 14, scale: 0.94 }}
+              animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
+              transition={{
+                duration: 0.6,
+                delay: 0.7,
+                ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+              }}
+              className="absolute top-6 right-6 z-20 rounded-2xl p-3.5"
+              style={{
+                background: "rgba(13,27,62,0.75)",
+                backdropFilter: "blur(16px)",
+                border: "1px solid rgba(201,168,76,0.3)",
+                boxShadow: "0 8px 32px rgba(0,0,0,0.25)",
+              }}
+            >
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-[#C9A84C] flex items-center justify-center shrink-0">
+                  <Star size={14} className="fill-white text-white" />
+                </div>
+                <div>
+                  <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-white/50 mb-0.5">
+                    Target LNAT Score
+                  </p>
+                  <p className="text-white font-extrabold text-[15px] leading-none">
+                    {university.admissions.targetLNATScore}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* ── Floating global rank badge ── */}
+          {university.globalRanking && (
+            <motion.div
+              initial={{ opacity: 0, y: -14, scale: 0.94 }}
+              animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
+              transition={{
+                duration: 0.6,
+                delay: 0.85,
+                ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+              }}
+              className="absolute top-6 left-10 z-20 hidden lg:flex items-center gap-2
+                rounded-full px-3.5 py-2"
+              style={{
+                background: "rgba(255,255,255,0.12)",
+                backdropFilter: "blur(16px)",
+                border: "1px solid rgba(255,255,255,0.2)",
+              }}
+            >
+              <GraduationCap size={13} className="text-[#C9A84C]" />
+              <span className="text-[11px] font-bold text-white">
+                {university.globalRanking}
+              </span>
+            </motion.div>
+          )}
+          </motion.div>
+        ) : null}
       </div>
     </section>
-  );
-}
-
-// --------------------------------------------------
-// SUBCOMPONENTS
-// --------------------------------------------------
-
-function Badge({ text, gold = false }: { text: string; gold?: boolean }) {
-  return (
-    <span
-      className={`px-4 py-1.5 rounded-full text-xs font-sans tracking-wider uppercase border ${
-        gold
-          ? "bg-[#C9A84C]/10 border-[#C9A84C]/50 text-[#C9A84C]"
-          : "bg-transparent border-[#F7F3EC]/20 text-[#F7F3EC]/80"
-      }`}
-    >
-      {text}
-    </span>
-  );
-}
-
-function StatCard({
-  label,
-  value,
-  icon,
-}: {
-  label: string;
-  value: string;
-  icon: React.ReactNode;
-}) {
-  return (
-    <div className="flex flex-col p-4 rounded-xl bg-[#F7F3EC]/5 border border-[#F7F3EC]/10 hover:border-[#C9A84C]/30 transition-colors duration-300">
-      <div className="flex items-center space-x-2 text-[#C9A84C] mb-2">
-        {icon}
-        <span className="text-xs font-sans uppercase tracking-wider">
-          {label}
-        </span>
-      </div>
-      <span className="font-serif text-2xl text-[#F7F3EC]">{value}</span>
-    </div>
-  );
-}
-
-function TimelineStep({ date, label }: { date: string; label: string }) {
-  return (
-    <div className="flex flex-col space-y-1">
-      <span className="text-[#C9A84C] font-semibold">{date}</span>
-      <span>{label}</span>
-    </div>
   );
 }

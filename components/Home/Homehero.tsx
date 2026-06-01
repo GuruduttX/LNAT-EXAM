@@ -11,15 +11,7 @@ import {
   Calendar,
   CheckCircle2,
 } from "lucide-react";
-
-// ── Replace with your actual import ──
-const EnquiryPopupForm = ({
-  isOpen,
-  onClose,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-}) => null;
+import EnquiryPopupForm from "@/utils/EnquiryForm";
 
 // ─────────────────────────────────────────────────────────────
 // Data
@@ -248,7 +240,7 @@ export default function HomeHero() {
 
       <section
         className="relative w-full overflow-hidden bg-[#F7F3EC]"
-        style={{ height: "100vh", maxHeight: "820px", minHeight: "600px" }}
+        style={{ height: "107vh", maxHeight: "820px", minHeight: "650px" }}
       >
         {/* ── Background image ── */}
         <div className="absolute inset-0">
@@ -345,13 +337,13 @@ export default function HomeHero() {
                 className="text-white/60 leading-[1.8] mb-6 max-w-[500px] font-light"
                 style={{ fontSize: "clamp(0.8rem, 1vw, 0.93rem)" }}
               >
-                India's most trusted platform for LNAT preparation. Personalised
+                India&apos;s most trusted platform for LNAT preparation. Personalised
                 mentorship, comprehensive study plans, and end-to-end admissions
                 support — built for{" "}
                 <span className="text-white font-semibold">
                   Indian students
                 </span>{" "}
-                aiming for the world's best universities.
+                aiming for the world&apos;s best universities.
               </motion.p>
 
               {/* CTAs */}

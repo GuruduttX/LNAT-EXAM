@@ -707,7 +707,7 @@ function SectionBPanel() {
 
   const samplePrompts = [
     "Should judges be elected rather than appointed?",
-    "Is there justification for public funding of the arts?",
+    "Make the best case you can for public funding of the arts.",
     "Are there sufficient grounds to justify the sacrifice of traditional liberties to defeat terrorism?",
     "Should voting be compulsory in a democracy?",
     "How much should students contribute financially to their own degrees?",
@@ -776,12 +776,12 @@ function SectionBPanel() {
         </h3>
         <div className="grid grid-cols-3 gap-3">
           {[
-            { v: "40 min", l: "Time Allowed" },
+            { v: "40 minutes", l: "Time Allowed" },
             { v: "3 prompts", l: "Choose 1" },
             { v: "750 words", l: "Max Length" },
           ].map((s, i) => (
             <div key={i} className="rounded-xl p-3 bg-black/[0.12] text-center">
-              <div className="text-white font-extrabold text-xl leading-none">
+              <div className="text-white font-bold md:font-extrabold md:text-xl leading-none">
                 {s.v}
               </div>
               <div className="text-white/70 text-[10px] mt-1">{s.l}</div>
@@ -1046,7 +1046,7 @@ function ScoringPanel() {
             },
           ].map((s, i) => (
             <div key={i} className="p-5">
-              <div className="text-[#C9A84C] font-extrabold text-2xl leading-none">
+              <div className="text-[#C9A84C] font-extrabold md:text-2xl leading-none">
                 {s.v}
               </div>
               <div className="text-white text-[11px] font-bold mt-1.5">
@@ -1278,45 +1278,56 @@ function LogisticsPanel() {
         <div className="text-[13px] font-bold text-[#0D1B3E] mb-3">
           Deadline Matrix by Target University
         </div>
-        <div className="rounded-2xl overflow-hidden border border-black/[0.08] bg-white">
-          <div className="grid grid-cols-4 gap-2 px-4 py-2.5 bg-[#0D1B3E]">
-            {[
-              "Target Institution",
-              "LNAT Registration",
-              "Test Deadline",
-              "UCAS Deadline",
-            ].map((h, i) => (
-              <div
-                key={i}
-                className="text-[10px] font-bold text-[#C9A84C] uppercase tracking-wide"
-              >
-                {h}
+        <div className="rounded-2xl border border-black/8 bg-white overflow-hidden">
+          {/* Added this wrapper for horizontal scrolling on mobile */}
+          <div className="w-full overflow-x-auto scrollbar-none [&::-webkit-scrollbar]:hidden">
+            {/* Forces a minimum width to prevent text cramping */}
+            <div className="min-w-150">
+              {/* Header Row */}
+              <div className="grid grid-cols-4 gap-2 px-4 py-2.5 bg-[#0D1B3E]">
+                {[
+                  "Target Institution",
+                  "LNAT Registration",
+                  "Test Deadline",
+                  "UCAS Deadline",
+                ].map((h, i) => (
+                  <div
+                    key={i}
+                    className="text-[10px] font-bold text-[#C9A84C] uppercase tracking-wide"
+                  >
+                    {h}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-          {deadlines.map((d, i) => (
-            <div
-              key={i}
-              className={`grid grid-cols-4 gap-2 px-4 py-3 ${
-                i < deadlines.length - 1 ? "border-b border-black/[0.05]" : ""
-              } ${i % 2 !== 0 ? "bg-black/[0.015]" : ""}`}
-            >
-              <div className="flex items-center gap-1.5">
+
+              {/* Data Rows */}
+              {deadlines.map((d, i) => (
                 <div
-                  className="w-2 h-2 rounded-full shrink-0"
-                  style={{ background: d.color }}
-                />
-                <span className="text-[12px] font-bold text-[#0D1B3E]">
-                  {d.target}
-                </span>
-              </div>
-              {[d.reg, d.test, d.ucas].map((v, j) => (
-                <div key={j} className="text-[11px] text-slate-500">
-                  {v}
+                  key={i}
+                  className={`grid grid-cols-4 gap-2 px-4 py-3 ${
+                    i < deadlines.length - 1
+                      ? "border-b border-black/5"
+                      : ""
+                  } ${i % 2 !== 0 ? "bg-black/1.5" : ""}`}
+                >
+                  <div className="flex items-center gap-1.5">
+                    <div
+                      className="w-2 h-2 rounded-full shrink-0"
+                      style={{ background: d.color }}
+                    />
+                    <span className="text-[12px] font-bold text-[#0D1B3E]">
+                      {d.target}
+                    </span>
+                  </div>
+                  {[d.reg, d.test, d.ucas].map((v, j) => (
+                    <div key={j} className="text-[11px] text-slate-500">
+                      {v}
+                    </div>
+                  ))}
                 </div>
               ))}
             </div>
-          ))}
+          </div>
         </div>
         <div className="mt-3">
           <AlertBox type="warning">

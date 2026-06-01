@@ -1,136 +1,122 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, BookOpen, FileText } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
+import { BookOpen, Award, Library } from "lucide-react";
 
-const floatingCards = [
-  {
-    title: "LNAT Essay Guide",
-    subtitle: "Preparation Resource",
-  },
-  {
-    title: "Oxford Admissions",
-    subtitle: "University Insights",
-  },
-  {
-    title: "UCAS Timeline",
-    subtitle: "Application Guide",
-  },
-];
+// Mocking the props for the design (replace with your actual data)
+interface BlogArchiveHeroProps {
+  blogsCount?: number;
+  featuredCount?: number;
+  hubsCount?: number;
+}
 
-export default function BlogArchiveHero() {
+export default function BlogArchiveHero({
+  blogsCount = 42,
+  featuredCount = 6,
+  hubsCount = 4,
+}: BlogArchiveHeroProps) {
   return (
-    <section className="relative overflow-hidden bg-[#07111F] px-6 py-20 md:px-10 lg:px-16">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(201,169,97,0.12),transparent_40%)]" />
+    <section className="relative w-full border-b border-black/[0.07] bg-[#F7F3EC] pt-24 pb-12 sm:pt-28 md:pb-16 lg:pt-32">
+      {/* Dense, subtle architectural background pattern */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-60
+        [background-image:radial-gradient(circle,rgba(13,27,62,0.04)_1px,transparent_1px)]
+        [background-size:20px_20px]"
+      />
 
-      <div className="relative mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-2">
-        {/* Left Content */}
+      <div className="relative z-10 mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
+        {/* Header Area - Compact and highly readable */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="space-y-8"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className="mb-8 md:mb-12"
         >
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#C9A961]/20 bg-white/5 px-4 py-2 text-sm tracking-wide text-[#E7D3A2] backdrop-blur-sm">
-            <BookOpen className="h-4 w-4" />
-            LNAT Editorial Resources
+          <div className="mb-4 flex items-center gap-2">
+            <div className="h-1.5 w-1.5 rounded-full bg-[#C9A84C]" />
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#C9A84C]">
+              The Knowledge Base
+            </span>
           </div>
 
-          <div className="space-y-5">
-            <h1 className="max-w-2xl text-4xl font-semibold leading-tight text-[#F8F5EE] md:text-5xl lg:text-6xl">
-              LNAT Preparation & Admissions Insights
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <h1 className="max-w-3xl text-[clamp(1.8rem,4vw,3.2rem)] font-extrabold leading-[1.1] tracking-tight text-[#0D1B3E]">
+              LNAT guides, university insights, and{" "}
+              <span className="bg-gradient-to-r from-[#C9A84C] to-[#E8C96A] bg-clip-text text-transparent">
+                strategy articles
+              </span>{" "}
+              for serious applicants.
             </h1>
-
-            <p className="max-w-xl text-base leading-7 text-slate-300 md:text-lg">
-              Explore curated guides, admissions strategies, essay preparation
-              resources, and expert insights for aspiring law students applying
-              to leading UK universities.
+            <p className="max-w-md text-[14px] leading-relaxed text-slate-500 lg:text-right">
+              Explore preparation guides, essay strategy, admissions advice, and
+              university explainers built to help you move from confusion to a
+              confident LNAT plan.
             </p>
-          </div>
-
-          <div className="flex flex-col gap-4 sm:flex-row">
-            <Link
-              href="/resources"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#C9A961] px-6 py-3 text-sm font-medium text-[#07111F] transition-all duration-300 hover:-translate-y-0.5"
-            >
-              Explore Resources
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-
-            <Link
-              href="/how-to-apply"
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-3 text-sm font-medium text-white backdrop-blur-sm transition-all duration-300 hover:border-[#C9A961]/40 hover:bg-white/10"
-            >
-              Download Guide
-              <FileText className="h-4 w-4" />
-            </Link>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-6 border-t border-white/10 pt-6 text-sm text-slate-400">
-            <span>Updated for 2026 Admissions</span>
-            <span>University Specific Guides</span>
-            <span>Expert Preparation Insights</span>
           </div>
         </motion.div>
 
-        {/* Right Visual */}
+        {/* Dense Information Grid */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          viewport={{ once: true }}
-          className="relative mx-auto w-full max-w-2xl"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+          className="grid gap-4 sm:grid-cols-2 md:grid-cols-3"
         >
-          <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 p-3 backdrop-blur-sm">
-            <div className="relative overflow-hidden rounded-[1.5rem]">
-              <Image
-                src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=1600&auto=format&fit=crop"
-                alt="Law preparation"
-                width={900}
-                height={700}
-                className="h-[500px] w-full object-cover"
-              />
-
-              <div className="absolute inset-0 bg-gradient-to-t from-[#07111F] via-[#07111F]/20 to-transparent" />
-            </div>
-          </div>
-
-          {/* Floating Cards */}
-          <div className="absolute -left-6 top-10 hidden space-y-4 lg:block">
-            {floatingCards.slice(0, 2).map((card) => (
-              <div
-                key={card.title}
-                className="rounded-2xl border border-white/10 bg-[#0B1727]/90 p-4 shadow-2xl backdrop-blur-md"
-              >
-                <p className="text-xs uppercase tracking-[0.2em] text-[#C9A961]">
-                  {card.subtitle}
-                </p>
-
-                <h3 className="mt-2 text-sm font-medium text-white">
-                  {card.title}
-                </h3>
+          {/* Card 1: Published Guides */}
+          <div className="group flex flex-col rounded-2xl border border-black/[0.06] bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A84C]/30 hover:shadow-[0_12px_30px_rgba(13,27,62,0.06)] md:p-6">
+            <div className="mb-4 flex items-center justify-between">
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
+                Published Guides
+              </p>
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#F7F3EC] text-[#0D1B3E] transition-colors group-hover:bg-[#C9A84C]/10 group-hover:text-[#C9A84C]">
+                <BookOpen size={16} strokeWidth={2} />
               </div>
-            ))}
+            </div>
+            <p className="mb-2 text-[32px] font-extrabold leading-none text-[#0D1B3E]">
+              {blogsCount}
+            </p>
+            <p className="mt-auto text-[13px] leading-relaxed text-slate-500">
+              Practical articles covering preparation, admissions, essay
+              writing, and university research.
+            </p>
           </div>
 
-          <div className="absolute -bottom-6 right-0 hidden lg:block">
-            <div className="rounded-2xl border border-white/10 bg-[#0B1727]/90 p-5 shadow-2xl backdrop-blur-md">
-              <p className="text-xs uppercase tracking-[0.2em] text-[#C9A961]">
-                Admissions Guide
+          {/* Card 2: Cornerstone Pieces */}
+          <div className="group flex flex-col rounded-2xl border border-black/[0.06] bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A84C]/30 hover:shadow-[0_12px_30px_rgba(13,27,62,0.06)] md:p-6">
+            <div className="mb-4 flex items-center justify-between">
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
+                Cornerstone Pieces
               </p>
-
-              <h3 className="mt-2 text-base font-medium text-white">
-                UCAS & LNAT Timeline
-              </h3>
-
-              <p className="mt-2 max-w-xs text-sm leading-6 text-slate-300">
-                Understand application deadlines, admissions stages, and LNAT
-                preparation milestones.
-              </p>
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#F7F3EC] text-[#0D1B3E] transition-colors group-hover:bg-[#C9A84C]/10 group-hover:text-[#C9A84C]">
+                <Award size={16} strokeWidth={2} />
+              </div>
             </div>
+            <p className="mb-2 text-[32px] font-extrabold leading-none text-[#0D1B3E]">
+              {featuredCount}
+            </p>
+            <p className="mt-auto text-[13px] leading-relaxed text-slate-500">
+              Our best starting points if you want high-context guidance before
+              going into narrower questions.
+            </p>
+          </div>
+
+          {/* Card 3: Topic Hubs */}
+          <div className="group flex flex-col rounded-2xl border border-black/[0.06] bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A84C]/30 hover:shadow-[0_12px_30px_rgba(13,27,62,0.06)] md:p-6 sm:col-span-2 md:col-span-1">
+            <div className="mb-4 flex items-center justify-between">
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
+                Topic Hubs
+              </p>
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#F7F3EC] text-[#0D1B3E] transition-colors group-hover:bg-[#C9A84C]/10 group-hover:text-[#C9A84C]">
+                <Library size={16} strokeWidth={2} />
+              </div>
+            </div>
+            <p className="mb-2 text-[32px] font-extrabold leading-none text-[#0D1B3E]">
+              {hubsCount}
+            </p>
+            <p className="mt-auto text-[13px] leading-relaxed text-slate-500">
+              Browse broader themes like LNAT prep, universities, and law
+              admissions to find the right next read faster.
+            </p>
           </div>
         </motion.div>
       </div>

@@ -1,4 +1,8 @@
-import { Globe2, GraduationCap, MapPin, ShieldCheck } from "lucide-react";
+"use client";
+
+import { motion, useInView, type Variants } from "framer-motion";
+import { useRef } from "react";
+import { Info } from "lucide-react";
 
 interface ArchiveHeroProps {
   totalUniversities: number;
@@ -6,75 +10,196 @@ interface ArchiveHeroProps {
   requiredLnatCount: number;
 }
 
+const fadeUp: Variants = {
+  hidden: { opacity: 0, y: 22 },
+  visible: (delay: number = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.65,
+      delay,
+      ease: [0.22, 1, 0.36, 1] as const,
+    },
+  }),
+};
+
+const stagger: Variants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.09, delayChildren: 0.05 },
+  },
+};
+
+// Extracted Design System Primitive
+function SectionLabel({ text }: { text: string }) {
+  return (
+    <div className="flex items-center gap-3 mb-6">
+      <div className="h-px w-8 bg-[#C9A84C]/40" />
+      <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#C9A84C]">
+        {text}
+      </span>
+      <div className="h-px w-8 bg-[#C9A84C]/40" />
+    </div>
+  );
+}
+
+// Extracted Design System Primitive
+function BulletItem({ text }: { text: string }) {
+  return (
+    <div className="flex gap-2.5 mb-2.5 items-start">
+      <div className="w-1.5 h-1.5 rounded-full shrink-0 mt-[7px] bg-[#C9A84C]" />
+      <span className="text-[13px] text-gray-700 leading-relaxed">{text}</span>
+    </div>
+  );
+}
+
 export default function ArchiveHero({
   totalUniversities,
   totalCountries,
   requiredLnatCount,
 }: ArchiveHeroProps) {
+  const ref = useRef<HTMLElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-8% 0px" });
+
   return (
-    <section className="relative overflow-hidden border-b border-white/5 bg-[#0c1727] px-6 pb-20 pt-28 text-[#f7f3ec] md:pb-28 md:pt-36">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(197,160,89,0.16),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(82,109,145,0.22),transparent_34%)]" />
+    <section ref={ref} className="relative w-full overflow-hidden bg-[#F7F3EC]">
+      {/* Design System: Dot grid texture */}
+      <div
+        className="absolute inset-0 pointer-events-none
+        [background-image:radial-gradient(circle,rgba(13,27,62,0.04)_1px,transparent_1px)]
+        [background-size:26px_26px]"
+      />
 
-      <div className="relative mx-auto max-w-7xl">
-        <div className="grid grid-cols-1 gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
-          <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#c5a059]/30 bg-[#c5a059]/8 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#d9c39a]">
-              <ShieldCheck className="h-4 w-4" />
-              LNAT Universities Hub
-            </div>
+      {/* Design System: Gold ambient top glow */}
+      <div
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse, rgba(201,168,76,0.06) 0%, transparent 70%)",
+        }}
+      />
 
-            <h1 className="mt-8 max-w-4xl text-4xl font-semibold tracking-tight text-white md:text-6xl md:leading-[1.05]">
-              A strategic hub for choosing the right LNAT university, not just a list of names.
-            </h1>
+      <div className="relative z-10 max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center text-center md:text-start">
+          {/* Left Content Column */}
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            animate={inView ? "visible" : "hidden"}
+            className="lg:col-span-7 flex flex-col items-start"
+          >
+            <motion.div variants={fadeUp}>
+              <SectionLabel text="LNAT University Directory" />
+            </motion.div>
 
-            <p className="mt-6 max-w-3xl text-lg leading-8 text-[#d7e0ea]">
-              This page is designed to help you shortlist universities that actually fit
-              your admissions profile. Use it to understand which institutions use the
-              LNAT, what kind of city and academic environment each one offers, and where
-              to go deeper with full university guides.
-            </p>
-
-            <div className="mt-8 flex flex-wrap gap-3 text-sm">
-              <span className="rounded-full border border-white/15 px-4 py-2 text-[#f7f3ec]">
-                Shortlist by city, country, and law-school reputation
+            <motion.h1
+              variants={fadeUp}
+              className="font-extrabold text-[#0D1B3E] tracking-tight leading-tight mb-6
+                text-[clamp(1.9rem,4.8vw,3.8rem)]"
+            >
+              Explore Global Law Schools. <br />
+              <span className="bg-gradient-to-r from-[#C9A84C] to-[#E8C96A] bg-clip-text text-transparent">
+                Find Your Perfect Fit.
               </span>
-              <span className="rounded-full border border-white/15 px-4 py-2 text-[#f7f3ec]">
-                Move from browse mode to profile-level admissions research
-              </span>
-            </div>
-          </div>
+            </motion.h1>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <div className="rounded-[28px] border border-white/10 bg-white/5 p-6 backdrop-blur">
-              <MapPin className="h-5 w-5 text-[#d9c39a]" />
-              <p className="mt-8 text-4xl font-semibold text-white">
-                {totalUniversities}
-              </p>
-              <p className="mt-2 text-sm leading-6 text-[#d7e0ea]">
-                published university profiles in the hub
-              </p>
-            </div>
+            {/* AEO / Quick Answer Block using Design System SectionCard logic */}
+            <motion.div
+              variants={fadeUp}
+              className="w-full rounded-2xl bg-white border border-black/[0.07] shadow-sm overflow-hidden mb-8"
+            >
+              <div
+                className="flex items-center gap-2 px-5 py-3.5 border-b border-black/[0.05]"
+                style={{ background: "#0D1B3E06" }}
+              >
+                <div className="w-[3px] h-[18px] rounded-full bg-[#0D1B3E]" />
+                <span className="text-[13px] font-bold text-[#0D1B3E]">
+                  What are LNAT Universities?
+                </span>
+              </div>
+              <div className="p-5">
+                <p className="text-[14px] text-slate-500 leading-relaxed">
+                  The LNAT is required by premier undergraduate law programs
+                  worldwide to assess analytical and logical reasoning skills.
+                  This directory helps you navigate these institutions, compare
+                  their admissions criteria, and shortlist law schools based on
+                  your academic profile.
+                </p>
+              </div>
+            </motion.div>
 
-            <div className="rounded-[28px] border border-white/10 bg-white/5 p-6 backdrop-blur">
-              <Globe2 className="h-5 w-5 text-[#d9c39a]" />
-              <p className="mt-8 text-4xl font-semibold text-white">
-                {totalCountries}
-              </p>
-              <p className="mt-2 text-sm leading-6 text-[#d7e0ea]">
-                countries represented across the directory
-              </p>
-            </div>
+            <motion.div variants={fadeUp} className="space-y-1">
+              {[
+                "Compare institutions by LNAT requirement and ranking",
+                "Filter globally recognized law schools by country",
+                "Shortlist universities that align with your admissions profile",
+              ].map((text, i) => (
+                <BulletItem key={i} text={text} />
+              ))}
+            </motion.div>
+          </motion.div>
 
-            <div className="rounded-[28px] border border-white/10 bg-white/5 p-6 backdrop-blur">
-              <GraduationCap className="h-5 w-5 text-[#d9c39a]" />
-              <p className="mt-8 text-4xl font-semibold text-white">
-                {requiredLnatCount}
-              </p>
-              <p className="mt-2 text-sm leading-6 text-[#d7e0ea]">
-                profiles where the LNAT is currently required
-              </p>
+          {/* Right Stats Column */}
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            animate={inView ? "visible" : "hidden"}
+            className="lg:col-span-5 w-full"
+          >
+            <div className="grid grid-cols-2 gap-4 md:gap-5">
+              {/* Primary Stat Card (Full Width) */}
+              <motion.div
+                variants={fadeUp}
+                className="col-span-2 rounded-2xl p-6 md:p-8 bg-[#0D1B3E] border border-[#C9A84C]/15 
+                  shadow-[0_16px_48px_rgba(13,27,62,0.2)] transition-transform duration-300 hover:-translate-y-1"
+              >
+                <div className="text-[#C9A84C] font-extrabold text-5xl md:text-6xl tracking-tight mb-2">
+                  {totalUniversities}+
+                </div>
+                <div className="text-white text-[15px] font-bold mb-2">
+                  Recognized Law Schools
+                </div>
+                <div className="text-white/50 text-[12px] leading-relaxed max-w-[90%]">
+                  LNAT is accepted by elite institutions globally, giving Indian
+                  students a distinct competitive edge.
+                </div>
+              </motion.div>
+
+              {/* Secondary Stat Card 1 */}
+              <motion.div
+                variants={fadeUp}
+                className="col-span-1 rounded-2xl p-5 bg-[#0D1B3E] border border-[#C9A84C]/15 
+                  shadow-[0_16px_48px_rgba(13,27,62,0.2)] transition-transform duration-300 hover:-translate-y-1"
+              >
+                <div className="text-[#C9A84C] font-extrabold text-3xl tracking-tight mb-1.5">
+                  {requiredLnatCount}
+                </div>
+                <div className="text-white text-[13px] font-bold mb-1">
+                  LNAT Required
+                </div>
+                <div className="text-white/40 text-[11px] leading-relaxed">
+                  Institutions where the test is a core admission criterion.
+                </div>
+              </motion.div>
+
+              {/* Secondary Stat Card 2 */}
+              <motion.div
+                variants={fadeUp}
+                className="col-span-1 rounded-2xl p-5 bg-[#0D1B3E] border border-[#C9A84C]/15 
+                  shadow-[0_16px_48px_rgba(13,27,62,0.2)] transition-transform duration-300 hover:-translate-y-1"
+              >
+                <div className="text-[#C9A84C] font-extrabold text-3xl tracking-tight mb-1.5">
+                  {totalCountries}
+                </div>
+                <div className="text-white text-[13px] font-bold mb-1">
+                  Global Reach
+                </div>
+                <div className="text-white/40 text-[11px] leading-relaxed">
+                  Countries represented in the official LNAT network.
+                </div>
+              </motion.div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

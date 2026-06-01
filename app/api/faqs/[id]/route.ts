@@ -18,7 +18,7 @@ export async function GET(
     }
 
     return NextResponse.json(faq);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to fetch FAQ" }, { status: 500 });
   }
 }
@@ -45,7 +45,7 @@ export async function PUT(
     }
 
     return NextResponse.json(updatedFaq);
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to update FAQ" },
       { status: 500 },
@@ -72,7 +72,7 @@ export async function DELETE(
       success: true,
       message: "FAQ deleted successfully",
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to delete FAQ" },
       { status: 500 },

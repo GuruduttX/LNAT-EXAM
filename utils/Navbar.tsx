@@ -28,7 +28,7 @@ const navLinks = [
 const universityLinks = [
   {
     label: "University of Oxford",
-    href: "/universities/oxford",
+    href: "/universities/university-of-oxford",
     rank: "World #1",
   },
   { label: "UCL", href: "/universities/ucl", rank: "World #9" },
@@ -363,14 +363,12 @@ function NavLink({
 // ─────────────────────────────────────────────────────────────
 // NavbarCTA
 // ─────────────────────────────────────────────────────────────
-interface NavbarCTAProps  {
-  setIsOpen:(isOpen: boolean)=>void
+interface NavbarCTAProps {
+  setIsOpen: (isOpen: boolean) => void;
 }
-function NavbarCTA({setIsOpen}: NavbarCTAProps) {
-
+function NavbarCTA({ setIsOpen }: NavbarCTAProps) {
   return (
     <>
-
       <div className="flex items-center gap-3">
         {/* 2026 badge */}
         <div
@@ -474,7 +472,10 @@ function MobileMenu({
 
   return (
     <>
-    <EnquiryPopupForm isOpen={isformOpen} onClose={()=> setIsFormOpen(false)}/>
+      <EnquiryPopupForm
+        isOpen={isformOpen}
+        onClose={() => setIsFormOpen(false)}
+      />
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -482,7 +483,7 @@ function MobileMenu({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.28, ease: "easeInOut" }}
-            className="fixed inset-0 z-40 md:hidden"
+            className="fixed inset-0 z-40 md:hidden flex flex-col"
             style={{ background: "#F7F3EC" }}
             role="dialog"
             aria-modal="true"
@@ -511,7 +512,7 @@ function MobileMenu({
 
             {/* Top bar */}
             <div
-              className="relative z-50 flex items-center justify-between px-6 py-5 border-b"
+              className="relative z-50 flex items-center justify-between px-6 py-5 border-b shrink-0"
               style={{ borderColor: "rgba(201,168,76,0.15)" }}
             >
               <NavLogo />
@@ -536,26 +537,142 @@ function MobileMenu({
               </button>
             </div>
 
-            {/* Nav items */}
-            <nav
-              className="relative z-10 flex flex-col px-8 pt-10 pb-8 gap-1"
-              aria-label="Mobile navigation"
-            >
-              {navLinks.map((link, i) => {
-                if (link.hasDropdown) {
+            {/* Nav items (Scrollable area) */}
+            <div className="relative z-10 flex-1 overflow-y-auto">
+              <nav
+                className="flex flex-col px-8 pt-6 pb-8 gap-1"
+                aria-label="Mobile navigation"
+              >
+                {navLinks.map((link, i) => {
+                  if (link.hasDropdown) {
+                    return (
+                      <div key={link.href}>
+                        <motion.div
+                          initial={{ opacity: 0, x: -16 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{
+                            delay: 0.08 + i * 0.06,
+                            duration: 0.45,
+                            ease: [0.22, 1, 0.36, 1],
+                          }}
+                          className="w-full flex items-center justify-between border-b group"
+                          style={{ borderColor: "rgba(13,27,62,0.07)" }}
+                        >
+                          {/* Split text Link and Icon Button */}
+                          <Link
+                            href={link.href}
+                            onClick={onClose}
+                            className="flex-1 py-4"
+                          >
+                            <span
+                              style={{
+                                fontFamily:
+                                  "'Cormorant Garamond', Georgia, serif",
+                                fontSize: "clamp(1.5rem, 5vw, 2rem)",
+                                fontWeight: 400,
+                                color: "#0A1628",
+                                letterSpacing: "-0.01em",
+                              }}
+                            >
+                              {link.label}
+                            </span>
+                          </Link>
+
+                          <button
+                            onClick={() => setUniExpanded((v) => !v)}
+                            aria-expanded={uniExpanded}
+                            className="px-4 py-4 -mr-4 flex items-center justify-center"
+                          >
+                            <ChevronDown
+                              size={16}
+                              className="text-[#8B6914] transition-transform duration-300"
+                              style={{
+                                transform: uniExpanded
+                                  ? "rotate(180deg)"
+                                  : "rotate(0deg)",
+                              }}
+                            />
+                          </button>
+                        </motion.div>
+
+                        <AnimatePresence>
+                          {uniExpanded && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{
+                                duration: 0.3,
+                                ease: [0.22, 1, 0.36, 1],
+                              }}
+                              className="overflow-hidden"
+                            >
+                              <div className="pl-4 py-2 flex flex-col gap-0">
+                                {universityLinks.map((uni) => (
+                                  <Link
+                                    key={uni.href}
+                                    href={uni.href}
+                                    onClick={onClose}
+                                    className="flex items-center gap-2 py-2.5 group"
+                                  >
+                                    <span className="w-1 h-1 rounded-full bg-[#C9A84C] opacity-60 flex-shrink-0" />
+                                    <span
+                                      style={{
+                                        fontFamily:
+                                          "'Libre Baskerville', Georgia, serif",
+                                        fontSize: "14px",
+                                        color: "#1A2844",
+                                      }}
+                                    >
+                                      {uni.label}
+                                    </span>
+                                  </Link>
+                                ))}
+                                <Link
+                                  href="/universities"
+                                  onClick={onClose}
+                                  className="flex items-center gap-1.5 py-2 mt-1"
+                                >
+                                  <span
+                                    style={{
+                                      fontFamily:
+                                        "'Libre Baskerville', Georgia, serif",
+                                      fontSize: "12px",
+                                      color: "#0D1B3E",
+                                      fontWeight: 700,
+                                      letterSpacing: "0.04em",
+                                    }}
+                                  >
+                                    View All Universities
+                                  </span>
+                                  <ExternalLink
+                                    size={10}
+                                    className="text-[#8B6914]"
+                                  />
+                                </Link>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    );
+                  }
+
                   return (
-                    <div key={link.href}>
-                      <motion.button
-                        initial={{ opacity: 0, x: -16 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{
-                          delay: 0.08 + i * 0.06,
-                          duration: 0.45,
-                          ease: [0.22, 1, 0.36, 1],
-                        }}
-                        onClick={() => setUniExpanded((v) => !v)}
-                        aria-expanded={uniExpanded}
-                        className="w-full flex items-center justify-between py-4 border-b group"
+                    <motion.div
+                      key={link.href}
+                      initial={{ opacity: 0, x: -16 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{
+                        delay: 0.08 + i * 0.06,
+                        duration: 0.45,
+                        ease: [0.22, 1, 0.36, 1],
+                      }}
+                    >
+                      <Link
+                        href={link.href}
+                        onClick={onClose}
+                        className="flex py-4 border-b w-full"
                         style={{ borderColor: "rgba(13,27,62,0.07)" }}
                       >
                         <span
@@ -569,113 +686,12 @@ function MobileMenu({
                         >
                           {link.label}
                         </span>
-                        <ChevronDown
-                          size={16}
-                          className="text-[#8B6914] transition-transform duration-300"
-                          style={{
-                            transform: uniExpanded
-                              ? "rotate(180deg)"
-                              : "rotate(0deg)",
-                          }}
-                        />
-                      </motion.button>
-
-                      <AnimatePresence>
-                        {uniExpanded && (
-                          <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: "auto", opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{
-                              duration: 0.3,
-                              ease: [0.22, 1, 0.36, 1],
-                            }}
-                            className="overflow-hidden"
-                          >
-                            <div className="pl-4 py-2 flex flex-col gap-0">
-                              {universityLinks.map((uni) => (
-                                <Link
-                                  key={uni.href}
-                                  href={uni.href}
-                                  onClick={onClose}
-                                  className="flex items-center gap-2 py-2.5 group"
-                                >
-                                  <span className="w-1 h-1 rounded-full bg-[#C9A84C] opacity-60 flex-shrink-0" />
-                                  <span
-                                    style={{
-                                      fontFamily:
-                                        "'Libre Baskerville', Georgia, serif",
-                                      fontSize: "14px",
-                                      color: "#1A2844",
-                                    }}
-                                  >
-                                    {uni.label}
-                                  </span>
-                                </Link>
-                              ))}
-                              <Link
-                                href="/universities"
-                                onClick={onClose}
-                                className="flex items-center gap-1.5 py-2 mt-1"
-                              >
-                                <span
-                                  style={{
-                                    fontFamily:
-                                      "'Libre Baskerville', Georgia, serif",
-                                    fontSize: "12px",
-                                    color: "#0D1B3E",
-                                    fontWeight: 700,
-                                    letterSpacing: "0.04em",
-                                  }}
-                                >
-                                  View All Universities
-                                </span>
-                                <ExternalLink
-                                  size={10}
-                                  className="text-[#8B6914]"
-                                />
-                              </Link>
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
+                      </Link>
+                    </motion.div>
                   );
-                }
-
-                return (
-                  <motion.div
-                    key={link.href}
-                    initial={{ opacity: 0, x: -16 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{
-                      delay: 0.08 + i * 0.06,
-                      duration: 0.45,
-                      ease: [0.22, 1, 0.36, 1],
-                    }}
-                  >
-                    <Link
-                      href={link.href}
-                      onClick={onClose}
-                      className="flex py-4 border-b w-full"
-                      style={{ borderColor: "rgba(13,27,62,0.07)" }}
-                    >
-                      <span
-                        style={{
-                          fontFamily: "'Cormorant Garamond', Georgia, serif",
-                          fontSize: "clamp(1.5rem, 5vw, 2rem)",
-                          fontWeight: 400,
-                          color: "#0A1628",
-                          letterSpacing: "-0.01em",
-                        }}
-                      >
-                        {link.label}
-                      </span>
-                    </Link>
-                  </motion.div>
-                );
-              })}
-            </nav>
+                })}
+              </nav>
+            </div>
 
             {/* Bottom CTAs */}
             <motion.div
@@ -686,10 +702,10 @@ function MobileMenu({
                 duration: 0.5,
                 ease: [0.22, 1, 0.36, 1],
               }}
-              className="relative z-10 px-8 pb-12 flex flex-col gap-3 mt-auto"
+              className="relative z-10 px-8 pb-10 flex flex-col gap-3 shrink-0"
             >
               <div
-                className="h-px w-full mb-4"
+                className="h-px w-full mb-2"
                 style={{ background: "rgba(201,168,76,0.2)" }}
               />
 
@@ -813,13 +829,13 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-if(pathname.startsWith("/admin")) {
-  return null;
-}
+  if (pathname.startsWith("/admin")) {
+    return null;
+  }
 
   return (
     <>
-    <EnquiryPopupForm isOpen={isOpen} onClose={()=> setIsOpen(false)}/>
+      <EnquiryPopupForm isOpen={isOpen} onClose={() => setIsOpen(false)} />
       {/* Google Fonts */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
@@ -849,7 +865,7 @@ if(pathname.startsWith("/admin")) {
 
             {/* Right CTA */}
             <div className="hidden md:block">
-              <NavbarCTA setIsOpen={()=>setIsOpen(true)} />
+              <NavbarCTA setIsOpen={() => setIsOpen(true)} />
             </div>
 
             {/* Mobile hamburger */}

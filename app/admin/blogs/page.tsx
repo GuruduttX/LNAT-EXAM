@@ -15,19 +15,7 @@ import {
   Filter,
 } from "lucide-react";
 import toast from "react-hot-toast";
-
-interface IBlog {
-  _id: string;
-  title: string;
-  category: string;
-  author: {
-    name: string;
-  };
-  image: string;
-  status: "draft" | "published";
-  readTime: number;
-  createdAt: string;
-}
+import { IBlog } from "@/types/backend.types";
 
 export default function BlogArchivePage() {
   const [blogs, setBlogs] = useState<IBlog[]>([]);
@@ -254,11 +242,13 @@ export default function BlogArchivePage() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-slate-400 text-xs whitespace-nowrap">
-                      {new Date(blog.createdAt).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })}
+                      {blog.createdAt
+                        ? new Date(blog.createdAt).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          })
+                        : "Recently saved"}
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex justify-end gap-3">

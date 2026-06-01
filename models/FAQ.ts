@@ -21,6 +21,17 @@ const faqSchema = new Schema(
       required: true,
       trim: true,
     },
+    lastUpdated: {
+      type: Date,
+      default: Date.now,
+    },
+    sourceUrl: { type: String, trim: true },
+    status: {
+      type: String,
+      enum: ["draft", "published"],
+      default: "draft",
+      index: true,
+    },
   },
   {
     timestamps: true,
@@ -28,8 +39,16 @@ const faqSchema = new Schema(
     // Mongoose automatically maps the database '_id' to your frontend 'id' requirement.
     toJSON: {
       virtuals: true,
-      transform: function (doc, ret: Record<string, any>) {
-        ret.id = ret._id.toString();
+      transform: function (
+        doc: unknown,
+        ret: Record<string, unknown> & {
+          _id?: { toString(): string };
+          __v?: unknown;
+        },
+      ) {
+        if (ret._id) {
+          ret.id = ret._id.toString();
+        }
         delete ret._id;
         delete ret.__v;
       },

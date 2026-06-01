@@ -1,21 +1,15 @@
-import ApplyHero from "@/components/how-to-apply/ApplyHero";
+import ApplyHero from "@/components/how-to-apply/ApplyHero"; // Use your existing hero
 import ApplyTimeline from "@/components/how-to-apply/ApplyTimeline";
-import IndiaGuidance from "@/components/how-to-apply/IndiaGuidance";
-import MentorCTA from "@/components/how-to-apply/MentorCTA";
-
-export const metadata = {
-  title: "How to Apply for the LNAT | Registration Guide | LNAT Exam India",
-  description:
-    "A step-by-step guide on how to register for the LNAT, book your test date, and integrate your scores with your UCAS application.",
-};
+import ApplyHowWeHelp from "@/components/how-to-apply/ApplyHowWeHelp";
+import FAQFinalCTA from "@/components/faq/FAQFinalCTA"; // Reuse your high-converting CTA
 
 export default function HowToApplyPage() {
   return (
-    <main className="min-h-screen bg-[#fdfbf7]">
+    <main className="min-h-screen bg-[#F7F3EC]">
       <ApplyHero />
       <ApplyTimeline />
-      <IndiaGuidance />
-      <MentorCTA />
+      <ApplyHowWeHelp />
+      <FAQFinalCTA />
     </main>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { HelpCircle, Plus, Search, Trash2, Edit } from "lucide-react";
+import { AlertTriangle, Plus, Search, Trash2, Edit } from "lucide-react";
 import toast from "react-hot-toast";
 
 // Matches the backend schema exact enums
@@ -11,10 +11,16 @@ const faqCategories = [
   "LNAT Preparation",
   "University Specifics",
   "Logistics & Scoring",
+  "LNAT basics",
+  "registration and dates",
+  "exam format",
+  "essay section",
+  "universities and admissions",
+  "fees / logistics",
 ];
 
 interface IFAQ {
-  id: string;
+  _id: string;
   category: string;
   question: string;
   answer: string;
@@ -26,40 +32,52 @@ export default function FAQArchivePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deleteModal, setDeleteModal] = useState({
+    isOpen: false,
+    id: null as string | null,
+    question: "",
+  });
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
-    fetchFAQs();
+    let isCancelled = false;
+
+    fetch("/api/faqs")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch FAQs");
+        return res.json();
+      })
+      .then((data) => {
+        if (!isCancelled) setFaqs(data);
+      })
+      .catch(() => {
+        if (!isCancelled) toast.error("Error loading FAQs");
+      })
+      .finally(() => {
+        if (!isCancelled) setIsLoading(false);
+      });
+
+    return () => {
+      isCancelled = true;
+    };
   }, []);
 
-  const fetchFAQs = async () => {
+  const executeDelete = async () => {
+    if (!deleteModal.id) return;
+    setIsDeleting(true);
     try {
-      // Pointing to the API route we designed earlier
-      const res = await fetch("/api/faqs");
-      if (!res.ok) throw new Error("Failed to fetch FAQs");
-      const data = await res.json();
-      setFaqs(data);
-    } catch (error) {
-      toast.error("Error loading FAQs");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this FAQ?")) return;
-
-    setDeletingId(id);
-    try {
-      const res = await fetch(`/api/faqs/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/faqs/${deleteModal.id}`, {
+        method: "DELETE",
+      });
       if (!res.ok) throw new Error("Delete failed");
 
-      setFaqs((prev) => prev.filter((faq) => faq.id !== id));
+      setFaqs((prev) => prev.filter((faq) => faq._id !== deleteModal.id));
       toast.success("FAQ deleted successfully");
-    } catch (error) {
+    } catch {
       toast.error("Failed to delete FAQ");
     } finally {
-      setDeletingId(null);
+      setIsDeleting(false);
+      setDeleteModal({ isOpen: false, id: null, question: "" });
     }
   };
 
@@ -155,7 +173,7 @@ export default function FAQArchivePage() {
               ) : (
                 filteredFaqs.map((faq) => (
                   <tr
-                    key={faq.id}
+                    key={faq._id}
                     className="hover:bg-slate-800/20 transition-colors"
                   >
                     <td className="px-6 py-4">
@@ -173,14 +191,20 @@ export default function FAQArchivePage() {
                     </td>
                     <td className="px-6 py-4 text-right whitespace-nowrap">
                       <div className="flex justify-end gap-3">
-                        <Link href={`/admin/faqs/edit/${faq.id}`}>
+                        <Link href={`/admin/faqs/edit/${faq._id}`}>
                           <button className="text-slate-400 hover:text-[#C4A47C] transition-colors">
                             <Edit size={16} />
                           </button>
                         </Link>
                         <button
-                          onClick={() => handleDelete(faq.id)}
-                          disabled={deletingId === faq.id}
+                          onClick={() =>
+                            setDeleteModal({
+                              isOpen: true,
+                              id: faq._id,
+                              question: faq.question,
+                            })
+                          }
+                          disabled={isDeleting}
                           className="text-slate-400 hover:text-red-400 transition-colors disabled:opacity-50"
                         >
                           <Trash2 size={16} />
@@ -194,6 +218,49 @@ export default function FAQArchivePage() {
           </table>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {deleteModal.isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md animate-in rounded-xl border border-slate-800 bg-[#0B1221] p-6 shadow-2xl duration-200 zoom-in-95">
+            <div className="mb-4 flex items-center gap-3 text-red-400">
+              <AlertTriangle size={24} />
+              <h3 className="text-lg font-semibold text-[#FDFBF7]">
+                Confirm Deletion
+              </h3>
+            </div>
+
+            <p className="mb-6 text-sm text-slate-300">
+              Are you sure you want to delete{" "}
+              <span className="font-semibold text-[#FDFBF7]">
+                &quot;{deleteModal.question}&quot;
+              </span>
+              ? This action cannot be undone.
+            </p>
+
+            <div className="flex items-center justify-end gap-3">
+              <button
+                type="button"
+                onClick={() =>
+                  setDeleteModal({ isOpen: false, id: null, question: "" })
+                }
+                disabled={isDeleting}
+                className="rounded-md border border-slate-700 px-4 py-2 text-sm font-medium text-slate-300 transition-colors hover:bg-slate-800 disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={executeDelete}
+                disabled={isDeleting}
+                className="rounded-md border border-red-500/20 bg-red-500/10 px-4 py-2 text-sm font-medium text-red-500 transition-colors hover:bg-red-500/20 disabled:opacity-50"
+              >
+                {isDeleting ? "Deleting..." : "Delete FAQ"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

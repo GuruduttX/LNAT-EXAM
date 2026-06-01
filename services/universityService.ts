@@ -76,6 +76,18 @@ export async function getPublishedUniversities() {
     .lean();
 }
 
+export async function getFeaturedUniversities(limit = 6) {
+  await connectDB();
+
+  return University.find({ status: "published" })
+    .sort({ featured: -1, sortOrder: 1, name: 1 })
+    .limit(limit)
+    .select(
+      "name slug location locationLabel city country image cardImage shortDescription excerpt40to60 globalRanking nationalRanking lawSchoolRanking lnatRequirement",
+    )
+    .lean();
+}
+
 export async function getUniversityById(id: string) {
   await connectDB();
   return University.findById(id);
@@ -99,7 +111,7 @@ export async function getPublishedUniversitySlugs() {
 
 export async function updateUniversity(id: string, data: Partial<IUniversity>) {
   await connectDB();
-  return University.findByIdAndUpdate(
+  return await University.findByIdAndUpdate(
     id,
     data,
     // new: true returns the updated document

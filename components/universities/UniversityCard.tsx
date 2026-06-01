@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { ArrowRight, Globe2, GraduationCap, MapPin } from "lucide-react";
 
 import { IUniversity } from "@/types/backend.types";
@@ -23,97 +22,112 @@ export default function UniversityCard({ university }: UniversityCardProps) {
     university.name;
 
   return (
-    <Link href={`/universities/${university.slug}`} className="block h-full">
-      <motion.article
-        whileHover={{ y: -6 }}
-        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-        className="group flex h-full flex-col overflow-hidden rounded-[28px] border border-[#e5ddd0] bg-white shadow-[0_18px_40px_rgba(20,31,45,0.06)] transition-all duration-500 hover:border-[#c5a059]/60 hover:shadow-[0_28px_60px_rgba(20,31,45,0.12)]"
-      >
-        <div className="relative h-64 overflow-hidden bg-[#14263a]">
+    <Link
+      href={`/universities/${university.slug}`}
+      className="block h-full outline-none"
+    >
+      <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-black/[0.07] bg-white shadow-[0_2px_10px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(0,0,0,0.12)]">
+        {/* Top Image Container */}
+        <div className="relative h-[220px] w-full shrink-0 overflow-hidden bg-[#0D1B3E]">
           {imageUrl ? (
             <Image
               src={imageUrl}
               alt={imageAlt}
               fill
-              className="object-cover transition duration-700 group-hover:scale-105"
+              draggable={false}
+              className="object-cover object-center transition-transform duration-500 group-hover:scale-[1.07]"
             />
           ) : (
-            <div className="flex h-full items-center justify-center text-5xl font-serif text-[#d0ae6c]">
+            <div className="flex h-full items-center justify-center text-4xl font-extrabold text-[#C9A84C]/30">
               {university.name.charAt(0)}
             </div>
           )}
 
-          <div className="absolute inset-0 bg-gradient-to-t from-[#09111f]/80 via-[#09111f]/20 to-transparent" />
+          {/* Design System: Image Overlay */}
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 to-transparent" />
 
-          <div className="absolute left-5 top-5 flex flex-wrap gap-2">
-            <span className="rounded-full border border-white/15 bg-[#0f1b2b]/70 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-white backdrop-blur">
+          {/* Top Left Pills */}
+          <div className="absolute left-4 top-4 flex flex-wrap gap-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[10px] font-semibold text-white/70 backdrop-blur-sm">
               LNAT {university.lnatRequirement}
             </span>
             {university.globalRanking ? (
-              <span className="rounded-full border border-[#d7bf92]/35 bg-[#c5a059]/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#f3dfb8] backdrop-blur">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-[#C9A84C]/20 bg-[#C9A84C]/[0.15] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#E8C96A] backdrop-blur-sm">
                 {university.globalRanking}
               </span>
             ) : null}
           </div>
 
-          <div className="absolute inset-x-0 bottom-0 p-5 text-white">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#e6cb94]">
+          {/* Bottom Left Title over Image */}
+          <div className="absolute inset-x-0 bottom-0 p-5">
+            <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.18em] text-[#C9A84C]">
               University Guide
             </p>
-            <h3 className="mt-2 text-2xl font-semibold tracking-tight">
+            <h3 className="text-xl font-bold tracking-tight text-white drop-shadow-md">
               {university.name}
             </h3>
           </div>
         </div>
 
-        <div className="flex flex-1 flex-col p-6">
-          <div className="flex flex-wrap gap-4 text-[11px] uppercase tracking-[0.18em] text-slate-500">
+        {/* Card Body */}
+        <div className="flex flex-1 flex-col p-5">
+          {/* Meta Data */}
+          <div className="mb-3 flex flex-wrap gap-4 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
             <span className="flex items-center gap-1.5">
-              <MapPin className="h-3.5 w-3.5 text-[#b08d4f]" />
+              <MapPin size={13} className="text-[#C9A84C]" />
               {university.country}
             </span>
             {university.established ? (
               <span className="flex items-center gap-1.5">
-                <GraduationCap className="h-3.5 w-3.5 text-[#b08d4f]" />
+                <GraduationCap size={13} className="text-[#C9A84C]" />
                 Est. {university.established}
               </span>
             ) : null}
           </div>
 
-          <p className="mt-4 flex-1 text-sm leading-7 text-slate-600">
+          {/* Description - Clamped to exactly 3 lines max */}
+          <p className="line-clamp-3 text-[13px] leading-relaxed text-slate-500">
             {university.excerpt40to60 ||
               university.shortDescription ||
               `Explore admissions strategy, city life, rankings, and LNAT guidance for ${university.name}.`}
           </p>
 
-          <div className="mt-6 grid grid-cols-2 gap-3 rounded-2xl border border-[#eee7d8] bg-[#fbfaf7] p-4">
-            <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-                Law Ranking
-              </p>
-              <p className="mt-2 text-sm font-medium text-[#0e1b2a]">
-                {university.lawSchoolRanking || "Top law school"}
-              </p>
+          {/* Bottom Data & Footer Wrapper (Pushed to bottom via mt-auto) */}
+          <div className="mt-auto pt-6">
+            {/* Data Grid */}
+            <div className="grid grid-cols-2 gap-3 rounded-xl border border-black/[0.04] bg-[#F7F3EC] p-4">
+              <div>
+                <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-slate-400">
+                  Law Ranking
+                </p>
+                <p className="mt-1 text-[13px] font-bold text-[#0D1B3E]">
+                  {university.lawSchoolRanking || "Top law school"}
+                </p>
+              </div>
+              <div>
+                <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-slate-400">
+                  Location
+                </p>
+                <p className="mt-1 truncate text-[13px] font-bold text-[#0D1B3E]">
+                  {university.city || university.location}
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-                Location
-              </p>
-              <p className="mt-2 text-sm font-medium text-[#0e1b2a]">
-                {university.city || university.location}
-              </p>
-            </div>
-          </div>
 
-          <div className="mt-6 flex items-center justify-between border-t border-[#eee7d8] pt-5">
-            <span className="inline-flex items-center gap-2 text-sm font-semibold text-[#0e1b2a] transition-colors group-hover:text-[#b08d4f]">
-              View full profile
-              <ArrowRight className="h-4 w-4" />
-            </span>
-            <Globe2 className="h-4 w-4 text-[#b08d4f]" />
+            {/* Footer CTA */}
+            <div className="mt-5 flex items-center justify-between border-t border-black/[0.05] pt-4">
+              <span className="inline-flex items-center gap-2 text-[13px] font-bold text-[#0D1B3E] transition-colors duration-200 group-hover:text-[#C9A84C]">
+                View full profile
+                <ArrowRight
+                  size={14}
+                  className="transition-transform duration-200 group-hover:translate-x-1"
+                />
+              </span>
+              <Globe2 size={14} className="text-slate-300" />
+            </div>
           </div>
         </div>
-      </motion.article>
+      </article>
     </Link>
   );
 }

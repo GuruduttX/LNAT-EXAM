@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     }
 
     const uploadedAsset = await uploadAssetService(file, folder);
-
+    console.log(uploadedAsset, "api/upload");
     return NextResponse.json({
       success: true,
       ...uploadedAsset,

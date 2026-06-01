@@ -7,7 +7,9 @@ import { ShieldCheck, MapPin, Trophy, CalendarClock } from "lucide-react";
 // --- Subcomponent Imports ---
 import SectionHeading from "./SectionHeading";
 import UniversityHeroCard from "./UniversityHeroCard";
-import UniversityGrid from "./UniversityGrid";
+import UniversityGrid, {
+  type FeaturedUniversityCardData,
+} from "./UniversityGrid";
 import UniversityMeta, { MetaItem } from "./UniversityMeta";
 
 // --- Animation Variants ---
@@ -37,7 +39,13 @@ const fadeUpVariants: Variants = {
 
 // --- Component ---
 
-export default function FeaturedUniversities() {
+interface FeaturedUniversitiesProps {
+  universities: FeaturedUniversityCardData[];
+}
+
+export default function FeaturedUniversities({
+  universities,
+}: FeaturedUniversitiesProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-5% 0px" });
 
@@ -119,7 +127,7 @@ export default function FeaturedUniversities() {
               <div className="flex-grow h-[1px] bg-[#0F172A]/5" />
             </div>
 
-            <UniversityGrid />
+            <UniversityGrid universities={universities} />
           </div>
         </motion.div>
       </motion.div>

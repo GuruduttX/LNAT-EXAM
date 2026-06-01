@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { motion, Variants } from "framer-motion";
 import { MapPin, ShieldCheck, ArrowRight, Trophy } from "lucide-react";
 
@@ -67,9 +68,11 @@ export default function UniversityCard({
         Uses an elegant 4:3 aspect ratio, avoiding overly tall images 
       */}
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#0F172A]/5">
-        <img
+        <Image
           src={imageUrl}
           alt={`${name} campus`}
+          fill
+          sizes="(min-width: 1024px) 30vw, (min-width: 768px) 45vw, 100vw"
           className="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105"
         />
         

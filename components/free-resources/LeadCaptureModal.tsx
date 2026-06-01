@@ -1,129 +1,231 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
-// types/resources.ts (Optional: if you want to extract types)
-import { LucideIcon } from "lucide-react";
+import type { FormEventHandler } from "react";
+import { useState } from "react";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
+import { X, Lock } from "lucide-react";
 
-export interface ResourceItem {
-  id: string;
-  title: string;
-  category: string;
-  description: string;
-  icon: LucideIcon;
-}
+// Import the IResource interface you defined in ResourcesClient
+import { IResource } from "./ResourcesClient";
 
 interface LeadCaptureModalProps {
   isOpen: boolean;
   onClose: () => void;
-  resource: ResourceItem | null;
+  resource: IResource | null;
 }
+
+const modalBackdrop: Variants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.3 } },
+};
+
+const modalContent: Variants = {
+  hidden: { opacity: 0, scale: 0.95, y: 10 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] as const },
+  },
+};
 
 export default function LeadCaptureModal({
   isOpen,
   onClose,
   resource,
 }: LeadCaptureModalProps) {
-  if (!isOpen || !resource) return null;
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
+    event.preventDefault();
+    if (!resource || isSubmitting) return;
+
+    const formData = new FormData(event.currentTarget);
+    const leadPayload = {
+      name: String(formData.get("name") || "").trim(),
+      email: String(formData.get("email") || "").trim(),
+      phone: String(formData.get("phone") || "").trim(),
+      resource: {
+        id: resource?.id || "",
+        slug: resource?.slug || "",
+        title: resource?.title || "",
+        category: resource?.category || "",
+        fileUrl: resource?.fileUrl || "",
+      },
+      source: "free-resources-modal",
+      submittedAt: new Date().toISOString(),
+    };
+
+    console.log("Resource lead captured:", leadPayload);
+
+    if (resource.fileUrl) {
+      setIsSubmitting(true);
+
+      const downloadLink = document.createElement("a");
+      let objectUrl = "";
+      let linkWasAttached = false;
+
+      try {
+        const response = await fetch(resource.fileUrl);
+        if (!response.ok) {
+          throw new Error("Unable to fetch resource file");
+        }
+
+        const fileBlob = await response.blob();
+        objectUrl = URL.createObjectURL(fileBlob);
+
+        downloadLink.href = objectUrl;
+        downloadLink.download = `${resource.slug || "lnat-resource"}.${resource.fileFormat || "pdf"}`;
+        downloadLink.style.display = "none";
+        document.body.appendChild(downloadLink);
+        linkWasAttached = true;
+        downloadLink.click();
+      } catch (error) {
+        console.error("Resource download failed:", error);
+      } finally {
+        if (linkWasAttached) {
+          document.body.removeChild(downloadLink);
+        }
+        if (objectUrl) {
+          URL.revokeObjectURL(objectUrl);
+        }
+        setIsSubmitting(false);
+      }
+    }
+
+    onClose();
+  };
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0a0f1c]/40 backdrop-blur-md"
-      >
-        <motion.div
-          initial={{ opacity: 0, y: 20, scale: 0.98 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 10, scale: 0.98 }}
-          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="relative w-full max-w-lg overflow-hidden bg-[#fdfbf7] shadow-2xl rounded-sm"
-        >
-          {/* Header */}
-          <div className="bg-[#0a0f1c] px-8 py-10 text-center relative">
-            <button
-              onClick={onClose}
-              className="absolute top-4 right-4 text-white/50 hover:text-white transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            <span className="text-[#c5a059] text-xs font-semibold tracking-widest uppercase mb-3 block">
-              Secure Access
-            </span>
-            <h3 className="text-2xl font-serif text-white mb-2">
-              Unlock the {resource.title}
-            </h3>
-            <p className="text-white/70 text-sm font-light">
-              Provide your details to receive instant access to this curated
-              resource.
-            </p>
-          </div>
+    <AnimatePresence mode="wait">
+      {isOpen && resource && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
+          {/* Background Blur Overlay */}
+          <motion.div
+            variants={modalBackdrop}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            onClick={onClose}
+            className="absolute inset-0 bg-[#0A1628]/40 backdrop-blur-sm"
+          />
 
-          {/* Form */}
-          <form className="p-8 space-y-6" onSubmit={(e) => e.preventDefault()}>
-            <div className="space-y-4">
-              <div>
-                <label
-                  htmlFor="name"
-                  className="block text-xs font-medium text-[#0a0f1c] uppercase tracking-wider mb-1.5"
-                >
-                  Full Name *
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  required
-                  className="w-full bg-transparent border-b border-gray-300 py-2 text-[#0a0f1c] placeholder-gray-400 focus:border-[#c5a059] focus:outline-none focus:ring-0 transition-colors"
-                  placeholder="e.g. John Doe"
-                />
+          {/* Modal Container */}
+          <motion.div
+            variants={modalContent}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            className="relative z-10 w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-[0_24px_64px_rgba(13,27,62,0.3)]"
+          >
+            {/* Design System: Gold Top Accent Bar */}
+            <div className="h-[4px] w-full bg-gradient-to-r from-[#C9A84C] to-[#E8C96A]" />
+
+            {/* Dark Header Area */}
+            <div className="relative bg-[#0D1B3E] px-6 py-8 text-center md:px-10">
+              <button
+                onClick={onClose}
+                className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white/50 transition-colors hover:bg-white/20 hover:text-white"
+              >
+                <X size={16} />
+              </button>
+
+              <div className="mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-[#C9A84C]">
+                <Lock size={18} />
               </div>
 
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-xs font-medium text-[#0a0f1c] uppercase tracking-wider mb-1.5"
-                >
-                  Email Address *
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  required
-                  className="w-full bg-transparent border-b border-gray-300 py-2 text-[#0a0f1c] placeholder-gray-400 focus:border-[#c5a059] focus:outline-none focus:ring-0 transition-colors"
-                  placeholder="john@example.com"
-                />
-              </div>
+              <span className="mb-2 block text-[10px] font-bold uppercase tracking-[0.18em] text-[#C9A84C]">
+                Secure Access
+              </span>
 
-              <div>
-                <label
-                  htmlFor="phone"
-                  className="block text-xs font-medium text-[#0a0f1c] uppercase tracking-wider mb-1.5"
-                >
-                  Phone Number
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  className="w-full bg-transparent border-b border-gray-300 py-2 text-[#0a0f1c] placeholder-gray-400 focus:border-[#c5a059] focus:outline-none focus:ring-0 transition-colors"
-                  placeholder="+91 XXXXX XXXXX"
-                />
-              </div>
+              <h3 className="mb-2 text-[20px] font-bold leading-tight text-white md:text-[24px]">
+                Unlock {resource.title}
+              </h3>
+
+              <p className="mx-auto max-w-sm text-[13px] leading-relaxed text-white/60">
+                Provide your details to receive instant access to this curated
+                resource directly to your inbox.
+              </p>
             </div>
 
-            <button
-              type="submit"
-              className="w-full bg-[#0a0f1c] text-white py-4 mt-4 text-sm tracking-widest uppercase hover:bg-[#c5a059] transition-colors duration-300"
-            >
-              Request Access
-            </button>
-            <p className="text-center text-[10px] text-gray-400 uppercase tracking-wider mt-4">
-              Your information is securely encrypted and never shared.
-            </p>
-          </form>
-        </motion.div>
-      </motion.div>
+            {/* Form Area */}
+            <form className="p-6 md:p-8" onSubmit={handleSubmit}>
+              <div className="mb-6 space-y-4">
+                {/* Name Input */}
+                <div>
+                  <label
+                    htmlFor="name"
+                    className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500"
+                  >
+                    Full Name *
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    required
+                    placeholder="e.g. John Doe"
+                    className="w-full rounded-xl border border-black/[0.07] bg-[#F7F3EC] px-4 py-3.5 text-[13px] text-[#0D1B3E] outline-none transition-all duration-300 focus:border-[#C9A84C]/50 focus:bg-white focus:shadow-[0_4px_20px_rgba(201,168,76,0.1)] placeholder:text-slate-400"
+                  />
+                </div>
+
+                {/* Email Input */}
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500"
+                  >
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    placeholder="john@example.com"
+                    className="w-full rounded-xl border border-black/[0.07] bg-[#F7F3EC] px-4 py-3.5 text-[13px] text-[#0D1B3E] outline-none transition-all duration-300 focus:border-[#C9A84C]/50 focus:bg-white focus:shadow-[0_4px_20px_rgba(201,168,76,0.1)] placeholder:text-slate-400"
+                  />
+                </div>
+
+                {/* Phone Input */}
+                <div>
+                  <label
+                    htmlFor="phone"
+                    className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500"
+                  >
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    placeholder="+91 XXXXX XXXXX"
+                    className="w-full rounded-xl border border-black/[0.07] bg-[#F7F3EC] px-4 py-3.5 text-[13px] text-[#0D1B3E] outline-none transition-all duration-300 focus:border-[#C9A84C]/50 focus:bg-white focus:shadow-[0_4px_20px_rgba(201,168,76,0.1)] placeholder:text-slate-400"
+                  />
+                </div>
+              </div>
+
+              {/* Design System Primary CTA */}
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="inline-flex w-full items-center justify-center gap-2.5 rounded-xl px-6 py-3.5 text-[14px] font-bold text-[#0D1B3E] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                style={{
+                  background:
+                    "linear-gradient(135deg, #C9A84C 0%, #E8C96A 60%, #C9A84C 100%)",
+                  boxShadow: "0 4px 20px rgba(201,168,76,0.45)",
+                }}
+              >
+                {isSubmitting ? "Preparing Download..." : "Request Access"}
+              </button>
+
+              <p className="mt-4 text-center text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-400">
+                Your information is securely encrypted.
+              </p>
+            </form>
+          </motion.div>
+        </div>
+      )}
     </AnimatePresence>
   );
 }

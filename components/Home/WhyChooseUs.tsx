@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion, Variants } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import {
   GraduationCap,
   FileText,
@@ -9,6 +9,7 @@ import {
   Users,
   CalendarCheck,
   Award,
+  ArrowRight,
 } from "lucide-react";
 
 // --- Types & Data ---
@@ -73,18 +74,16 @@ interface MetricItem {
 const metrics: MetricItem[] = [
   { label: "Consortium Universities", value: "100%" },
   { label: "Strategic Focus", value: "Premium" },
-  { label: "Curriculum Standard", value: "202Entry" },
+  { label: "Curriculum Standard", value: "2026 Entry" },
 ];
 
 // --- Animation Variants ---
 
-const staggerContainer = {
+const staggerContainer: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.08,
-    },
+    transition: { staggerChildren: 0.08 },
   },
 };
 
@@ -101,34 +100,42 @@ const fadeUpItem: Variants = {
 
 export default function WhyChooseUs() {
   return (
-    <section className="relative w-full bg-[#FDFBF7] py-12 md:py-16 overflow-hidden border-b border-[#0F172A]/5">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section className="relative w-full border-b border-black/[0.05] bg-[#FDFBF7] py-12 md:py-16 lg:py-20 overflow-hidden">
+      
+      {/* Design System Texture */}
+      <div className="absolute inset-0 pointer-events-none [background-image:radial-gradient(circle,rgba(13,27,62,0.03)_1px,transparent_1px)] [background-size:26px_26px]" />
+
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 relative z-10">
+        
         {/* Compact Editorial Heading Area */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10 pb-6 border-b border-[#0F172A]/5">
+        <div className="mb-10 flex flex-col justify-between gap-5 border-b border-black/[0.05] pb-6 md:flex-row md:items-end">
           <div className="max-w-xl">
-            <div className="inline-flex items-center gap-2 mb-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#C4A47C]" />
-              <span className="text-[10px] font-medium tracking-[0.2em] uppercase text-[#C4A47C]">
+            <div className="mb-3 flex items-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#C9A84C]" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#C9A84C]">
                 Institutional Paradigm
               </span>
             </div>
-            <h2 className="text-2xl md:text-3xl font-serif text-[#0F172A] tracking-tight">
+            <h2 className="text-[clamp(1.5rem,3vw,2.2rem)] font-extrabold leading-tight tracking-tight text-[#0D1B3E]">
               Trusted LNAT Admissions Guidance
             </h2>
           </div>
-          <p className="text-xs md:text-sm text-slate-500 font-light max-w-sm leading-relaxed md:mb-1">
+          <p className="max-w-sm text-[13px] font-medium leading-relaxed text-slate-500 md:mb-1">
             Bridging elite Indian law aspirants with premier global universities
             through highly precise, non-commercial advisory systems.
           </p>
         </div>
 
-        {/* Refined Functional Pillar Grid */}
+        {/* 
+            Refined Functional Pillar Container
+            Mobile: Horizontal Scroll | Desktop: Grid 
+        */}
         <motion.div
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-10% 0px" }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+          className="-mx-4 flex snap-x snap-mandatory overflow-x-auto px-4 pb-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:grid-cols-2 md:gap-5 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-3"
         >
           {pillars.map((pillar) => {
             const Icon = pillar.icon;
@@ -136,18 +143,17 @@ export default function WhyChooseUs() {
               <motion.div
                 key={pillar.id}
                 variants={fadeUpItem}
-                whileHover={{ y: -2 }}
-                className="group relative flex flex-col p-5 bg-white rounded-xl border border-[#0F172A]/5 transition-all duration-500 hover:shadow-[0_8px_24px_-4px_rgba(196,164,124,0.08)] hover:border-[#C4A47C]/20"
+                className="group mr-4 flex w-[85vw] max-w-[320px] shrink-0 snap-center flex-col rounded-xl border border-black/[0.05] bg-white p-5 transition-all duration-500 hover:-translate-y-1 hover:border-[#C9A84C]/30 hover:shadow-[0_12px_30px_-4px_rgba(13,27,62,0.08)] md:mr-0 md:w-auto md:max-w-none"
               >
-                <div className="flex items-center gap-3.5 mb-2.5">
-                  <div className="p-2 rounded-lg bg-[#FDFBF7] border border-[#0F172A]/5 text-[#0F172A]/60 group-hover:text-[#C4A47C] transition-colors duration-500 shrink-0">
-                    <Icon size={16} strokeWidth={1.5} />
+                <div className="mb-3 flex items-center gap-3.5">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-black/[0.04] bg-[#FDFBF7] text-[#0D1B3E]/60 transition-colors duration-500 group-hover:bg-[#C9A84C]/10 group-hover:text-[#C9A84C]">
+                    <Icon size={18} strokeWidth={1.5} />
                   </div>
-                  <h3 className="text-sm font-medium tracking-wide text-[#0F172A] group-hover:text-[#C4A47C] transition-colors duration-500">
+                  <h3 className="text-[14px] font-bold tracking-wide text-[#0D1B3E] transition-colors duration-500 group-hover:text-[#C9A84C]">
                     {pillar.title}
                   </h3>
                 </div>
-                <p className="text-xs text-slate-500 font-light leading-relaxed pl-[38px]">
+                <p className="pl-[54px] text-[13px] font-medium leading-relaxed text-slate-500">
                   {pillar.description}
                 </p>
               </motion.div>
@@ -155,24 +161,48 @@ export default function WhyChooseUs() {
           })}
         </motion.div>
 
-        {/* Muted Editorial Trust Strip */}
-        <div className="mt-10 pt-6 border-t border-[#0F172A]/5 flex flex-wrap items-center justify-between gap-4">
-          <span className="text-[10px] font-medium tracking-widest uppercase text-slate-400">
+        {/* CTA Button Added Here */}
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="mt-4 flex justify-center md:mt-8  "
+        >
+          <a
+            href="/consultation" // Update with your actual route
+            className="group flex w-full items-center justify-center gap-2.5 rounded-xl px-7 py-3.5 text-[14px] font-bold text-[#0D1B3E] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] sm:w-auto"
+            style={{
+              background: "linear-gradient(135deg, #C9A84C 0%, #E8C96A 60%, #C9A84C 100%)",
+              boxShadow: "0 4px 20px rgba(201,168,76,0.35)",
+            }}
+          >
+            Get Expert Guidance
+            <ArrowRight size={16} className="transition-transform duration-200 group-hover:translate-x-1" />
+          </a>
+        </motion.div>
+
+        {/* Muted Editorial Trust Strip (Mobile Optimized) */}
+        <div className="mt-10 flex flex-col gap-6 border-t border-black/[0.05] pt-6 md:mt-12 md:flex-row md:items-center md:justify-between md:gap-4">
+          <span className="text-[11px] font-bold tracking-widest uppercase text-slate-400">
             Admissions Standards Metric
           </span>
-          <div className="flex items-center gap-8">
+          
+          {/* Metrics wrapped nicely for mobile screens */}
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-4 md:gap-8">
             {metrics.map((metric, idx) => (
               <div key={idx} className="flex items-baseline gap-1.5">
-                <span className="text-sm font-serif text-[#0F172A] font-medium">
+                <span className="text-[16px] font-extrabold text-[#0D1B3E]">
                   {metric.value}
                 </span>
-                <span className="text-[10px] text-slate-400 font-light uppercase tracking-wider">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                   {metric.label}
                 </span>
               </div>
             ))}
           </div>
         </div>
+        
       </div>
     </section>
   );

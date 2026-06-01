@@ -55,6 +55,12 @@ export const faqCategories = [
   "LNAT Preparation",
   "University Specifics",
   "Logistics & Scoring",
+  "LNAT basics",
+  "registration and dates",
+  "exam format",
+  "essay section",
+  "universities and admissions",
+  "fees / logistics",
 ] as const;
 
 export type FAQCategory = typeof faqCategories[number];
@@ -64,6 +70,8 @@ export interface IFAQ {
   category: FAQCategory;
   question: string;
   answer: string; // This can store HTML if your CMS uses a rich text editor for links/formatting
+  sourceUrl?: string;
+  status?: "draft" | "published";
   createdAt?: Date;
   updatedAt?: Date;
 }

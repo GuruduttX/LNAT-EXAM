@@ -1,249 +1,321 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { useState, useRef } from "react";
 import {
-  ArrowRight,
+  motion,
+  AnimatePresence,
+  useInView,
+  type Variants,
+} from "framer-motion";
+import {
   Search,
-  MessageSquare,
-  BookOpen,
-  Shield,
   HelpCircle,
+  X,
+  ArrowRight,
+  Lightbulb,
+  MapPin,
+  Globe2,
 } from "lucide-react";
+import EnquiryPopupForm from "@/utils/EnquiryForm";
 
-// --- Animation Variants ---
+// --- 10 Highly Relevant FAQs for Indian Students ---
+const LNAT_FAQS = [
+  {
+    id: 1,
+    q: "Is the LNAT required for all UK law schools?",
+    a: "No, but it is mandatory for the most prestigious 'Russell Group' universities, including Oxford, Cambridge, UCL, LSE, and King's College London. If you are targeting top-tier UK law schools from India, taking the LNAT is non-negotiable.",
+  },
+  {
+    id: 2,
+    q: "Can I use my CLAT preparation for the LNAT?",
+    a: "While both test reading comprehension and logical reasoning, they are very different. CLAT is heavily knowledge-based (Current Affairs, Legal Reasoning), whereas the LNAT assumes zero prior legal or general knowledge and focuses entirely on critical thinking, deduction, and essay writing.",
+  },
+  {
+    id: 3,
+    q: "How much does the LNAT cost for students testing in India?",
+    a: "For candidates taking the test at an international test centre (outside the UK/EU), the LNAT costs £120. Payment must be made online via major credit/debit cards during registration.",
+  },
+  {
+    id: 4,
+    q: "Where are the LNAT test centres located in India?",
+    a: "The LNAT is administered through Pearson VUE. Test centres are typically available in major Indian metropolitan cities including New Delhi, Mumbai, Bangalore, Chennai, and Hyderabad. You can select your preferred centre during registration.",
+  },
+  {
+    id: 5,
+    q: "Does my Class 12 board percentage matter if I take the LNAT?",
+    a: "Absolutely. UK universities look at your UCAS application holistically. Your Class 12 board scores (CBSE/ISC/State) or IB/A-Level predicted grades must meet the university's minimum entry requirements. The LNAT acts as a differentiator among applicants who all have top grades.",
+  },
+  {
+    id: 6,
+    q: "When should I book the LNAT for Oxford or Cambridge?",
+    a: "Oxford and Cambridge have an earlier UCAS deadline (typically October 15th). You must register for and sit the LNAT *before* this deadline, usually by mid-October. Booking opens in August, and Indian test slots fill up very quickly.",
+  },
+  {
+    id: 7,
+    q: "Is the essay section (Section B) graded by the computer?",
+    a: "No. Section A (multiple choice) is computer-marked out of 42. Section B (the essay) is not marked by the LNAT consortium at all. Instead, it is sent directly to the universities you apply to, where admissions tutors read it to assess your ability to argue logically and write persuasively.",
+  },
+  {
+    id: 8,
+    q: "Do UK law schools prefer CBSE, ISC, or IB boards?",
+    a: "Top UK universities accept CBSE, ISC, and IB equally. However, they have strict equivalent requirements (e.g., 90-95% overall in CBSE/ISC, or 38-40 points in IB). The LNAT levels the playing field regardless of which board you studied under.",
+  },
+  {
+    id: 9,
+    q: "Are there scholarships available for Indian law students in the UK?",
+    a: "Yes, though they are highly competitive. Universities like UCL, KCL, and Oxford offer specific international scholarships (like the Felix Scholarship). A high LNAT score can indirectly strengthen your application for merit-based financial aid.",
+  },
+  {
+    id: 10,
+    q: "What is considered a 'good' LNAT score for an international applicant?",
+    a: "The average global LNAT score usually hovers around 22/42. To be competitive for elite universities like Oxford or UCL, you should aim for a score of 27 or higher. However, scores are assessed alongside your personal statement, essay, and academic grades.",
+  },
+];
+
+// Split FAQs for the two scrolling columns to create the Masonry effect
+const col1Faqs = LNAT_FAQS.filter((_, i) => i % 2 === 0);
+const col2Faqs = LNAT_FAQS.filter((_, i) => i % 2 !== 0);
+
+// Design System Variants
 const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
+  hidden: { opacity: 0, y: 22 },
+  visible: (delay: number = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
-  },
+    transition: { duration: 0.65, delay, ease: [0.22, 1, 0.36, 1] as const },
+  }),
 };
 
-const staggerContainer: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15, delayChildren: 0.2 },
-  },
-};
-
-const float: Variants = {
-  animate: {
-    y: [0, -8, 0],
-    transition: {
-      duration: 6,
-      repeat: Infinity,
-      ease: "easeInOut",
-    },
-  },
-};
-
-const floatDelayed: Variants = {
-  animate: {
-    y: [0, 8, 0],
-    transition: {
-      duration: 7,
-      repeat: Infinity,
-      ease: "easeInOut",
-      delay: 1,
-    },
-  },
+const stagger: Variants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.09, delayChildren: 0.05 } },
 };
 
 export default function FAQHero() {
-  return (
-    <section className="relative bg-[#0a0f1c] pt-24 pb-16 md:pt-32 md:pb-20 overflow-hidden px-6 lg:px-12 border-b border-white/5">
-      {/* Ambient Atmospheric Background - Slightly smaller for FAQ */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Soft left gold glow */}
-        <div className="absolute top-0 -left-40 w-[500px] h-[500px] bg-[#c5a059] opacity-[0.03] blur-[100px] rounded-full" />
-        {/* Deep right slate/navy glow */}
-        <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-[#1e293b] opacity-[0.2] blur-[120px] rounded-full" />
-      </div>
+  const ref = useRef<HTMLElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-8% 0px" });
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedFaq, setSelectedFaq] = useState<(typeof LNAT_FAQS)[0] | null>(
+    null,
+  );
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-          {/* ========================================== */}
-          {/* LEFT CONTENT: Editorial & Typography       */}
-          {/* ========================================== */}
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            animate="visible"
-            className="lg:col-span-5 flex flex-col justify-center text-center lg:text-left"
-          >
-            {/* Premium Badge */}
+  // Reusable FAQ Card Component
+  const FaqCard = ({ faq }: { faq: (typeof LNAT_FAQS)[0] }) => (
+    <div
+      onClick={() => setSelectedFaq(faq)}
+      className="group cursor-pointer rounded-2xl border border-black/[0.07] bg-white p-5 shadow-[0_2px_10px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A84C]/40 hover:shadow-[0_16px_40px_rgba(0,0,0,0.08)]"
+    >
+      <div className="mb-3 flex h-8 w-8 items-center justify-center rounded-full bg-[#F7F3EC] text-[#C9A84C] transition-colors group-hover:bg-[#C9A84C] group-hover:text-white">
+        <HelpCircle size={14} strokeWidth={2.5} />
+      </div>
+      <h3 className="text-[13px] font-bold leading-snug text-[#0D1B3E] transition-colors group-hover:text-[#C9A84C]">
+        {faq.q}
+      </h3>
+      {/** this is only for the AEO and GEO */}
+      <div className="sr-only">{faq.a}</div>
+    </div>
+  );
+
+  return (
+    <>
+    <EnquiryPopupForm isOpen={isOpen} onClose={()=> setIsOpen(false)}/>
+      <section
+        ref={ref}
+        className="relative w-full overflow-hidden bg-[#F7F3EC] px-4 py-14 sm:px-6 md:py-20 lg:px-8"
+      >
+        {/* Design System: Dot grid texture */}
+        <div
+          className="absolute inset-0 pointer-events-none opacity-60
+        [background-image:radial-gradient(circle,rgba(13,27,62,0.05)_1px,transparent_1px)]
+        [background-size:26px_26px]"
+        />
+
+        <div className="relative z-10 mx-auto max-w-[1280px]">
+          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
+            {/* ========================================== */}
+            {/* LEFT CONTENT: Light Theme Typography       */}
+            {/* ========================================== */}
             <motion.div
-              variants={fadeUp}
-              className="flex justify-center lg:justify-start mb-6 lg:mb-8"
+              variants={stagger}
+              initial="hidden"
+              animate={inView ? "visible" : "hidden"}
+              className="flex flex-col"
             >
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#c5a059]/30 bg-[#c5a059]/5 backdrop-blur-sm">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#c5a059] animate-pulse" />
-                <span className="text-[#c5a059] text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase">
-                  Information Desk
+              {/* Design System Pill */}
+              <motion.div
+                variants={fadeUp}
+                className="mb-6 flex justify-center lg:justify-start"
+              >
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-[#0D1B3E]/12 bg-[#0D1B3E]/[0.06] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-[#0D1B3E]">
+                  <Globe2 size={12} className="text-[#C9A84C]" />
+                  India Application Helpdesk
                 </span>
+              </motion.div>
+
+              {/* Heading */}
+              <motion.h1
+                variants={fadeUp}
+                className="text-center text-[clamp(1.9rem,4.5vw,3.5rem)] font-extrabold leading-tight tracking-tight text-[#0D1B3E] lg:text-start"
+              >
+                Your Pathway to UK Law, <br className="hidden lg:block" />
+                <span className="bg-gradient-to-r from-[#C9A84C] to-[#E8C96A] bg-clip-text text-transparent">
+                  Demystified.
+                </span>
+              </motion.h1>
+
+              {/* Supporting Text */}
+              <motion.p
+                variants={fadeUp}
+                className="mx-auto mt-5 max-w-xl text-center text-[14px] leading-relaxed text-slate-500 lg:mx-0 lg:text-start"
+              >
+                From test centre logistics in New Delhi to balancing CBSE boards
+                with LNAT prep—find exact answers tailored for Indian students
+                targeting Oxford, Cambridge, and UCL.
+              </motion.p>
+
+              {/* CTA Buttons */}
+              <motion.div
+                variants={fadeUp}
+                className="mt-8 flex flex-col items-center gap-4 sm:flex-row lg:justify-start"
+              >
+                <button
+                  className="group inline-flex w-full items-center justify-center gap-2.5 rounded-xl px-6 py-3.5 text-[14px] font-bold text-[#0D1B3E] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] sm:w-auto"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, #C9A84C 0%, #E8C96A 60%, #C9A84C 100%)",
+                    boxShadow: "0 4px 20px rgba(201,168,76,0.35)",
+                  }}
+                  onClick={() => setIsOpen(true)}
+                >
+                  Ask a Question
+                  <ArrowRight
+                    size={14}
+                    className="transition-transform duration-200 group-hover:translate-x-1"
+                  />
+                </button>
+
+                <button className="group inline-flex w-full items-center justify-center gap-2.5 rounded-xl border border-black/[0.07] bg-white px-6 py-3.5 text-[14px] font-bold text-[#0D1B3E] shadow-sm transition-all duration-300 hover:bg-slate-50 hover:shadow-md sm:w-auto">
+                  <Search size={14} className="text-[#C9A84C]" />
+                  Browse Topics
+                </button>
+              </motion.div>
+            </motion.div>
+
+            {/* ========================================== */}
+            {/* RIGHT VISUAL: Scrolling Masonry FAQ Grid   */}
+            {/* ========================================== */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={inView ? { opacity: 1 } : { opacity: 0 }}
+              transition={{ duration: 1, delay: 0.2 }}
+              className="relative h-[450px] w-full overflow-hidden lg:h-[550px]"
+              style={{
+                // Elegant top/bottom fade to mask the scrolling edges
+                maskImage:
+                  "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)",
+                WebkitMaskImage:
+                  "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)",
+              }}
+            >
+              <div className="absolute inset-0 grid grid-cols-2 gap-4 px-2">
+                {/* Column 1 (Scrolls UP slowly) */}
+                <motion.div
+                  animate={{ y: ["0%", "-50%"] }}
+                  transition={{
+                    duration: 40,
+                    ease: "linear",
+                    repeat: Infinity,
+                  }}
+                  className="flex flex-col gap-4 pt-8"
+                >
+                  {/* Render array twice to create seamless infinite loop */}
+                  {[...col1Faqs, ...col1Faqs].map((faq, i) => (
+                    <FaqCard key={`col1-${i}`} faq={faq} />
+                  ))}
+                </motion.div>
+
+                {/* Column 2 (Scrolls DOWN slowly - starts offset) */}
+                <motion.div
+                  animate={{ y: ["-50%", "0%"] }}
+                  transition={{
+                    duration: 45,
+                    ease: "linear",
+                    repeat: Infinity,
+                  }}
+                  className="flex flex-col gap-4"
+                >
+                  {[...col2Faqs, ...col2Faqs].map((faq, i) => (
+                    <FaqCard key={`col2-${i}`} faq={faq} />
+                  ))}
+                </motion.div>
               </div>
             </motion.div>
+          </div>
+        </div>
 
-            {/* Cinematic Heading */}
-            <motion.h1
-              variants={fadeUp}
-              className="text-4xl md:text-5xl lg:text-[3.25rem] font-serif text-white mb-5 leading-[1.1] tracking-tight"
-            >
-              Frequently Asked <br className="hidden lg:block" />
-              <span className="text-white/50 italic font-light">
-                Questions.
-              </span>
-            </motion.h1>
-
-            {/* Supporting Text */}
-            <motion.p
-              variants={fadeUp}
-              className="text-base md:text-lg text-slate-400 font-light leading-relaxed mb-8 lg:mb-10 max-w-xl mx-auto lg:mx-0"
-            >
-              Clarification on the admissions process, examination logistics,
-              and strategies for securing your placement at elite institutions.
-            </motion.p>
-
-            {/* CTA Buttons */}
-            <motion.div
-              variants={fadeUp}
-              className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-8 lg:mb-10"
-            >
-              <button className="w-full sm:w-auto group relative inline-flex items-center justify-center gap-3 px-8 py-3.5 bg-[#FDFBF7] text-[#0a0f1c] rounded-full overflow-hidden transition-all duration-500 hover:bg-white hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(253,251,247,0.15)]">
-                <span className="relative z-10 text-sm font-semibold tracking-wide">
-                  Contact Support
-                </span>
-                <MessageSquare
-                  size={16}
-                  className="relative z-10 group-hover:scale-110 transition-transform duration-300"
-                />
-              </button>
-
-              <button className="w-full sm:w-auto group inline-flex items-center justify-center gap-3 px-8 py-3.5 bg-transparent border border-white/20 text-white rounded-full transition-all duration-300 hover:bg-white/5 hover:border-white/40">
-                <span className="text-sm font-medium tracking-wide">
-                  Browse Topics
-                </span>
-                <Search
-                  size={16}
-                  className="text-white/70 group-hover:text-white transition-colors"
-                />
-              </button>
-            </motion.div>
-
-            {/* Trust Indicator */}
-            <motion.div
-              variants={fadeUp}
-              className="flex items-center justify-center lg:justify-start gap-3 pt-5 border-t border-white/10"
-            >
-              <Shield size={16} className="text-[#c5a059]" />
-              <span className="text-xs text-slate-400 tracking-wide uppercase font-medium">
-                Comprehensive LNAT Guidance
-              </span>
-            </motion.div>
-          </motion.div>
-
-          {/* ========================================== */}
-          {/* RIGHT VISUAL: Cinematic Composition        */}
-          {/* ========================================== */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-            // Notice the reduced height here compared to ApplyHero (max 500px instead of 600px)
-            className="lg:col-span-7 relative h-[350px] sm:h-[400px] lg:h-[500px] w-full flex items-center justify-center lg:justify-end"
-          >
-            {/* Main Image Container */}
-            <div className="relative w-full max-w-[450px] lg:max-w-none aspect-[4/3] lg:aspect-[16/11] rounded-3xl overflow-hidden border border-white/10 shadow-[0_0_60px_rgba(0,0,0,0.4)]">
-              {/* Overlay Gradients for Cinematic Feel */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-[#0a0f1c]/90 via-[#0a0f1c]/30 to-transparent z-10" />
-              <div className="absolute inset-0 bg-[#c5a059]/10 mix-blend-overlay z-10" />
-
-              {/* High-Quality Institutional/Library Image */}
-              <img
-                src="https://plus.unsplash.com/premium_photo-1679547203062-cb664e169eaf?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                alt="Elite Law Library"
-                className="w-full h-full object-cover scale-105 transform hover:scale-110 transition-transform duration-[20s] ease-out"
+        {/* ========================================== */}
+        {/* FULL SCREEN MODAL DIALOG                   */}
+        {/* ========================================== */}
+        <AnimatePresence mode="wait">
+          {selectedFaq && (
+            <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
+              {/* Dark Backdrop Blur */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                onClick={() => setSelectedFaq(null)}
+                className="absolute inset-0 bg-[#0A1628]/60 backdrop-blur-sm"
               />
 
-              {/* Decorative Frame Line */}
-              <div className="absolute inset-4 border border-[#c5a059]/20 rounded-2xl z-20 pointer-events-none" />
-            </div>
+              {/* Modal Card */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                className="relative z-10 w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-[0_24px_64px_rgba(13,27,62,0.3)]"
+              >
+                {/* Top Accent Bar */}
+                <div className="h-[4px] w-full bg-gradient-to-r from-[#C9A84C] to-[#E8C96A]" />
 
-            {/* Floating UI Card 1: Support Desk */}
-            <motion.div
-              variants={float}
-              animate="animate"
-              className="absolute top-[10%] lg:top-[15%] right-2 lg:-right-4 z-30 w-52 p-4 rounded-2xl bg-[#1e293b]/70 backdrop-blur-xl border border-white/10 shadow-2xl"
-            >
-              <div className="flex items-start gap-3">
-                <div className="p-2 rounded-lg bg-[#c5a059]/10 border border-[#c5a059]/20">
-                  <HelpCircle size={16} className="text-[#c5a059]" />
-                </div>
-                <div>
-                  <p className="text-[10px] text-slate-400 uppercase tracking-wider mb-0.5">
-                    Admissions
-                  </p>
-                  <p className="text-sm text-white font-medium">Support Desk</p>
-                </div>
-              </div>
-              <div className="mt-3 flex items-center justify-between">
-                <span className="text-[10px] text-slate-400">
-                  Response time
-                </span>
-                <span className="text-[10px] font-medium text-[#c5a059] bg-[#c5a059]/10 px-2 py-0.5 rounded">
-                  &lt; 24 Hours
-                </span>
-              </div>
-            </motion.div>
+                <div className="p-6 md:p-8">
+                  <button
+                    onClick={() => setSelectedFaq(null)}
+                    className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-400 transition-colors hover:bg-slate-200 hover:text-[#0D1B3E]"
+                  >
+                    <X size={16} />
+                  </button>
 
-            {/* Floating UI Card 2: Knowledge Base */}
-            <motion.div
-              variants={floatDelayed}
-              animate="animate"
-              className="absolute bottom-[10%] lg:bottom-[15%] left-2 lg:-left-6 z-30 w-60 p-4 rounded-2xl bg-[#0F172A]/80 backdrop-blur-xl border border-white/10 shadow-2xl"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <div className="p-2 rounded-xl bg-white/5 border border-white/10 text-white">
-                  <BookOpen size={18} strokeWidth={1.5} />
-                </div>
-                <div>
-                  <h3 className="text-white text-sm font-medium">
-                    Knowledge Base
+                  <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-[#C9A84C]/[0.08] text-[#C9A84C]">
+                    <HelpCircle size={18} strokeWidth={2} />
+                  </div>
+
+                  <h3 className="mb-4 text-[18px] font-bold leading-snug text-[#0D1B3E]">
+                    {selectedFaq.q}
                   </h3>
-                  <p className="text-slate-400 text-xs mt-0.5">
-                    50+ Curated Answers
-                  </p>
-                </div>
-              </div>
-              <div className="pt-3 border-t border-white/10 flex items-center gap-2">
-                <Search size={12} className="text-slate-400" />
-                <span className="text-xs text-slate-400">
-                  Search by topic...
-                </span>
-              </div>
-            </motion.div>
 
-            {/* Subtle floating decorative dots */}
-            <motion.div
-              animate={{ opacity: [0.3, 0.7, 0.3] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute top-1/3 -right-8 w-2 h-2 rounded-full bg-[#c5a059] blur-[2px] hidden lg:block"
-            />
-            <motion.div
-              animate={{ opacity: [0.2, 0.6, 0.2] }}
-              transition={{
-                duration: 5,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 1,
-              }}
-              className="absolute bottom-1/3 -left-10 w-3 h-3 rounded-full bg-white blur-[2px] hidden lg:block"
-            />
-          </motion.div>
-        </div>
-      </div>
-    </section>
+                  <div className="rounded-xl border border-black/[0.05] bg-[#FDFBF7] p-5">
+                    <p className="text-[14px] leading-relaxed text-slate-600">
+                      {selectedFaq.a}
+                    </p>
+                  </div>
+
+                  <div className="mt-6 flex justify-end border-t border-black/[0.05] pt-4">
+                    <button
+                      onClick={() => setSelectedFaq(null)}
+                      className="rounded-xl bg-[#0D1B3E] px-6 py-2.5 text-[13px] font-bold text-white transition-colors hover:bg-[#162447]"
+                    >
+                      Close Answer
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
+      </section>
+    </>
   );
 }

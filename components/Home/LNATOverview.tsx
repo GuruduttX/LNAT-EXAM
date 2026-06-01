@@ -25,6 +25,7 @@ import {
   Clock,
   CheckCircle,
 } from "lucide-react";
+import EnquiryPopupForm from "@/utils/EnquiryForm";
 
 // ─────────────────────────────────────────────────────────────
 // SHARED PRIMITIVES
@@ -456,7 +457,7 @@ function WhyStudentsChoose() {
 
   return (
     <div ref={ref} className="mb-20 lg:mb-28">
-      <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="grid lg:grid-cols-2 gap-12 items-center text-center md:text-start">
         {/* Left: editorial text */}
         <motion.div
           variants={stagger}
@@ -515,7 +516,7 @@ function WhyStudentsChoose() {
             <motion.div
               key={i}
               variants={fadeUp}
-              className="flex items-center gap-3 mb-2.5"
+              className="flex items-center gap-3 mb-2.5 text-start"
             >
               <CheckCircle
                 size={14}
@@ -1385,8 +1386,10 @@ const journey = [
     icon: <Star size={18} strokeWidth={1.5} />,
   },
 ];
-
-function LNATJourney() {
+interface LNATJourneyprops {
+  setIsOpen: (isOpen: boolean) => void;
+}
+function LNATJourney({ setIsOpen }: LNATJourneyprops) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-8% 0px" });
 
@@ -1558,6 +1561,7 @@ function LNATJourney() {
         </div>
       </div>
       <button
+        onClick={() => setIsOpen(true)}
         className="
           group relative overflow-hidden rounded-lg
           border border-[#C9A227]/40
@@ -1567,24 +1571,25 @@ function LNATJourney() {
           hover:-translate-y-0.5
           hover:border-[#C9A227]
           hover:bg-[#13294B] block mx-auto
+          mt-10
         "
       >
         <span
           className="
-      absolute inset-0 -translate-x-full
-      bg-gradient-to-r from-transparent via-white/10 to-transparent
-      transition-transform duration-700
-      group-hover:translate-x-full
-    "
+          absolute inset-0 -translate-x-full
+          bg-gradient-to-r from-transparent via-white/10 to-transparent
+          transition-transform duration-700
+          group-hover:translate-x-full
+        "
         />
 
         <span className="relative flex items-center gap-2">
           Get Full Guidance
           <span
             className="
-        transition-transform duration-300
-        group-hover:translate-x-1
-      "
+              transition-transform duration-300
+              group-hover:translate-x-1
+            "
           >
             →
           </span>
@@ -1599,44 +1604,48 @@ function LNATJourney() {
 // ─────────────────────────────────────────────────────────────
 
 export default function LNATOverview() {
+  const[isOpen, setIsOpen] = useState(false);;
   return (
-    <section
-      className="relative w-full overflow-hidden"
-      style={{ background: "#FDFBF7" }}
-    >
-      <style>{`
+    <>
+      <EnquiryPopupForm isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <section
+        className="relative w-full overflow-hidden"
+        style={{ background: "#FDFBF7" }}
+      >
+        <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Cormorant+Garamond:wght@300;400;500&display=swap');
       `}</style>
 
-      {/* Dot grid bg */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle, rgba(13,27,62,0.04) 1px, transparent 1px)",
-          backgroundSize: "28px 28px",
-        }}
-      />
+        {/* Dot grid bg */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle, rgba(13,27,62,0.04) 1px, transparent 1px)",
+            backgroundSize: "28px 28px",
+          }}
+        />
 
-      {/* Gold ambient top */}
-      <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none"
-        style={{
-          width: 900,
-          height: 400,
-          background:
-            "radial-gradient(ellipse, rgba(201,168,76,0.05) 0%, transparent 70%)",
-        }}
-      />
+        {/* Gold ambient top */}
+        <div
+          className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none"
+          style={{
+            width: 900,
+            height: 400,
+            background:
+              "radial-gradient(ellipse, rgba(201,168,76,0.05) 0%, transparent 70%)",
+          }}
+        />
 
-      <div className="max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-12 py-16 lg:py-24 relative z-10">
-        <LNATHero />
-        <WhyLNATDifferent />
-        <WhyStudentsChoose />
-        <ExamSnapshot />
-        <SkillVisualization />
-        <LNATJourney />
-      </div>
-    </section>
+        <div className="max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-12 py-16 lg:py-24 relative z-10">
+          <LNATHero />
+          <WhyLNATDifferent />
+          <WhyStudentsChoose />
+          <ExamSnapshot />
+          <SkillVisualization />
+          <LNATJourney setIsOpen={() => setIsOpen(true)} />
+        </div>
+      </section>
+    </>
   );
 }

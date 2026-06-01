@@ -5,11 +5,36 @@ import ExamPattern from "@/components/Home/ExamPattern/ExamPattern";
 import LNATTimeline from "@/components/Home/TimeLine/LNATTimeline";
 import FeaturedUniversities from "@/components/Home/FeaturedUniversities/FeaturedUniversities";
 import WhyChooseUs from "@/components/Home/WhyChooseUs";
-import FreeResourcesPreview from "@/components/Home/FreeResourcesPreview";
 import FAQPreview from "@/components/Home/FAQPreview";
 import FinalCTA from "@/components/Home/FinalCTA";
+import type { FeaturedUniversityCardData } from "@/components/Home/FeaturedUniversities/UniversityGrid";
+import { getFeaturedUniversities } from "@/services/universityService";
 
-export default function Home() {
+export default async function Home() {
+  const universityDocuments = await getFeaturedUniversities(6);
+  const universities = universityDocuments.map(
+    (university): FeaturedUniversityCardData => ({
+      id: university._id.toString(),
+      slug: university.slug,
+      name: university.name,
+      location:
+        university.locationLabel ||
+        [university.city || university.location, university.country]
+          .filter(Boolean)
+          .join(", "),
+      description:
+        university.excerpt40to60 ||
+        university.shortDescription ||
+        `Explore admissions guidance for ${university.name}.`,
+      imageUrl: university.cardImage?.url || university.image,
+      ranking:
+        university.lawSchoolRanking ||
+        university.globalRanking ||
+        university.nationalRanking,
+      lnatRequired: university.lnatRequirement === "Required",
+    }),
+  );
+
   return (
     <main>
       <HomeHero />
@@ -17,9 +42,8 @@ export default function Home() {
       <LNATOverview />
       <ExamPattern />
       <LNATTimeline />
-      <FeaturedUniversities />
+      <FeaturedUniversities universities={universities} />
       <WhyChooseUs />
-      <FreeResourcesPreview />
       <FAQPreview />
       <FinalCTA />
     </main>

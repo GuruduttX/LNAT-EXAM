@@ -3,13 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-
-const faqCategories = [
-  "Admissions Process",
-  "LNAT Preparation",
-  "University Specifics",
-  "Logistics & Scoring",
-];
+import RichTextEditor from "@/shared/RichTextEditor";
+import { faqCategories } from "@/types/backend.types";
 
 const inputClass = `
   mt-2 w-full px-4 py-3 rounded-md
@@ -22,63 +17,80 @@ const inputClass = `
 
 export default function CreateFAQPage() {
   const router = useRouter();
-  const [isLoaded, setIsLoaded] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
+  const [isSavingDraft, setIsSavingDraft] = useState(false);
 
-  const [form, setForm] = useState({
-    category: "",
-    question: "",
-    answer: "",
+  const [form, setForm] = useState(() => {
+    const emptyForm = {
+      category: "",
+      question: "",
+      answer: "",
+      sourceUrl: "",
+    };
+
+    if (typeof window === "undefined") return emptyForm;
+
+    const savedDraft = localStorage.getItem("lnat_faq_draft");
+    if (!savedDraft) return emptyForm;
+
+    try {
+      return JSON.parse(savedDraft) as typeof emptyForm;
+    } catch {
+      return emptyForm;
+    }
   });
 
-  // 1. READ EFFECT (Load from local storage on mount)
+  // Auto-save on each change so editors can safely resume unfinished FAQs.
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const savedDraft = localStorage.getItem("lnat_faq_draft");
-      if (savedDraft) {
-        setForm(JSON.parse(savedDraft));
-      }
-      setIsLoaded(true);
-    }
-  }, []);
-
-  // 2. WRITE EFFECT (Auto-save on keystroke)
-  useEffect(() => {
-    if (typeof window !== "undefined" && isLoaded) {
       localStorage.setItem("lnat_faq_draft", JSON.stringify(form));
     }
-  }, [form, isLoaded]);
+  }, [form]);
 
   const updateForm = (field: keyof typeof form, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handlePublish = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const submitFAQ = async (status: "draft" | "published") => {
     if (!form.category || !form.question || !form.answer) {
-      toast.error("Please fill in all fields.");
+      toast.error("Category, question, and answer are required.");
       return;
     }
 
-    setIsPublishing(true);
+    const setLoading =
+      status === "published" ? setIsPublishing : setIsSavingDraft;
+    setLoading(true);
+
     try {
       const res = await fetch("/api/faqs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, status }),
       });
 
-      if (!res.ok) throw new Error("Failed to publish");
+      if (!res.ok) throw new Error("Failed to save FAQ");
 
-      toast.success("FAQ published successfully!");
-      localStorage.removeItem("lnat_faq_draft"); // Clear draft on success
+      toast.success(
+        status === "published"
+          ? "FAQ published successfully!"
+          : "FAQ draft saved to the database!",
+      );
+      localStorage.removeItem("lnat_faq_draft");
       router.push("/admin/faqs");
-    } catch (error) {
-      toast.error("Failed to publish FAQ");
+    } catch {
+      toast.error(
+        status === "published"
+          ? "Failed to publish FAQ"
+          : "Failed to save FAQ draft",
+      );
     } finally {
-      setIsPublishing(false);
+      setLoading(false);
     }
+  };
+
+  const handlePublish = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await submitFAQ("published");
   };
 
   return (
@@ -137,14 +149,31 @@ export default function CreateFAQPage() {
             <label className="text-sm font-medium text-slate-400">
               Answer <span className="text-red-400">*</span>
             </label>
-            <textarea
-              required
-              rows={5}
+            <div className="mt-2 overflow-hidden rounded-xl border border-slate-800 text-gray-900">
+              <RichTextEditor
               value={form.answer}
-              onChange={(e) => updateForm("answer", e.target.value)}
-              placeholder="Enter the detailed answer here..."
-              className={`${inputClass} resize-none`}
+                onChange={(value) => updateForm("answer", value)}
+                minHeight="35vh"
+                maxHeight="50vh"
+              />
+            </div>
+          </div>
+
+          {/* Source URL */}
+          <div>
+            <label className="text-sm font-medium text-slate-400">
+              Source URL
+            </label>
+            <input
+              type="url"
+              value={form.sourceUrl}
+              onChange={(e) => updateForm("sourceUrl", e.target.value)}
+              placeholder="https://www.example.com/official-guidance"
+              className={inputClass}
             />
+            <p className="mt-2 text-xs text-slate-500">
+              Optional official source used to verify this answer.
+            </p>
           </div>
         </div>
 
@@ -152,7 +181,7 @@ export default function CreateFAQPage() {
         <div className="mt-10 flex items-center gap-4 pt-6 border-t border-slate-800">
           <button
             type="submit"
-            disabled={isPublishing}
+            disabled={isPublishing || isSavingDraft}
             className="px-6 py-2.5 rounded-md bg-[#C4A47C] text-[#0B1221] font-medium hover:bg-[#b0916a] transition-colors disabled:opacity-50"
           >
             {isPublishing ? "Publishing..." : "Publish FAQ"}
@@ -160,13 +189,11 @@ export default function CreateFAQPage() {
 
           <button
             type="button"
-            onClick={() => {
-              toast.success("Draft saved locally!");
-              router.push("/admin/faqs");
-            }}
+            onClick={() => submitFAQ("draft")}
+            disabled={isPublishing || isSavingDraft}
             className="px-6 py-2.5 rounded-md border border-slate-700 text-slate-300 hover:bg-slate-800 transition-colors"
           >
-            Save Draft & Exit
+            {isSavingDraft ? "Saving Draft..." : "Save Draft & Exit"}
           </button>
 
           <span className="ml-auto text-xs text-slate-500 hidden sm:block">

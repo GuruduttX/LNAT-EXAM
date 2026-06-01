@@ -31,8 +31,8 @@ export default function ResourcePdfSection({
       return;
     }
 
-    if (file.size > 15 * 1024 * 1024) {
-      toast.error("PDF must be under 15MB");
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("PDF must be under 10MB");
       return;
     }
 

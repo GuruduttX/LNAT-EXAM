@@ -35,6 +35,7 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await request.json();
+    console.log("university update call")
     const updatedUniversity = await updateUniversity(id, body);
 
     if (!updatedUniversity) {

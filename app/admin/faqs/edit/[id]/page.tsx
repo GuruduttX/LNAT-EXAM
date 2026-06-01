@@ -3,14 +3,9 @@
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import toast from "react-hot-toast";
-
-const faqCategories = [
-  "Admissions Process",
-  "LNAT Preparation",
-  "University Specifics",
-  "Logistics & Scoring",
-];
-
+import RichTextEditor from "@/shared/RichTextEditor";
+import { faqCategories } from "@/types/backend.types";
+ 
 const inputClass = `
   mt-2 w-full px-4 py-3 rounded-md
   bg-slate-900/50 text-[#FDFBF7]
@@ -27,11 +22,13 @@ export default function EditFAQPage() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isSavingDraft, setIsSavingDraft] = useState(false);
 
   const [form, setForm] = useState({
     category: "",
     question: "",
     answer: "",
+    sourceUrl: "",
   });
 
   // 1. Fetch the existing FAQ data
@@ -46,6 +43,7 @@ export default function EditFAQPage() {
           category: data.category || "",
           question: data.question || "",
           answer: data.answer || "",
+          sourceUrl: data.sourceUrl || "",
         });
       } catch (error) {
         toast.error("Error loading FAQ data");
@@ -63,31 +61,44 @@ export default function EditFAQPage() {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleUpdate = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const submitFAQ = async (status: "draft" | "published") => {
     if (!form.category || !form.question || !form.answer) {
-      toast.error("Please fill in all fields.");
+      toast.error("Category, question, and answer are required.");
       return;
     }
 
-    setIsUpdating(true);
+    const setLoading = status === "published" ? setIsUpdating : setIsSavingDraft;
+    setLoading(true);
+
     try {
       const res = await fetch(`/api/faqs/${id}`, {
         method: "PUT", // Use PUT for updating
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, status }),
       });
 
-      if (!res.ok) throw new Error("Failed to update");
+      if (!res.ok) throw new Error("Failed to save FAQ");
 
-      toast.success("FAQ updated successfully!");
+      toast.success(
+        status === "published"
+          ? "FAQ published successfully!"
+          : "FAQ draft saved to the database!",
+      );
       router.push("/admin/faqs");
-    } catch (error) {
-      toast.error("Failed to update FAQ");
+    } catch {
+      toast.error(
+        status === "published"
+          ? "Failed to publish FAQ"
+          : "Failed to save FAQ draft",
+      );
     } finally {
-      setIsUpdating(false);
+      setLoading(false);
     }
+  };
+
+  const handleUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await submitFAQ("published");
   };
 
   if (isLoading) {
@@ -154,14 +165,31 @@ export default function EditFAQPage() {
             <label className="text-sm font-medium text-slate-400">
               Answer <span className="text-red-400">*</span>
             </label>
-            <textarea
-              required
-              rows={5}
+            <div className="mt-2 overflow-hidden rounded-xl border border-slate-800 text-gray-900">
+              <RichTextEditor
               value={form.answer}
-              onChange={(e) => updateForm("answer", e.target.value)}
-              placeholder="Enter the detailed answer here..."
-              className={`${inputClass} resize-none`}
+                onChange={(value) => updateForm("answer", value)}
+                minHeight="35vh"
+                maxHeight="50vh"
+              />
+            </div>
+          </div>
+
+          {/* Source URL */}
+          <div>
+            <label className="text-sm font-medium text-slate-400">
+              Source URL
+            </label>
+            <input
+              type="url"
+              value={form.sourceUrl}
+              onChange={(e) => updateForm("sourceUrl", e.target.value)}
+              placeholder="https://www.example.com/official-guidance"
+              className={inputClass}
             />
+            <p className="mt-2 text-xs text-slate-500">
+              Optional official source used to verify this answer.
+            </p>
           </div>
         </div>
 
@@ -169,7 +197,7 @@ export default function EditFAQPage() {
         <div className="mt-10 flex items-center gap-4 pt-6 border-t border-slate-800">
           <button
             type="submit"
-            disabled={isUpdating}
+            disabled={isUpdating || isSavingDraft}
             className="px-6 py-2.5 rounded-md bg-[#C4A47C] text-[#0B1221] font-medium hover:bg-[#b0916a] transition-colors disabled:opacity-50"
           >
             {isUpdating ? "Updating..." : "Update FAQ"}
@@ -177,10 +205,11 @@ export default function EditFAQPage() {
 
           <button
             type="button"
-            onClick={() => router.push("/admin/faqs")}
+            onClick={() => submitFAQ("draft")}
+            disabled={isUpdating || isSavingDraft}
             className="px-6 py-2.5 rounded-md border border-slate-700 text-slate-300 hover:bg-slate-800 transition-colors"
           >
-            Cancel
+            {isSavingDraft ? "Saving Draft..." : "Save Draft & Exit"}
           </button>
         </div>
       </form>
