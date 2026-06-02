@@ -356,6 +356,20 @@ body::-webkit-scrollbar {
   @apply font-bold text-[#0D1B3E];
 }
 
+/* University overview content stays editorial and left-aligned in both views. */
+.university-overview-prose {
+  @apply text-left;
+}
+.university-overview-prose h1 {
+  @apply mb-5 mt-2 text-[1.6rem] font-extrabold leading-tight tracking-tight text-[#0D1B3E] md:text-[1.9rem];
+}
+.university-overview-prose h1:first-child {
+  @apply mt-0;
+}
+.university-overview-prose :is(h1, h2, h3, h4, p, ul, ol, li, blockquote) {
+  text-align: left !important;
+}
+
 /* ============================================= */
 /* LNAT Design System: Pro Editorial CMS Content */
 /* ============================================= */

@@ -1,17 +1,21 @@
 "use client";
 
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect, type FormEventHandler } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { X, ArrowRight } from "lucide-react";
+import { submitEnquiry } from "@/lib/submitEnquiry";
+import type { EnquirySource } from "@/types/backend.types";
 
 interface EnquiryPopupFormProps {
   isOpen: boolean;
   onClose: () => void;
+  source?: EnquirySource;
 }
 
 export default function EnquiryPopupForm({
   isOpen,
   onClose,
+  source = "navbar",
 }: EnquiryPopupFormProps) {
   // Form State
   const [name, setName] = useState("");
@@ -22,6 +26,7 @@ export default function EnquiryPopupForm({
   // UI State
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({ name: false, phone: false });
+  const [submitError, setSubmitError] = useState("");
 
   // Handle ESC key to close
   useEffect(() => {
@@ -44,7 +49,7 @@ export default function EnquiryPopupForm({
     };
   }, [isOpen]);
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
     // Minimal Validation
@@ -57,21 +62,36 @@ export default function EnquiryPopupForm({
     if (newErrors.name || newErrors.phone) return;
 
     setIsSubmitting(true);
+    setSubmitError("");
 
-    // Simulate API call for premium feel
-    await new Promise((resolve) => setTimeout(resolve, 800));
+    try {
+      await submitEnquiry({
+        name,
+        phone,
+        email,
+        message,
+        enquiryType: "admissions-guidance",
+        source,
+      });
 
-    setIsSubmitting(false);
-    onClose();
+      onClose();
 
-    // Reset form after close animation completes
-    setTimeout(() => {
-      setName("");
-      setPhone("");
-      setEmail("");
-      setMessage("");
-      setErrors({ name: false, phone: false });
-    }, 300);
+      // Reset form after close animation completes.
+      setTimeout(() => {
+        setName("");
+        setPhone("");
+        setEmail("");
+        setMessage("");
+        setErrors({ name: false, phone: false });
+        setSubmitError("");
+      }, 300);
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error ? error.message : "Unable to submit enquiry",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Animation variants for smooth, cinematic feel
@@ -226,6 +246,10 @@ export default function EnquiryPopupForm({
               </div>
 
               {/* Submit Button */}
+              {submitError ? (
+                <p className="text-xs text-red-600">{submitError}</p>
+              ) : null}
+
               <button
                 type="submit"
                 disabled={isSubmitting}

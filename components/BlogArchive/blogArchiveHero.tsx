@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { BookOpen, Award, Library } from "lucide-react";
+import Breadcrumbs from "@/components/shared/Breadcrumbs";
 
 // Mocking the props for the design (replace with your actual data)
 interface BlogArchiveHeroProps {
@@ -16,7 +17,7 @@ export default function BlogArchiveHero({
   hubsCount = 4,
 }: BlogArchiveHeroProps) {
   return (
-    <section className="relative w-full border-b border-black/[0.07] bg-[#F7F3EC] pt-24 pb-12 sm:pt-28 md:pb-16 lg:pt-32">
+    <section className="relative w-full border-b border-black/[0.07] bg-[#F7F3EC] pt-10 pb-12  md:pb-16 ">
       {/* Dense, subtle architectural background pattern */}
       <div
         className="absolute inset-0 pointer-events-none opacity-60
@@ -25,6 +26,14 @@ export default function BlogArchiveHero({
       />
 
       <div className="relative z-10 mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
+        <Breadcrumbs
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Blog", href: "/blog" },
+          ]}
+          className="mb-7"
+        />
+
         {/* Header Area - Compact and highly readable */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}

@@ -236,70 +236,96 @@ function HubCardItem({ hub }: { hub: HubCardData }) {
   const { category, relatedBlogs } = hub;
 
   return (
-    <article className="group flex flex-col rounded-3xl border border-black/[0.06] bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A84C]/30 hover:shadow-[0_16px_40px_rgba(13,27,62,0.06)] md:p-8">
-      {/* Card Header */}
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
-            Topic Hub
-          </p>
-          <h3 className="mt-2 text-[22px] font-extrabold text-[#0D1B3E] md:text-[24px]">
-            {category.name}
-          </h3>
-        </div>
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#F7F3EC] text-[#C9A84C] transition-colors duration-300 group-hover:bg-[#C9A84C] group-hover:text-white">
-          <Compass size={24} strokeWidth={1.5} />
-        </div>
-      </div>
+    <article
+      className="group flex h-full flex-col overflow-hidden rounded-2xl bg-white transition-all duration-300"
+      style={{
+        border: "1px solid rgba(0,0,0,0.07)",
+        boxShadow: "0 2px 10px rgba(0,0,0,0.06)",
+      }}
+      onMouseEnter={(e) => {
+        const el = e.currentTarget;
+        el.style.boxShadow = "0 16px 40px rgba(0,0,0,0.12)";
+        el.style.transform = "translateY(-4px)";
+      }}
+      onMouseLeave={(e) => {
+        const el = e.currentTarget;
+        el.style.boxShadow = "0 2px 10px rgba(0,0,0,0.06)";
+        el.style.transform = "translateY(0)";
+      }}
+    >
+      {/* Top Gold Accent Bar */}
+      <div
+        className="h-[3px] w-full"
+        style={{
+          background: "linear-gradient(90deg, #C9A84C, #E8C96A)",
+        }}
+      />
 
-      <p className="mt-4 text-[14px] leading-relaxed text-slate-500">
-        {category.topicDefinition}
-      </p>
+      <div className="flex flex-1 flex-col p-6">
+        {/* Header Section */}
+        <div className="mb-4 flex items-start justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#C9A84C]/10 text-[#C9A84C]">
+              <Compass size={16} strokeWidth={2} />
+            </div>
+            <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
+              Topic Hub
+            </span>
+          </div>
+          {/* Ghost Meta Tag moved to top to save vertical footer space */}
+          <span className="inline-flex items-center rounded-lg bg-[#F7F3EC] px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.15em] text-slate-500">
+            #{formatCategoryName(category.slug)}
+          </span>
+        </div>
 
-      {/* Inner Box: Popular Guides */}
-      <div className="mt-6 flex-1 rounded-2xl border border-black/[0.04] bg-[#FDFBF7] p-5">
-        <p className="mb-4 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-[#C9A84C]">
-          <BookOpen size={14} /> Popular Guides
+        <h3 className="mb-3 text-[20px] font-extrabold leading-tight text-[#0D1B3E]">
+          {category.name}
+        </h3>
+
+        <p className="mb-6 text-[13px] leading-relaxed text-slate-500">
+          {category.topicDefinition}
         </p>
-        <div className="flex flex-col gap-3">
-          {relatedBlogs.slice(0, 3).map((blog) => (
-            <Link
-              key={blog.slug}
-              href={`/blog/${blog.slug}`}
-              className="group/link flex items-start justify-between gap-4 rounded-xl border border-transparent p-2 transition-all hover:bg-white hover:shadow-sm"
-            >
-              <span className="text-[13px] font-medium leading-relaxed text-slate-600 transition-colors group-hover/link:text-[#0D1B3E]">
-                {blog.title}
-              </span>
-              <ChevronRight className="mt-0.5 h-4 w-4 shrink-0 text-[#C9A84C] transition-transform group-hover/link:translate-x-0.5" />
-            </Link>
-          ))}
-          {relatedBlogs.length === 0 && (
-            <p className="text-[12px] italic text-slate-400">
-              Guides coming soon...
-            </p>
-          )}
+
+        {/* Inner Box: Popular Guides (Pushes footer down) */}
+        <div className="mb-6 flex-1 rounded-xl border border-black/[0.04] bg-[#FDFBF7] p-4">
+          <p className="mb-3 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-[#0D1B3E]">
+            <BookOpen size={14} className="text-[#C9A84C]" /> Popular Guides
+          </p>
+
+          <div className="flex flex-col gap-1.5">
+            {relatedBlogs.slice(0, 3).map((blog) => (
+              <Link
+                key={blog.slug}
+                href={`/blog/${blog.slug}`}
+                className="group/link flex items-start justify-between gap-3 rounded-lg p-1.5 transition-colors hover:bg-[#C9A84C]/10"
+              >
+                <span className="line-clamp-2 text-[13px] font-medium leading-relaxed text-slate-600 transition-colors group-hover/link:text-[#8B6914]">
+                  {blog.title}
+                </span>
+                <ChevronRight className="mt-0.5 h-4 w-4 shrink-0 text-[#C9A84C] transition-transform group-hover/link:translate-x-0.5" />
+              </Link>
+            ))}
+            {relatedBlogs.length === 0 && (
+              <p className="text-[12px] italic text-slate-400">
+                Guides coming soon...
+              </p>
+            )}
+          </div>
         </div>
-      </div>
 
-      {/* Card Footer (CTAs) */}
-      <div className="mt-6 flex flex-wrap items-center gap-3">
-        {/* Primary Action */}
-        <Link
-          href={`/topics/${category.slug}`}
-          className="group/btn flex items-center gap-2 rounded-xl bg-[#0D1B3E] px-6 py-3.5 text-[13px] font-bold text-white transition-all hover:bg-[#162447] hover:shadow-md"
-        >
-          Explore Topic
-          <ArrowRight
-            size={14}
-            className="transition-transform group-hover/btn:translate-x-1"
-          />
-        </Link>
-
-        {/* Ghost Meta Tag */}
-        <span className="inline-flex items-center rounded-xl border border-black/[0.05] bg-[#F7F3EC] px-4 py-3.5 text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">
-          #{formatCategoryName(category.slug)}
-        </span>
+        {/* Card Footer: Full-Width Primary Action */}
+        <div className="mt-auto pt-2">
+          <Link
+            href={`/topics/${category.slug}`}
+            className="group/btn flex w-full items-center justify-center gap-2 rounded-xl bg-[#0D1B3E] px-6 py-3.5 text-[13px] font-bold text-white transition-all duration-300 hover:bg-[#162447] hover:shadow-md"
+          >
+            Explore Topic
+            <ArrowRight
+              size={14}
+              className="transition-transform group-hover/btn:translate-x-1"
+            />
+          </Link>
+        </div>
       </div>
     </article>
   );

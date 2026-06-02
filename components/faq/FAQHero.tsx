@@ -17,6 +17,7 @@ import {
   Globe2,
 } from "lucide-react";
 import EnquiryPopupForm from "@/utils/EnquiryForm";
+import Breadcrumbs from "@/components/shared/Breadcrumbs";
 
 // --- 10 Highly Relevant FAQs for Indian Students ---
 const LNAT_FAQS = [
@@ -118,7 +119,7 @@ export default function FAQHero() {
 
   return (
     <>
-    <EnquiryPopupForm isOpen={isOpen} onClose={()=> setIsOpen(false)}/>
+    <EnquiryPopupForm isOpen={isOpen} onClose={()=> setIsOpen(false)} source="faq-page"/>
       <section
         ref={ref}
         className="relative w-full overflow-hidden bg-[#F7F3EC] px-4 py-14 sm:px-6 md:py-20 lg:px-8"
@@ -131,6 +132,14 @@ export default function FAQHero() {
         />
 
         <div className="relative z-10 mx-auto max-w-[1280px]">
+          <Breadcrumbs
+            items={[
+              { label: "Home", href: "/" },
+              { label: "FAQs", href: "/faq" },
+            ]}
+            className="mb-8"
+          />
+
           <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
             {/* ========================================== */}
             {/* LEFT CONTENT: Light Theme Typography       */}

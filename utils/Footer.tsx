@@ -3,13 +3,15 @@
 import { motion, Variants } from "framer-motion";
 import { FiMail, FiInstagram, FiLinkedin, FiTwitter } from "react-icons/fi";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 const footerLinks = {
   navigation: [
-    { label: "Home", href: "#" },
-    { label: "Universities", href: "#" },
-    { label: "Free Resources", href: "#" },
-    { label: "FAQ", href: "#" },
-    { label: "How to Apply", href: "#" },
+    { label: "Home", href: "/" },
+    { label: "About", href: "/about" },
+    { label: "Universities", href: "/universities" },
+    { label: "Free Resources", href: "/free-resources" },
+    { label: "FAQ", href: "/faq" },
+    { label: "How to Apply", href: "/how-to-apply" },
   ],
   institutions: [
     { label: "University of Oxford", href: "#" },
@@ -75,11 +77,11 @@ export default function Footer() {
             variants={itemVariants}
             className="md:col-span-5 lg:col-span-4"
           >
-            <a href="#" className="inline-block mb-4 focus:outline-none">
+            <Link href="/" className="inline-block mb-4 focus:outline-none">
               <span className="text-xl font-serif text-[#FDFCFB] tracking-wide">
                 LNAT Exam <span className="text-[#9A7B4F] italic">India</span>
               </span>
-            </a>
+            </Link>
             <p className="text-sm text-slate-400 leading-relaxed max-w-sm mb-6">
               Premium LNAT admissions guidance for Indian students aspiring to
               study law at leading UK universities. Curated insights, rigorous
@@ -112,12 +114,12 @@ export default function Footer() {
             <ul className="space-y-2.5">
               {footerLinks.navigation.map((link) => (
                 <li key={link.label}>
-                  <a
+                  <Link
                     href={link.href}
                     className="text-sm text-slate-400 hover:text-[#9A7B4F] transition-colors duration-300"
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

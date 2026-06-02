@@ -3,6 +3,7 @@
 import { motion, useInView, type Variants } from "framer-motion";
 import { useRef } from "react";
 import { Info } from "lucide-react";
+import Breadcrumbs from "@/components/shared/Breadcrumbs";
 
 interface ArchiveHeroProps {
   totalUniversities: number;
@@ -80,6 +81,14 @@ export default function ArchiveHero({
       />
 
       <div className="relative z-10 max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-10">
+        <Breadcrumbs
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Universities", href: "/universities" },
+          ]}
+          className="mb-8"
+        />
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center text-center md:text-start">
           {/* Left Content Column */}
           <motion.div

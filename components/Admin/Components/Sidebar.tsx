@@ -7,6 +7,7 @@ import {
   FileText,
   HelpCircle,
   FolderDown,
+  Inbox,
   Layers3,
   LogOutIcon,
   X,
@@ -21,6 +22,7 @@ const menu = [
   { name: "Blogs", icon: FileText, slug: "/admin/blogs" },
   { name: "FAQs", icon: HelpCircle, slug: "/admin/faqs" },
   { name: "Resources", icon: FolderDown, slug: "/admin/resources" },
+  { name: "Enquiries", icon: Inbox, slug: "/admin/enquiries" },
 ];
 
 export default function Sidebar({

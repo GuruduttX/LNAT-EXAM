@@ -4,6 +4,7 @@ import BlogDetailsHero from "@/components/blog/BlogDetailsHero";
 import BlogContentLayout from "@/components/blog/BlogContentLayout";
 import { getBlogBySlug, getPublishedBlogSlugs } from "@/services/blogService";
 import { IBlog } from "@/types/backend.types";
+import { createBreadcrumbSchema } from "@/lib/breadcrumbSchema";
 
 interface BlogDetailsPageProps {
   params: Promise<{
@@ -161,15 +162,7 @@ export default async function BlogDetailsPage({
         wordCount: blog.wordCount,
         citation: blog.sources || [],
       },
-      {
-        "@type": "BreadcrumbList",
-        itemListElement: breadcrumbItems.map((item, index) => ({
-          "@type": "ListItem",
-          position: index + 1,
-          name: item.label,
-          item: `https://www.lnatexamindia.com${item.href}`,
-        })),
-      },
+      createBreadcrumbSchema(breadcrumbItems),
       ...(blog.faqs?.length
         ? [
             {

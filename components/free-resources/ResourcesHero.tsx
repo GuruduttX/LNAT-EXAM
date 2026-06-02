@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { motion, useInView, type Variants } from "framer-motion";
 import { BookOpen, FileText, CheckCircle2, Download } from "lucide-react";
+import Breadcrumbs from "@/components/shared/Breadcrumbs";
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 22 },
@@ -59,6 +60,15 @@ export default function ResourcesHero() {
       />
 
       <div className="relative z-10 mx-auto max-w-[1280px]">
+        <Breadcrumbs
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Free Resources", href: "/free-resources" },
+          ]}
+          className="mb-8"
+          tone="dark"
+        />
+
         <div className="grid grid-cols-1 gap-10 items-center lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
           {/* Left Column: Content */}
           <motion.div

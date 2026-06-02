@@ -236,7 +236,11 @@ export default function HomeHero() {
 
   return (
     <>
-      <EnquiryPopupForm isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <EnquiryPopupForm
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        source="home-hero"
+      />
 
       <section
         className="relative w-full overflow-hidden bg-[#F7F3EC]"

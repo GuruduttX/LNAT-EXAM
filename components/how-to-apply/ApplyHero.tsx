@@ -11,6 +11,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import EnquiryPopupForm from "@/utils/EnquiryForm";
+import Breadcrumbs from "@/components/shared/Breadcrumbs";
 
 // Design System: Module-level variants
 const fadeUp: Variants = {
@@ -52,7 +53,7 @@ export default function ApplyHero() {
 
   return (
     <>
-    <EnquiryPopupForm isOpen={isOpen} onClose={()=> setIsOpen(false)}/>
+    <EnquiryPopupForm isOpen={isOpen} onClose={()=> setIsOpen(false)} source="how-to-apply"/>
       <section
         ref={ref}
         className="relative w-full overflow-hidden bg-[#F7F3EC] px-4 py-14 sm:px-6 md:py-20 lg:px-8 border-b border-black/[0.07]"
@@ -74,6 +75,14 @@ export default function ApplyHero() {
         />
 
         <div className="relative z-10 mx-auto max-w-[1280px]">
+          <Breadcrumbs
+            items={[
+              { label: "Home", href: "/" },
+              { label: "How To Apply", href: "/how-to-apply" },
+            ]}
+            className="mb-8"
+          />
+
           <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
             {/* ========================================== */}
             {/* LEFT CONTENT: Editorial & Typography       */}

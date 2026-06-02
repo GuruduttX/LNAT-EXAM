@@ -8,6 +8,7 @@ import BlogArchiveHero from "@/components/BlogArchive/blogArchiveHero";
 import BlogArchiveGrid from "@/components/BlogArchive/BlogArchiveGrid";
 import TopicHubsArchive from "@/components/TopicHub/TopicHubArchive";
 import LatestBlogsGrid from "@/components/BlogArchive/LatestBlogsGrid";
+import { createBreadcrumbSchema } from "@/lib/breadcrumbSchema";
 
 export const metadata = {
   title: "LNAT Blog | Guides, Analysis, and Editorial Insights",
@@ -68,23 +69,10 @@ export default async function BlogIndexPage() {
         description:
           "An editorial index of LNAT guides, admissions strategy, and topic-hub pathways for structured research.",
       },
-      {
-        "@type": "BreadcrumbList",
-        itemListElement: [
-          {
-            "@type": "ListItem",
-            position: 1,
-            name: "Home",
-            item: "https://www.lnatexamindia.com/",
-          },
-          {
-            "@type": "ListItem",
-            position: 2,
-            name: "Blog",
-            item: "https://www.lnatexamindia.com/blog",
-          },
-        ],
-      },
+      createBreadcrumbSchema([
+        { label: "Home", href: "/" },
+        { label: "Blog", href: "/blog" },
+      ]),
       {
         "@type": "ItemList",
         name: "Published LNAT blog articles",

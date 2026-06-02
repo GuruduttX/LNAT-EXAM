@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import Breadcrumbs from "@/components/shared/Breadcrumbs";
+import { createBreadcrumbSchema } from "@/lib/breadcrumbSchema";
 import { getPublishedCategories } from "@/services/categoryService";
 import { ICategory } from "@/types/backend.types";
 
@@ -14,10 +16,37 @@ export default async function TopicsPage() {
   const categories = JSON.parse(
     JSON.stringify(categoryDocuments),
   ) as ICategory[];
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        name: "LNAT Topic Hubs",
+        url: "https://www.lnatexamindia.com/topics",
+        description:
+          "Explore the major topic hubs that organise LNAT preparation, universities, and admissions content.",
+      },
+      createBreadcrumbSchema([
+        { label: "Home", href: "/" },
+        { label: "Topics", href: "/topics" },
+      ]),
+    ],
+  };
 
   return (
     <main className="min-h-screen bg-[#fbfaf7] px-6 py-20">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <div className="mx-auto max-w-6xl">
+        <Breadcrumbs
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Topics", href: "/topics" },
+          ]}
+          className="mb-8"
+        />
         <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#b08d4f]">
           Topic Hubs
         </p>
@@ -33,7 +62,7 @@ export default async function TopicsPage() {
           {categories.map((category) => (
             <Link
               key={category.slug}
-              href={`/topics/${category.slug}`}
+              href={`topics/${category.slug}`}
               className="rounded-[28px] border border-[#e4dccf] bg-white p-7 shadow-[0_16px_36px_rgba(20,31,45,0.05)] transition hover:border-[#c5a059]/60"
             >
               <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#b08d4f]">

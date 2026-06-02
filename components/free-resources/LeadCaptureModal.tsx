@@ -4,6 +4,7 @@ import type { FormEventHandler } from "react";
 import { useState } from "react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { X, Lock } from "lucide-react";
+import { submitEnquiry } from "@/lib/submitEnquiry";
 
 // Import the IResource interface you defined in ResourcesClient
 import { IResource } from "./ResourcesClient";
@@ -35,6 +36,7 @@ export default function LeadCaptureModal({
   resource,
 }: LeadCaptureModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
@@ -52,20 +54,25 @@ export default function LeadCaptureModal({
         category: resource?.category || "",
         fileUrl: resource?.fileUrl || "",
       },
-      source: "free-resources-modal",
-      submittedAt: new Date().toISOString(),
     };
 
-    console.log("Resource lead captured:", leadPayload);
+    let downloadSucceeded = false;
 
     if (resource.fileUrl) {
       setIsSubmitting(true);
+      setSubmitError("");
 
       const downloadLink = document.createElement("a");
       let objectUrl = "";
       let linkWasAttached = false;
 
       try {
+        await submitEnquiry({
+          ...leadPayload,
+          enquiryType: "resource-download",
+          source: "free-resources",
+        });
+
         const response = await fetch(resource.fileUrl);
         if (!response.ok) {
           throw new Error("Unable to fetch resource file");
@@ -80,8 +87,10 @@ export default function LeadCaptureModal({
         document.body.appendChild(downloadLink);
         linkWasAttached = true;
         downloadLink.click();
+        downloadSucceeded = true;
       } catch (error) {
         console.error("Resource download failed:", error);
+        setSubmitError("Unable to prepare the download. Please try again.");
       } finally {
         if (linkWasAttached) {
           document.body.removeChild(downloadLink);
@@ -92,6 +101,13 @@ export default function LeadCaptureModal({
         setIsSubmitting(false);
       }
     }
+
+    if (!resource.fileUrl) {
+      setSubmitError("This resource file is currently unavailable.");
+      return;
+    }
+
+    if (!downloadSucceeded) return;
 
     onClose();
   };
@@ -206,6 +222,12 @@ export default function LeadCaptureModal({
               </div>
 
               {/* Design System Primary CTA */}
+              {submitError ? (
+                <p className="mb-4 text-center text-xs text-red-600">
+                  {submitError}
+                </p>
+              ) : null}
+
               <button
                 type="submit"
                 disabled={isSubmitting}

@@ -16,6 +16,8 @@ import {
   getPublishedCategorySlugs,
 } from "@/services/categoryService";
 import { IBlog, ICategory, IUniversity } from "@/types/backend.types";
+import TopicHubHero from "@/components/Topic/TopicHubHero";
+import { createBreadcrumbSchema } from "@/lib/breadcrumbSchema";
 
 interface PageProps {
   params: Promise<{
@@ -142,7 +144,6 @@ export default async function TopicHubPage({ params }: PageProps) {
   const category = JSON.parse(JSON.stringify(categoryDocument)) as ICategory;
   const { posts, universities, siblingCategories, subtopicSections } =
     await getTopicContent(category);
-
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -154,29 +155,11 @@ export default async function TopicHubPage({ params }: PageProps) {
         dateModified:
           category.lastUpdated || category.updatedAt || new Date().toISOString(),
       },
-      {
-        "@type": "BreadcrumbList",
-        itemListElement: [
-          {
-            "@type": "ListItem",
-            position: 1,
-            name: "Home",
-            item: "https://www.lnatexamindia.com/",
-          },
-          {
-            "@type": "ListItem",
-            position: 2,
-            name: "Topics",
-            item: "https://www.lnatexamindia.com/topics",
-          },
-          {
-            "@type": "ListItem",
-            position: 3,
-            name: category.name,
-            item: `https://www.lnatexamindia.com/topics/${category.slug}`,
-          },
-        ],
-      },
+      createBreadcrumbSchema([
+        { label: "Home", href: "/" },
+        { label: "Topics", href: "/topics" },
+        { label: category.name, href: `/topics/${category.slug}` },
+      ]),
       {
         "@type": "ItemList",
         name: `${category.name} content`,
@@ -204,60 +187,8 @@ export default async function TopicHubPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-
-      <section className="relative overflow-hidden border-b border-[#ece5d8] bg-[#0c1727] px-6 pb-20 pt-28 text-[#f7f3ec] md:pt-36">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(201,168,76,0.14),transparent_28%),radial-gradient(circle_at_left,rgba(255,255,255,0.08),transparent_24%)]" />
-        <div className="relative mx-auto max-w-6xl">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#d9c39a]">
-            Topic Guide
-          </p>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight md:text-6xl">
-            {category.name}
-          </h1>
-          <p className="mt-6 max-w-3xl text-lg leading-8 text-[#d7e0ea]">
-            {category.topicDefinition}
-          </p>
-
-          <div className="mt-10 grid gap-4 md:grid-cols-3">
-            <div className="rounded-[24px] border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
-              <p className="text-[11px] uppercase tracking-[0.18em] text-[#91A0B2]">
-                Featured Guides
-              </p>
-              <p className="mt-3 text-3xl font-semibold text-[#FDFBF5]">
-                {posts.length}
-              </p>
-            </div>
-            <div className="rounded-[24px] border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
-              <p className="text-[11px] uppercase tracking-[0.18em] text-[#91A0B2]">
-                Universities
-              </p>
-              <p className="mt-3 text-3xl font-semibold text-[#FDFBF5]">
-                {universities.length}
-              </p>
-            </div>
-            <div className="rounded-[24px] border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
-              <p className="text-[11px] uppercase tracking-[0.18em] text-[#91A0B2]">
-                Subtopics
-              </p>
-              <p className="mt-3 text-3xl font-semibold text-[#FDFBF5]">
-                {subtopicSections.length}
-              </p>
-            </div>
-          </div>
-
-          {category.heroImage?.url ? (
-            <div className="mt-10 overflow-hidden rounded-[28px] border border-white/10">
-              <Image
-                src={category.heroImage.url}
-                alt={category.heroImage.alt}
-                width={1400}
-                height={700}
-                className="h-[360px] w-full object-cover"
-              />
-            </div>
-          ) : null}
-        </div>
-      </section>
+      <TopicHubHero category={category} stats={{posts:posts.length, universities: universities.length, subtopicSections: subtopicSections.length}} />
+      
 
       <section className="px-6 py-16">
         <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1.1fr_0.9fr]">

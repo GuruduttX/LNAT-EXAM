@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, ShieldCheck, Loader2 } from "lucide-react";
+import { submitEnquiry } from "@/lib/submitEnquiry";
 
 export default function StickyConsultationForm() {
   const [formData, setFormData] = useState({
@@ -22,13 +23,18 @@ export default function StickyConsultationForm() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call for future backend integration
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    console.log("Consultation Request:", formData);
-
-    setIsSubmitting(false);
-    setFormData({ name: "", phone: "" }); // Reset form
+    try {
+      await submitEnquiry({
+        ...formData,
+        enquiryType: "mentor-consultation",
+        source: "blog-sidebar",
+      });
+      setFormData({ name: "", phone: "" });
+    } catch (error) {
+      console.error("Consultation request failed:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

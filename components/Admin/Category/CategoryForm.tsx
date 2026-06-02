@@ -70,7 +70,6 @@ function createInitialState(
     isIndexed: initialData?.isIndexed ?? true,
     minPostsToIndex: String(initialData?.minPostsToIndex || 4),
     postOrder: initialData?.postOrder || "curated",
-    status: initialData?.status || "draft",
     faqs: initialData?.faqs?.length ? initialData.faqs : [emptyFaq()],
     subtopics: initialData?.subtopics?.length
       ? initialData.subtopics.map((subtopic) => ({
@@ -618,7 +617,7 @@ export default function CategoryForm({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             <label className="flex items-center gap-3 rounded-md border border-slate-800 bg-slate-900/30 px-4 py-3 text-sm text-slate-300">
               <input
                 type="checkbox"
@@ -649,17 +648,6 @@ export default function CategoryForm({
                 <option value="curated">Curated</option>
                 <option value="recent">Recent</option>
                 <option value="popular">Popular</option>
-              </select>
-            </div>
-            <div>
-              <label className={labelClass}>Status</label>
-              <select
-                value={form.status}
-                onChange={(event) => updateForm("status", event.target.value)}
-                className={inputClass}
-              >
-                <option value="draft">Draft</option>
-                <option value="published">Published</option>
               </select>
             </div>
           </div>

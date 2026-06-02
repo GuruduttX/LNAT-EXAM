@@ -220,6 +220,13 @@ export default function UniversityHero({ university }: UniversityHeroProps) {
               text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400"
           >
             <Link
+              href="/"
+              className="transition-colors hover:text-[#C9A84C]"
+            >
+              Home
+            </Link>
+            <ChevronRight size={11} className="text-slate-300" />
+            <Link
               href="/universities"
               className="transition-colors hover:text-[#C9A84C]"
             >

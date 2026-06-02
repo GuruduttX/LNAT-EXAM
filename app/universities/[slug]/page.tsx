@@ -15,6 +15,8 @@ import FAQSection from "@/components/universities/FAQSection";
 import UniversitySources from "@/components/universities/detail/UniversitySources";
 import UniversityFinalCTA from "@/components/universities/detail/UniversityFinalCTA";
 import UniversityQuickFacts from "@/components/universities/detail/UniversityQuickFacts";
+import { createBreadcrumbSchema } from "@/lib/breadcrumbSchema";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 interface PageProps {
   params: Promise<{
@@ -84,8 +86,34 @@ export default async function UniversityDetailPage({ params }: PageProps) {
   const university = JSON.parse(
     JSON.stringify(universityDocument),
   ) as IUniversity;
+  const siteUrl = getSiteUrl();
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": university.schemaType || "CollegeOrUniversity",
+        name: university.name,
+        url: `${siteUrl}/universities/${university.slug}`,
+        description: university.schemaDescription || university.shortDescription,
+        sameAs: university.sameAs,
+      },
+      createBreadcrumbSchema([
+        { label: "Home", href: "/" },
+        { label: "Universities", href: "/universities" },
+        {
+          label: university.shortName || university.name,
+          href: `/universities/${university.slug}`,
+        },
+      ]),
+    ],
+  };
+
   return (
     <main className="min-h-screen w-full max-w-full overflow-x-clip bg-[#fbfaf7] text-[#0e1b2a]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <UniversityHero university={university} />
       {/* <section className="border-y border-[#e3ddd1] bg-white/70">
         <div className="mx-auto grid max-w-7xl grid-cols-1 gap-4 px-6 py-10 md:grid-cols-2 xl:grid-cols-5">

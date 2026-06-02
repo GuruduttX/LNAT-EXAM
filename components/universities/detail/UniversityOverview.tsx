@@ -105,7 +105,7 @@ export default function UniversityOverview({
             <div className="relative overflow-hidden">
               {/* Max-height wrapper. Adjust 300px based on how much you want to show initially */}
               <div
-                className="ds-prose max-h-[280px] w-full"
+                className="ds-prose university-overview-prose max-h-[280px] w-full"
                 dangerouslySetInnerHTML={{ __html: university.overview }}
               />
 
@@ -206,7 +206,7 @@ export default function UniversityOverview({
           ========================================= */}
       <AnimatePresence mode="wait">
         {isModalOpen && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center px-4 py-6 md:py-12">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center text-start px-4 py-6 md:py-12">
             {/* Backdrop Layer */}
             <motion.div
               variants={modalBackdrop}
@@ -246,7 +246,7 @@ export default function UniversityOverview({
               {/* Scrollable Content Area */}
               <div className="overflow-y-auto px-6 py-6 md:px-10 md:py-8 [scrollbar-width:thin]">
                 <div
-                  className="ds-prose"
+                  className="ds-prose university-overview-prose"
                   dangerouslySetInnerHTML={{ __html: university.overview }}
                 />
               </div>

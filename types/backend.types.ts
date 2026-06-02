@@ -344,3 +344,54 @@ export interface IResource {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export const enquiryTypes = [
+  "admissions-guidance",
+  "mentor-consultation",
+  "resource-download",
+  "general",
+] as const;
+
+export const enquirySources = [
+  "navbar",
+  "home-hero",
+  "faq-page",
+  "how-to-apply",
+  "blog-sidebar",
+  "free-resources",
+  "about-page",
+  "university-page",
+] as const;
+
+export const enquiryStatuses = [
+  "new",
+  "contacted",
+  "converted",
+  "closed",
+] as const;
+
+export type EnquiryType = (typeof enquiryTypes)[number];
+export type EnquirySource = (typeof enquirySources)[number];
+export type EnquiryStatus = (typeof enquiryStatuses)[number];
+
+export interface IEnquiry {
+  _id?: string;
+  id?: string;
+  name: string;
+  phone?: string;
+  email?: string;
+  message?: string;
+  enquiryType: EnquiryType;
+  source: EnquirySource;
+  resource?: {
+    id?: string;
+    slug?: string;
+    title?: string;
+    category?: string;
+    fileUrl?: string;
+  };
+  status: EnquiryStatus;
+  internalNotes?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}

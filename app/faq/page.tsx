@@ -4,6 +4,7 @@ import FAQCategoryGrid from "@/components/faq/FAQAccordion";
 import type { FAQItem } from "@/components/faq/FAQAccordion";
 import { getPublishedFAQs } from "@/services/faqService";
 import FAQFinalCTA from "@/components/faq/FAQFinalCTA";
+import { createBreadcrumbSchema } from "@/lib/breadcrumbSchema";
 
 async function getFaqsFromDB(): Promise<FAQItem[]> {
   const faqDocuments = await getPublishedFAQs();
@@ -25,18 +26,26 @@ export default async function FAQPage() {
   const categories = Array.from(new Set(allFaqs.map((f) => f.category)));
 
   // 2. Generate JSON-LD Schema for Google SGE / Rich Snippets
-  const faqSchema = {
+  const structuredData = {
     "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: allFaqs.map((faq) => ({
-      "@type": "Question",
-      name: faq.question,
-      acceptedAnswer: {
-        "@type": "Answer",
-        // Strip HTML tags for the JSON-LD schema, keep raw text
-        text: faq.answerHtml.replace(/<[^>]*>?/gm, ""),
+    "@graph": [
+      {
+        "@type": "FAQPage",
+        mainEntity: allFaqs.map((faq) => ({
+          "@type": "Question",
+          name: faq.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            // Strip HTML tags for the JSON-LD schema, keep raw text
+            text: faq.answerHtml.replace(/<[^>]*>?/gm, ""),
+          },
+        })),
       },
-    })),
+      createBreadcrumbSchema([
+        { label: "Home", href: "/" },
+        { label: "FAQs", href: "/faq" },
+      ]),
+    ],
   };
 
   return (
@@ -44,7 +53,7 @@ export default async function FAQPage() {
       {/* Inject AEO Schema */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
       {/* 1. Featured FAQs & Hero Hook */}

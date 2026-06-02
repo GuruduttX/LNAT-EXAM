@@ -4,7 +4,6 @@ import { useRef, useState } from "react";
 import { motion, useInView, type Variants } from "framer-motion";
 import { MessageCircle, Mail, ArrowRight, Clock } from "lucide-react";
 import EnquiryPopupForm from "@/utils/EnquiryForm";
-import { set } from "mongoose";
 
 // Design System: Framer Motion Variants
 const fadeUp: Variants = {
@@ -33,7 +32,7 @@ export default function FAQFinalCTA() {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
-    <EnquiryPopupForm isOpen={isOpen} onClose={()=> setIsOpen(false)}/>
+    <EnquiryPopupForm isOpen={isOpen} onClose={()=> setIsOpen(false)} source="faq-page"/>
       <section
         ref={ref}
         className="relative w-full bg-[#F7F3EC] px-4 py-12 sm:px-6 md:py-16 lg:px-8"

@@ -7,6 +7,7 @@ import FAQSection from "@/components/universities/FAQSection";
 import { getPublishedUniversities } from "@/services/universityService";
 import { IUniversity } from "@/types/backend.types";
 import NextStepCTA from "@/components/universities/NextStepCTA";
+import { createBreadcrumbSchema } from "@/lib/breadcrumbSchema";
 
 export const metadata = {
   title: "LNAT Universities Hub | LNAT Exam India",
@@ -70,23 +71,10 @@ export default async function UniversitiesArchivePage() {
           "A topic hub for exploring LNAT universities, comparing fit, and moving into detailed university guides.",
         url: "https://www.lnatexamindia.com/universities",
       },
-      {
-        "@type": "BreadcrumbList",
-        itemListElement: [
-          {
-            "@type": "ListItem",
-            position: 1,
-            name: "Home",
-            item: "https://www.lnatexamindia.com/",
-          },
-          {
-            "@type": "ListItem",
-            position: 2,
-            name: "Universities",
-            item: "https://www.lnatexamindia.com/universities",
-          },
-        ],
-      },
+      createBreadcrumbSchema([
+        { label: "Home", href: "/" },
+        { label: "Universities", href: "/universities" },
+      ]),
       {
         "@type": "ItemList",
         name: "Published LNAT University Profiles",

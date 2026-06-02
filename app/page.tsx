@@ -9,6 +9,7 @@ import FAQPreview from "@/components/Home/FAQPreview";
 import FinalCTA from "@/components/Home/FinalCTA";
 import type { FeaturedUniversityCardData } from "@/components/Home/FeaturedUniversities/UniversityGrid";
 import { getFeaturedUniversities } from "@/services/universityService";
+import { createHomePageSchema } from "@/lib/homePageSchema";
 
 export default async function Home() {
   const universityDocuments = await getFeaturedUniversities(6);
@@ -34,9 +35,14 @@ export default async function Home() {
       lnatRequired: university.lnatRequirement === "Required",
     }),
   );
+  const structuredData = createHomePageSchema(universities);
 
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <HomeHero />
       <TrustedUniversities />
       <LNATOverview />

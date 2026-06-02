@@ -186,7 +186,7 @@ function LNATHero() {
         }}
       >
         LNAT evaluates reasoning and analytical thinking — not rote learning.
-        Accepted by the world's top law universities, it gives Indian students a
+        Accepted by the world&apos;s top law universities, it gives Indian students a
         genuinely differentiated, globally recognised path.
       </motion.p>
 
@@ -1266,7 +1266,7 @@ function SkillVisualization() {
             }}
           >
             Every component of LNAT preparation directly builds the cognitive
-            toolkit you'll use throughout your legal career — not just to pass
+            toolkit you&apos;ll use throughout your legal career — not just to pass
             an exam.
           </motion.p>
           <motion.div variants={fadeUp}>
@@ -1607,7 +1607,11 @@ export default function LNATOverview() {
   const[isOpen, setIsOpen] = useState(false);;
   return (
     <>
-      <EnquiryPopupForm isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <EnquiryPopupForm
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        source="home-hero"
+      />
       <section
         className="relative w-full overflow-hidden"
         style={{ background: "#FDFBF7" }}
