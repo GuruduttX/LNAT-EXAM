@@ -4,16 +4,17 @@ export async function GET() {
   const siteUrl = getSiteUrl();
 
   const robots = `User-agent: *
-    Allow: /
+    Disallow: /
     Disallow: /admin/
     Disallow: /api/
+
 
     User-agent: GPTBot
     User-agent: ClaudeBot
     User-agent: PerplexityBot
     User-agent: Google-Extended
     User-agent: CCBot
-    Allow: /
+    Disallow: /
     Disallow: /admin/
     Disallow: /api/
 
