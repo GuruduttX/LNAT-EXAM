@@ -4,6 +4,7 @@ import { FAQ } from "@/models/FAQ";
 import connectDB from "@/lib/db";
 import { getFAQs } from "@/services/faqService";
 import { faqCategories } from "@/types/backend.types";
+import { requireAdminRequest } from "@/lib/adminAuth";
 
 export async function GET(request: Request) {
   try {
@@ -11,13 +12,19 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const category = searchParams.get("category");
     const status = searchParams.get("status");
+    const normalizedStatus =
+      status === "draft" || status === "published" || status === "all"
+        ? status
+        : "published";
+
+    if (normalizedStatus !== "published") {
+      const authError = requireAdminRequest(request);
+      if (authError) return authError;
+    }
 
     const faqs = await getFAQs({
       category: category || undefined,
-      status:
-        status === "draft" || status === "published" || status === "all"
-          ? status
-          : "all",
+      status: normalizedStatus,
     });
 
     return NextResponse.json(faqs);
@@ -30,6 +37,9 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  const authError = requireAdminRequest(request);
+  if (authError) return authError;
+
   try {
     await connectDB();
     const body = await request.json();

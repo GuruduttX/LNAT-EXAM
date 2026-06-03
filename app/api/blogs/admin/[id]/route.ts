@@ -3,6 +3,12 @@ import { NextResponse } from "next/server";
 import connectDB from "@/lib/db";
 import { Blog } from "@/models/Blog";
 import { getBlogById } from "@/services/blogService";
+import {
+  createSlugConflictResponse,
+  getSlugConflictResponse,
+  isMongoDuplicateSlugError,
+} from "@/lib/slugValidation";
+import { requireAdminRequest } from "@/lib/adminAuth";
 
 interface RouteProps {
   params: Promise<{
@@ -11,6 +17,9 @@ interface RouteProps {
 }
 
 export async function GET(_request: Request, { params }: RouteProps) {
+  const authError = requireAdminRequest(_request);
+  if (authError) return authError;
+
   try {
     const { id } = await params;
     const blog = await getBlogById(id);
@@ -29,10 +38,24 @@ export async function GET(_request: Request, { params }: RouteProps) {
 }
 
 export async function PUT(request: Request, { params }: RouteProps) {
+  const authError = requireAdminRequest(request);
+  if (authError) return authError;
+
+  let submittedSlug = "";
+
   try {
     await connectDB();
     const { id } = await params;
     const body = await request.json();
+    submittedSlug = typeof body.slug === "string" ? body.slug : "";
+
+    const slugConflict = await getSlugConflictResponse(
+      Blog,
+      "blog",
+      body.slug,
+      id,
+    );
+    if (slugConflict) return slugConflict;
 
     const updatedBlog = await Blog.findByIdAndUpdate(id, body, {
       new: true,
@@ -44,7 +67,11 @@ export async function PUT(request: Request, { params }: RouteProps) {
     }
 
     return NextResponse.json(updatedBlog);
-  } catch {
+  } catch (error) {
+    if (isMongoDuplicateSlugError(error)) {
+      return createSlugConflictResponse("blog", submittedSlug);
+    }
+
     return NextResponse.json(
       { error: "Failed to update blog" },
       { status: 400 },
@@ -53,6 +80,9 @@ export async function PUT(request: Request, { params }: RouteProps) {
 }
 
 export async function DELETE(_request: Request, { params }: RouteProps) {
+  const authError = requireAdminRequest(_request);
+  if (authError) return authError;
+
   try {
     await connectDB();
     const { id } = await params;

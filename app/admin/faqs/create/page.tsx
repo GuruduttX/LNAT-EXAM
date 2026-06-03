@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import RichTextEditor from "@/shared/RichTextEditor";
 import { faqCategories } from "@/types/backend.types";
+import { adminFetch } from "@/lib/adminApiClient";
 
 const inputClass = `
   mt-2 w-full px-4 py-3 rounded-md
@@ -62,7 +63,7 @@ export default function CreateFAQPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/faqs", {
+      const res = await adminFetch("/api/faqs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...form, status }),

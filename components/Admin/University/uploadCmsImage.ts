@@ -1,11 +1,13 @@
 "use client";
 
+import { adminFetch } from "@/lib/adminApiClient";
+
 export async function uploadCmsImage(file: File, folder: string) {
   const formData = new FormData();
   formData.append("file", file);
   formData.append("folder", folder);
 
-  const response = await fetch("/api/admin/upload", {
+  const response = await adminFetch("/api/admin/upload", {
     method: "POST",
     body: formData,
   });

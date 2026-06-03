@@ -5,11 +5,22 @@ import {
   getUniversityById,
   updateUniversity,
 } from "@/services/universityService";
+import connectDB from "@/lib/db";
+import { University } from "@/models/University";
+import {
+  createSlugConflictResponse,
+  getSlugConflictResponse,
+  isMongoDuplicateSlugError,
+} from "@/lib/slugValidation";
+import { requireAdminRequest } from "@/lib/adminAuth";
 
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const authError = requireAdminRequest(request);
+  if (authError) return authError;
+
   try {
     const { id } = await params;
     const university = await getUniversityById(id);
@@ -32,10 +43,25 @@ export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const authError = requireAdminRequest(request);
+  if (authError) return authError;
+
+  let submittedSlug = "";
+
   try {
+    await connectDB();
     const { id } = await params;
     const body = await request.json();
-    console.log("university update call")
+    submittedSlug = typeof body.slug === "string" ? body.slug : "";
+
+    const slugConflict = await getSlugConflictResponse(
+      University,
+      "university",
+      body.slug,
+      id,
+    );
+    if (slugConflict) return slugConflict;
+
     const updatedUniversity = await updateUniversity(id, body);
 
     if (!updatedUniversity) {
@@ -46,7 +72,11 @@ export async function PUT(
     }
 
     return NextResponse.json(updatedUniversity);
-  } catch {
+  } catch (error) {
+    if (isMongoDuplicateSlugError(error)) {
+      return createSlugConflictResponse("university", submittedSlug);
+    }
+
     return NextResponse.json(
       { error: "Failed to update university record" },
       { status: 400 },
@@ -58,6 +88,9 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const authError = requireAdminRequest(request);
+  if (authError) return authError;
+
   try {
     const { id } = await params;
     const deletedUniversity = await deleteUniversity(id);

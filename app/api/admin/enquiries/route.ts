@@ -9,8 +9,12 @@ import {
   type EnquiryStatus,
   type EnquiryType,
 } from "@/types/backend.types";
+import { requireAdminRequest } from "@/lib/adminAuth";
 
 export async function GET(request: Request) {
+  const authError = requireAdminRequest(request);
+  if (authError) return authError;
+
   try {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status") as EnquiryStatus | null;

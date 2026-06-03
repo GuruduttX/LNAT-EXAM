@@ -1,12 +1,16 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/db";
 import { FAQ } from "@/models/FAQ";
+import { requireAdminRequest } from "@/lib/adminAuth";
 
 // GET: Fetch a single FAQ for the Edit Page
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const authError = requireAdminRequest(request);
+  if (authError) return authError;
+
   try {
     await connectDB();
     const { id } = await params; // Unwrap the params Promise
@@ -28,6 +32,9 @@ export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const authError = requireAdminRequest(request);
+  if (authError) return authError;
+
   try {
     await connectDB();
     const body = await request.json();
@@ -58,6 +65,9 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const authError = requireAdminRequest(request);
+  if (authError) return authError;
+
   try {
     await connectDB();
     const { id } = await params; // Unwrap the params Promise

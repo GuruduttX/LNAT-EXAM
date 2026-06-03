@@ -3,6 +3,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { ExternalLink } from "lucide-react";
+import { adminFetch } from "@/lib/adminApiClient";
 
 const pdfCompressionTools = [
   {
@@ -58,7 +59,7 @@ export default function ResourcePdfSection({
 
     try {
       setLoading(true);
-      const response = await fetch("/api/admin/upload", {
+      const response = await adminFetch("/api/admin/upload", {
         method: "POST",
         body: formData,
       });

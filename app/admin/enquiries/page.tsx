@@ -23,6 +23,7 @@ import {
   type EnquiryStatus,
   type IEnquiry,
 } from "@/types/backend.types";
+import { adminFetch } from "@/lib/adminApiClient";
 
 interface EnquiryListItem extends Omit<IEnquiry, "createdAt" | "updatedAt"> {
   _id?: string;
@@ -60,7 +61,7 @@ export default function EnquiriesPage() {
   useEffect(() => {
     let isCancelled = false;
 
-    fetch("/api/admin/enquiries")
+    adminFetch("/api/admin/enquiries")
       .then((response) => {
         if (!response.ok) throw new Error("Failed to fetch enquiries");
         return response.json();
@@ -106,7 +107,7 @@ export default function EnquiriesPage() {
     updates: Pick<Partial<IEnquiry>, "status" | "internalNotes">,
   ) => {
     const enquiryId = getEnquiryId(enquiry);
-    const response = await fetch(`/api/admin/enquiries/${enquiryId}`, {
+    const response = await adminFetch(`/api/admin/enquiries/${enquiryId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updates),

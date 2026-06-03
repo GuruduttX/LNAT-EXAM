@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 import { uploadAssetService } from "@/services/admin/uploadAssetService";
+import { requireAdminRequest } from "@/lib/adminAuth";
 
 export async function POST(req: Request) {
+  const authError = requireAdminRequest(req);
+  if (authError) return authError;
+
   try {
     const formData = await req.formData();
     const file = formData.get("file") as File;
@@ -15,7 +19,6 @@ export async function POST(req: Request) {
     }
 
     const uploadedAsset = await uploadAssetService(file, folder);
-    console.log(uploadedAsset, "api/upload");
     return NextResponse.json({
       success: true,
       ...uploadedAsset,

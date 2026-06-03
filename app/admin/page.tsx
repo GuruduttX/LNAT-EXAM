@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import CountUp from "react-countup";
+import { adminFetch } from "@/lib/adminApiClient";
 
 export default function DashboardPage() {
   const [stats, setStats] = useState({
@@ -22,40 +23,48 @@ export default function DashboardPage() {
     resources: 0,
   });
 
-  const [syncTime, setSyncTime] = useState("");
+  const [syncTime] = useState(() =>
+    new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+  );
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch actual dashboard stats from your backend
-  const getDashboardData = async () => {
-    try {
-      // Replace with your actual API endpoint later
-      const response = await fetch(`/api/admin/dashboard`);
-
-      if (response.ok) {
-        const data = await response.json();
-        setStats({
-          universities: data.data.universityCount || 0,
-          blogs: data.data.blogCount || 0,
-          faqs: data.data.faqCount || 0,
-          resources: data.data.resourceCount || 0,
-        });
-      } else {
-        // Fallback for UI visualization before API is built
-        setStats({ universities: 12, blogs: 48, faqs: 124, resources: 15 });
-      }
-    } catch (error) {
-      console.error("Error fetching dashboard data:", error);
-      setStats({ universities: 12, blogs: 48, faqs: 124, resources: 15 });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
-    getDashboardData();
-    setSyncTime(
-      new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-    );
+    let isMounted = true;
+
+    const getDashboardData = async () => {
+      try {
+        const response = await adminFetch(`/api/admin/dashboard`);
+
+        if (!isMounted) return;
+
+        if (response.ok) {
+          const data = await response.json();
+          setStats({
+            universities: data.data.universityCount || 0,
+            blogs: data.data.blogCount || 0,
+            faqs: data.data.faqCount || 0,
+            resources: data.data.resourceCount || 0,
+          });
+        } else {
+          setStats({ universities: 0, blogs: 0, faqs: 0, resources: 0 });
+        }
+      } catch (error) {
+        console.error("Error fetching dashboard data:", error);
+        if (isMounted) {
+          setStats({ universities: 0, blogs: 0, faqs: 0, resources: 0 });
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    void getDashboardData();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const kpiCards = [

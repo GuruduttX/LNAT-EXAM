@@ -4,6 +4,7 @@ import { startTransition, useEffect, useState } from "react";
 import Link from "next/link";
 import { Edit, FileText, Plus, Search, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
+import { adminFetch } from "@/lib/adminApiClient";
 
 interface ResourceListItem {
   id?: string;
@@ -28,7 +29,7 @@ export default function ResourcesPage() {
 
   const fetchResources = async () => {
     try {
-      const response = await fetch("/api/resources?status=all");
+      const response = await adminFetch("/api/resources?status=all");
       if (!response.ok) {
         throw new Error("Failed to fetch resources");
       }
@@ -56,7 +57,7 @@ export default function ResourcesPage() {
     }
 
     try {
-      const response = await fetch(`/api/resources/${id}`, {
+      const response = await adminFetch(`/api/resources/${id}`, {
         method: "DELETE",
       });
 

@@ -4,6 +4,7 @@ import { startTransition, useEffect, useState } from "react";
 import Link from "next/link";
 import { Edit, Plus, Search, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
+import { adminFetch } from "@/lib/adminApiClient";
 
 interface ICategoryListItem {
   _id: string;
@@ -27,7 +28,7 @@ export default function CategoriesPage() {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch("/api/categories");
+      const response = await adminFetch("/api/categories");
       if (!response.ok) {
         throw new Error("Failed to fetch categories");
       }
@@ -55,7 +56,7 @@ export default function CategoriesPage() {
     }
 
     try {
-      const response = await fetch(`/api/categories/${id}`, {
+      const response = await adminFetch(`/api/categories/${id}`, {
         method: "DELETE",
       });
 

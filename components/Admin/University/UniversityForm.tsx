@@ -9,6 +9,8 @@ import CMSMediaSection from "@/components/Admin/CMS/CMSMediaSection";
 import CMSSeoSection from "@/components/Admin/CMS/CMSSeoSection";
 import CMSSchema from "@/components/Admin/CMS/CMSSchema";
 import CMSActions from "@/components/Admin/CMS/CMSActions";
+import { getCmsErrorMessage } from "@/components/Admin/CMS/getCmsErrorMessage";
+import { adminFetch } from "@/lib/adminApiClient";
 import RichTextEditor from "@/shared/RichTextEditor";
 import { IUniversity, IMediaAsset } from "@/types/backend.types";
 import UniversityGallerySection from "./UniversityGallerySection";
@@ -401,7 +403,7 @@ export default function UniversityForm({
         : `/api/universities/${initialData?.id || initialData?._id}`;
     const method = mode === "create" ? "POST" : "PUT";
 
-    const response = await fetch(endpoint, {
+    const response = await adminFetch(endpoint, {
       method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -409,7 +411,12 @@ export default function UniversityForm({
 
     if (!response.ok) {
       throw new Error(
-        `Failed to ${statusOverride === "draft" ? "save draft" : "publish"} university`,
+        await getCmsErrorMessage(
+          response,
+          `Failed to ${
+            statusOverride === "draft" ? "save draft" : "publish"
+          } university`,
+        ),
       );
     }
 
@@ -426,8 +433,8 @@ export default function UniversityForm({
       await submitUniversity("draft");
       toast.success("University draft saved");
       router.push("/admin/universities");
-    } catch {
-      toast.error("Failed to save draft");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to save draft");
     } finally {
       setIsSavingDraft(false);
     }
@@ -472,11 +479,13 @@ export default function UniversityForm({
           : "University updated successfully",
       );
       router.push("/admin/universities");
-    } catch {
+    } catch (error) {
       toast.error(
-        mode === "create"
-          ? "Failed to create university"
-          : "Failed to update university",
+        error instanceof Error
+          ? error.message
+          : mode === "create"
+            ? "Failed to create university"
+            : "Failed to update university",
       );
     } finally {
       setIsPublishing(false);

@@ -2,11 +2,15 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/db";
 import { Blog } from "@/models/Blog";
+import { requireAdminRequest } from "@/lib/adminAuth";
 
 export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const authError = requireAdminRequest(request);
+  if (authError) return authError;
+
   try {
     await connectDB();
     const { id } = await params;

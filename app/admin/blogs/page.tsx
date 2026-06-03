@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { IBlog } from "@/types/backend.types";
+import { adminFetch } from "@/lib/adminApiClient";
 
 export default function BlogArchivePage() {
   const [blogs, setBlogs] = useState<IBlog[]>([]);
@@ -26,7 +27,7 @@ export default function BlogArchivePage() {
   const [statusFilter, setStatusFilter] = useState<
     "all" | "draft" | "published"
   >("all");
-  const [viewMode, setViewMode] = useState<"table" | "grid">("table");
+  const [viewMode, setViewMode] = useState<"table" | "grid">("grid");
 
   // Delete Modal State
   const [deleteModal, setDeleteModal] = useState({
@@ -38,7 +39,7 @@ export default function BlogArchivePage() {
 
   const fetchBlogs = async () => {
     try {
-      const res = await fetch("/api/blogs?limit=50&status=all");
+      const res = await adminFetch("/api/blogs?limit=50&status=all");
       if (!res.ok) throw new Error("Failed to fetch blogs");
       const data = await res.json();
       startTransition(() => {
@@ -62,7 +63,7 @@ export default function BlogArchivePage() {
     setIsDeleting(true);
 
     try {
-      const res = await fetch(`/api/blogs/admin/${deleteModal.id}`, {
+      const res = await adminFetch(`/api/blogs/admin/${deleteModal.id}`, {
         method: "DELETE",
       });
 
@@ -327,10 +328,11 @@ export default function BlogArchivePage() {
                   </span>
                 </div>
 
-                <div className="mt-4 flex justify-end gap-3 pt-4 border-t border-slate-800/50">
-                  <Link href={`/admin/blogs/edit/${blog._id}`}>
-                    <button className="text-slate-400 hover:text-[#C4A47C] transition-colors p-1">
-                      <Edit size={16} />
+                <div className="mt-4 grid grid-cols-2 gap-3 border-t border-slate-800/50 pt-4">
+                  <Link href={`/admin/blogs/edit/${blog._id}`} className="min-w-0">
+                    <button className="flex w-full items-center justify-center gap-2 rounded-md border border-[#C4A47C]/25 bg-[#C4A47C]/10 px-3 py-2.5 text-sm font-medium text-[#C4A47C] transition-colors hover:bg-[#C4A47C]/20">
+                      <Edit size={15} />
+                      Edit
                     </button>
                   </Link>
                   <button
@@ -341,9 +343,10 @@ export default function BlogArchivePage() {
                         title: blog.title,
                       })
                     }
-                    className="text-slate-400 hover:text-red-400 transition-colors p-1"
+                    className="flex w-full items-center justify-center gap-2 rounded-md border border-red-500/20 bg-red-500/10 px-3 py-2.5 text-sm font-medium text-red-400 transition-colors hover:bg-red-500/20"
                   >
-                    <Trash2 size={16} />
+                    <Trash2 size={15} />
+                    Delete
                   </button>
                 </div>
               </div>

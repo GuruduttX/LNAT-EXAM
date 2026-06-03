@@ -7,6 +7,8 @@ import toast from "react-hot-toast";
 import CMSActions from "@/components/Admin/CMS/CMSActions";
 import CMSHeader from "@/components/Admin/CMS/CMSHeader";
 import CMSSeoSection from "@/components/Admin/CMS/CMSSeoSection";
+import { getCmsErrorMessage } from "@/components/Admin/CMS/getCmsErrorMessage";
+import { adminFetch } from "@/lib/adminApiClient";
 import { IResource } from "@/types/backend.types";
 import ResourcePdfSection from "./ResourcePdfSection";
 
@@ -179,14 +181,16 @@ export default function ResourceForm({
           : `/api/resources/${initialData?.id || initialData?._id}`;
       const method = mode === "create" ? "POST" : "PUT";
 
-      const response = await fetch(endpoint, {
+      const response = await adminFetch(endpoint, {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to save resource");
+        throw new Error(
+          await getCmsErrorMessage(response, "Failed to save resource"),
+        );
       }
 
       if (typeof window !== "undefined") {
@@ -203,11 +207,13 @@ export default function ResourceForm({
 
       router.push("/admin/resources");
       router.refresh();
-    } catch {
+    } catch (error) {
       toast.error(
-        statusOverride === "published"
-          ? "Failed to publish resource"
-          : "Failed to save resource draft",
+        error instanceof Error
+          ? error.message
+          : statusOverride === "published"
+            ? "Failed to publish resource"
+            : "Failed to save resource draft",
       );
     } finally {
       setter(false);

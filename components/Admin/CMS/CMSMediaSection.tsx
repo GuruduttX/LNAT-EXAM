@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import toast from "react-hot-toast";
+import { adminFetch } from "@/lib/adminApiClient";
 
 type EditorType = "Blog" | "University" | "FAQ" | "Resource" | "Category";
 
@@ -41,7 +42,7 @@ const CMSMediaSection = ({
 
     try {
       setLoading(true);
-      const res = await fetch("/api/admin/upload", {
+      const res = await adminFetch("/api/admin/upload", {
         method: "POST",
         body: formData,
       });

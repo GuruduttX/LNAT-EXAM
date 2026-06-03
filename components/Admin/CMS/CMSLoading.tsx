@@ -1,57 +1,54 @@
-export default function CMSLoading() {
+export default function CMSLoading({
+  title = "Loading CMS",
+  message = "Preparing your admin workspace...",
+}: {
+  title?: string;
+  message?: string;
+}) {
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#020617]">
-      
-      {/* Background gradient glow */}
-      <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/20 via-sky-900/10 to-transparent" />
+    <div className="relative min-h-[calc(100vh-8rem)] overflow-hidden rounded-3xl border border-slate-800 bg-[#0B1221] p-6 shadow-2xl shadow-black/20">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(196,164,124,0.16),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(15,23,42,0.88),transparent_36%)]" />
 
-      {/* Floating dots */}
-      <div className="absolute inset-0 animate-pulse opacity-30">
-        <div className="absolute top-1/4 left-1/3 h-2 w-2 rounded-full bg-sky-400" />
-        <div className="absolute top-1/2 right-1/4 h-1.5 w-1.5 rounded-full bg-indigo-400" />
-        <div className="absolute bottom-1/3 left-1/4 h-2 w-2 rounded-full bg-sky-300" />
-      </div>
+      <div className="relative flex min-h-[calc(100vh-11rem)] flex-col justify-center">
+        <div className="mx-auto flex w-full max-w-3xl flex-col items-center text-center">
+          <div className="relative flex h-24 w-24 items-center justify-center">
+            <div className="absolute h-24 w-24 animate-ping rounded-full border border-[#C4A47C]/25" />
+            <div className="absolute h-16 w-16 animate-pulse rounded-full bg-[#C4A47C]/10" />
+            <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl border border-[#C4A47C]/40 bg-slate-950 shadow-xl shadow-[#C4A47C]/10">
+              <div className="h-7 w-7 animate-spin rounded-full border-2 border-[#C4A47C]/25 border-t-[#C4A47C]" />
+            </div>
+          </div>
 
-      {/* Main Loader */}
-      <div className="relative flex flex-col items-center gap-6">
-        
-        {/* Pulse Rings */}
-        <div className="relative flex items-center justify-center">
-          <div className="absolute h-40 w-40 animate-ping rounded-full border border-sky-400/30" />
-          <div className="absolute h-28 w-28 animate-ping rounded-full border border-indigo-400/40 delay-300" />
-          
-          {/* Core */}
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-tr from-sky-500 to-indigo-600 shadow-xl shadow-sky-500/30">
-            <span className="text-xl font-bold text-white">AI</span>
+          <h2 className="mt-6 text-2xl font-semibold tracking-tight text-[#FDFBF7]">
+            {title}
+          </h2>
+          <p className="mt-2 max-w-md text-sm leading-6 text-slate-400">
+            {message}
+          </p>
+
+          <div className="mt-8 h-1.5 w-full max-w-sm overflow-hidden rounded-full bg-slate-950">
+            <div className="h-full w-1/2 animate-pulse rounded-full bg-gradient-to-r from-[#8B6F3D] via-[#C4A47C] to-[#F2D98F]" />
+          </div>
+
+          <div className="mt-10 grid w-full gap-4 md:grid-cols-3">
+            {["Syncing records", "Loading editor", "Checking status"].map(
+              (item) => (
+                <div
+                  key={item}
+                  className="rounded-2xl border border-slate-800 bg-slate-950/50 p-4 text-left"
+                >
+                  <div className="h-2 w-16 animate-pulse rounded-full bg-[#C4A47C]/40" />
+                  <p className="mt-4 text-xs font-medium uppercase tracking-[0.18em] text-slate-500">
+                    {item}
+                  </p>
+                  <div className="mt-3 h-2 w-full animate-pulse rounded-full bg-slate-800" />
+                  <div className="mt-2 h-2 w-2/3 animate-pulse rounded-full bg-slate-800" />
+                </div>
+              ),
+            )}
           </div>
         </div>
-
-        {/* Text */}
-        <div className="text-center">
-          <h2 className="text-lg font-semibold tracking-wide text-gray-200">
-            Loading Experience
-          </h2>
-          <p className="mt-1 text-sm text-gray-400">
-            Preparing something amazing for you
-          </p>
-        </div>
-
-        {/* Progress Bar */}
-        <div className="mt-2 h-1 w-48 overflow-hidden rounded-full bg-white/10">
-          <div className="h-full w-1/3 animate-loading-bar rounded-full bg-gradient-to-r from-sky-400 to-indigo-500" />
-        </div>
       </div>
-
-      {/* Animation Keyframes */}
-      <style jsx>{`
-        @keyframes loading-bar {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(300%); }
-        }
-        .animate-loading-bar {
-          animation: loading-bar 1.5s infinite ease-in-out;
-        }
-      `}</style>
     </div>
   );
 }

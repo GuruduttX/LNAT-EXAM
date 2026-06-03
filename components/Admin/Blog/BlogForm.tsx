@@ -9,6 +9,8 @@ import CMSHeader from "@/components/Admin/CMS/CMSHeader";
 import CMSMediaSection from "@/components/Admin/CMS/CMSMediaSection";
 import CMSSeoSection from "@/components/Admin/CMS/CMSSeoSection";
 import CMSSchema from "@/components/Admin/CMS/CMSSchema";
+import { getCmsErrorMessage } from "@/components/Admin/CMS/getCmsErrorMessage";
+import { adminFetch } from "@/lib/adminApiClient";
 import RichTextEditor from "@/shared/RichTextEditor";
 import { IBlog } from "@/types/backend.types";
 
@@ -292,14 +294,16 @@ export default function BlogForm({ mode, initialData }: BlogFormProps) {
           : `/api/blogs/admin/${initialData?._id}`;
       const method = mode === "create" ? "POST" : "PUT";
 
-      const response = await fetch(endpoint, {
+      const response = await adminFetch(endpoint, {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to save blog");
+        throw new Error(
+          await getCmsErrorMessage(response, "Failed to save blog"),
+        );
       }
 
       if (typeof window !== "undefined") {
@@ -316,11 +320,13 @@ export default function BlogForm({ mode, initialData }: BlogFormProps) {
 
       router.push("/admin/blogs");
       router.refresh();
-    } catch {
+    } catch (error) {
       toast.error(
-        statusOverride === "published"
-          ? "Failed to publish blog"
-          : "Failed to save draft",
+        error instanceof Error
+          ? error.message
+          : statusOverride === "published"
+            ? "Failed to publish blog"
+            : "Failed to save draft",
       );
     } finally {
       setter(false);

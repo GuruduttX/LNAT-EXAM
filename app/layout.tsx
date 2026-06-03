@@ -3,6 +3,7 @@ import { Playfair_Display, Lato } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/utils/Navbar";
 import Footer from "@/utils/Footer";
+import FloatingWhatsAppButton from "@/components/shared/FloatingWhatsAppButton";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -38,6 +39,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col overflow-x-clip bg-[#fbfaf7] text-[#0e1b2a]">
         <Navbar />
         {children}
+        <FloatingWhatsAppButton />
         <Footer />
       </body>
     </html>

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AlertTriangle, Plus, Search, Trash2, Edit } from "lucide-react";
 import toast from "react-hot-toast";
+import { adminFetch } from "@/lib/adminApiClient";
 
 // Matches the backend schema exact enums
 const faqCategories = [
@@ -42,7 +43,7 @@ export default function FAQArchivePage() {
   useEffect(() => {
     let isCancelled = false;
 
-    fetch("/api/faqs")
+    adminFetch("/api/faqs?status=all")
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch FAQs");
         return res.json();
@@ -66,7 +67,7 @@ export default function FAQArchivePage() {
     if (!deleteModal.id) return;
     setIsDeleting(true);
     try {
-      const res = await fetch(`/api/faqs/${deleteModal.id}`, {
+      const res = await adminFetch(`/api/faqs/${deleteModal.id}`, {
         method: "DELETE",
       });
       if (!res.ok) throw new Error("Delete failed");

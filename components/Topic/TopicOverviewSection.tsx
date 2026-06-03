@@ -58,7 +58,7 @@ export default function TopicOverviewSection({
           {/* LEFT COLUMN: Overview (Light Theme Pattern) */}
           <motion.div
             variants={fadeUp}
-            className="flex flex-col overflow-hidden rounded-2xl border border-black/[0.07] bg-white shadow-sm transition-all duration-300 hover:shadow-[0_16px_40px_rgba(0,0,0,0.06)]"
+            className="flex flex-col overflow-hidden rounded-2xl border border-black/[0.07] bg-white shadow-sm transition-all duration-300 hover:shadow-[0_16px_40px_rgba(0,0,0,0.06)] text-center md:text-start"
           >
             {/* Top Accent Bar */}
             <div

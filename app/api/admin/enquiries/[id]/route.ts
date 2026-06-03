@@ -4,6 +4,7 @@ import {
   getEnquiryById,
   updateEnquiry,
 } from "@/services/enquiryService";
+import { requireAdminRequest } from "@/lib/adminAuth";
 import { enquiryStatuses, type EnquiryStatus } from "@/types/backend.types";
 
 interface RouteProps {
@@ -16,6 +17,9 @@ interface UpdateEnquiryBody {
 }
 
 export async function GET(_request: Request, { params }: RouteProps) {
+  const authError = requireAdminRequest(_request);
+  if (authError) return authError;
+
   try {
     const { id } = await params;
     const enquiry = await getEnquiryById(id);
@@ -34,6 +38,9 @@ export async function GET(_request: Request, { params }: RouteProps) {
 }
 
 export async function PATCH(request: Request, { params }: RouteProps) {
+  const authError = requireAdminRequest(request);
+  if (authError) return authError;
+
   try {
     const { id } = await params;
     const body = (await request.json()) as UpdateEnquiryBody;

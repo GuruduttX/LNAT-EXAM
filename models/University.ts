@@ -145,6 +145,8 @@ const universitySchema = new Schema(
     slug: {
       type: String,
       required: true,
+      unique: true,
+      index: true,
       trim: true,
     },
     metaTitle: { type: String },

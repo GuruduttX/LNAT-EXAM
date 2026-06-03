@@ -1,11 +1,9 @@
-import DashboardLayout from "@/components/Admin/Components/DashboardLayout";
-import { Toaster } from "react-hot-toast";
+import AdminShell from "@/components/Admin/Components/AdminShell";
 
 export default function AdminRootLayout({ children }: { children: React.ReactNode }) {
     return (
         <div className="bg-[#040421]">
-            <DashboardLayout>{children}</DashboardLayout>
-            <Toaster />
+            <AdminShell>{children}</AdminShell>
         </div>
     );
 }

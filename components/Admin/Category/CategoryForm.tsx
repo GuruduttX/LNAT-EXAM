@@ -8,6 +8,8 @@ import CMSActions from "@/components/Admin/CMS/CMSActions";
 import CMSHeader from "@/components/Admin/CMS/CMSHeader";
 import CMSMediaSection from "@/components/Admin/CMS/CMSMediaSection";
 import CMSSeoSection from "@/components/Admin/CMS/CMSSeoSection";
+import { getCmsErrorMessage } from "@/components/Admin/CMS/getCmsErrorMessage";
+import { adminFetch } from "@/lib/adminApiClient";
 import { ICategory } from "@/types/backend.types";
 
 const inputClass = `
@@ -288,14 +290,16 @@ export default function CategoryForm({
           : `/api/categories/${initialData?.id || initialData?._id}`;
       const method = mode === "create" ? "POST" : "PUT";
 
-      const response = await fetch(endpoint, {
+      const response = await adminFetch(endpoint, {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to save category");
+        throw new Error(
+          await getCmsErrorMessage(response, "Failed to save category"),
+        );
       }
 
       if (typeof window !== "undefined") {
@@ -309,11 +313,13 @@ export default function CategoryForm({
       );
       router.push("/admin/categories");
       router.refresh();
-    } catch {
+    } catch (error) {
       toast.error(
-        statusOverride === "published"
-          ? "Failed to publish category"
-          : "Failed to save category draft",
+        error instanceof Error
+          ? error.message
+          : statusOverride === "published"
+            ? "Failed to publish category"
+            : "Failed to save category draft",
       );
     } finally {
       setter(false);
@@ -332,7 +338,9 @@ export default function CategoryForm({
         className="space-y-8"
       >
         <section className={sectionClass}>
-          <h2 className="text-lg font-semibold text-[#FDFBF7]">Core Hub Info</h2>
+          <h2 className="text-lg font-semibold text-[#FDFBF7]">
+            Core Hub Info
+          </h2>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div>
               <label className={labelClass}>Category Name</label>
@@ -460,88 +468,88 @@ export default function CategoryForm({
             <h2 className="text-lg font-semibold text-[#FDFBF7]">
               Subtopic Groups
             </h2>
-            <button
-              type="button"
-              onClick={addSubtopic}
-              className="text-sm font-medium text-[#C4A47C]"
-            >
-              + Add Subtopic
-            </button>
           </div>
 
           <div className="space-y-5">
             {form.subtopics.map(
               (subtopic: CategorySubtopicFormItem, index: number) => (
-              <div
-                key={`subtopic-${index}`}
-                className="space-y-4 rounded-xl border border-slate-800 bg-slate-950/40 p-4"
-              >
-                <div className="flex items-center justify-between gap-4">
-                  <p className="text-sm font-medium text-slate-300">
-                    Subtopic {index + 1}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => removeSubtopic(index)}
-                    className="text-xs font-medium text-rose-400"
-                  >
-                    Remove
-                  </button>
-                </div>
+                <div
+                  key={`subtopic-${index}`}
+                  className="space-y-4 rounded-xl border border-slate-800 bg-slate-950/40 p-4"
+                >
+                  <div className="flex items-center justify-between gap-4">
+                    <p className="text-sm font-medium text-slate-300">
+                      Subtopic {index + 1}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => removeSubtopic(index)}
+                      className="text-xs font-medium text-rose-400"
+                    >
+                      Remove
+                    </button>
+                  </div>
 
-                <input
-                  value={subtopic.title}
-                  onChange={(event) =>
-                    updateSubtopic(index, "title", event.target.value)
-                  }
-                  placeholder="Subtopic title"
-                  className={inputClass}
-                />
-                <textarea
-                  value={subtopic.description}
-                  onChange={(event) =>
-                    updateSubtopic(index, "description", event.target.value)
-                  }
-                  placeholder="Short explanation for this subtopic"
-                  className={textareaClass}
-                />
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  <textarea
-                    value={subtopic.postSlugsText}
+                  <input
+                    value={subtopic.title}
                     onChange={(event) =>
-                      updateSubtopic(index, "postSlugsText", event.target.value)
+                      updateSubtopic(index, "title", event.target.value)
                     }
-                    placeholder="Blog slugs for this subtopic"
-                    className={textareaClass}
+                    placeholder="Subtopic title"
+                    className={inputClass}
                   />
                   <textarea
-                    value={subtopic.universitySlugsText}
+                    value={subtopic.description}
                     onChange={(event) =>
-                      updateSubtopic(
-                        index,
-                        "universitySlugsText",
-                        event.target.value,
-                      )
+                      updateSubtopic(index, "description", event.target.value)
                     }
-                    placeholder="University slugs for this subtopic"
+                    placeholder="Short explanation for this subtopic"
                     className={textareaClass}
                   />
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <textarea
+                      value={subtopic.postSlugsText}
+                      onChange={(event) =>
+                        updateSubtopic(
+                          index,
+                          "postSlugsText",
+                          event.target.value,
+                        )
+                      }
+                      placeholder="Blog slugs for this subtopic"
+                      className={textareaClass}
+                    />
+                    <textarea
+                      value={subtopic.universitySlugsText}
+                      onChange={(event) =>
+                        updateSubtopic(
+                          index,
+                          "universitySlugsText",
+                          event.target.value,
+                        )
+                      }
+                      placeholder="University slugs for this subtopic"
+                      className={textareaClass}
+                    />
+                  </div>
                 </div>
-              </div>
-            ))}
+              ),
+            )}
           </div>
+          <button
+            type="button"
+            onClick={addSubtopic}
+            className="text-sm font-medium text-[#C4A47C] block ml-auto"
+          >
+            + Add Subtopic
+          </button>
         </section>
 
         <section className={sectionClass}>
           <div className="flex items-center justify-between gap-4">
-            <h2 className="text-lg font-semibold text-[#FDFBF7]">Category FAQs</h2>
-            <button
-              type="button"
-              onClick={addFaq}
-              className="text-sm font-medium text-[#C4A47C]"
-            >
-              + Add FAQ
-            </button>
+            <h2 className="text-lg font-semibold text-[#FDFBF7]">
+              Category FAQs
+            </h2>
           </div>
 
           <div className="space-y-5">
@@ -581,10 +589,19 @@ export default function CategoryForm({
               </div>
             ))}
           </div>
+          <button
+            type="button"
+            onClick={addFaq}
+            className="text-sm font-medium text-[#C4A47C] block ml-auto"
+          >
+            + Add FAQ
+          </button>
         </section>
 
         <section className={sectionClass}>
-          <h2 className="text-lg font-semibold text-[#FDFBF7]">CTA + Publishing</h2>
+          <h2 className="text-lg font-semibold text-[#FDFBF7]">
+            CTA + Publishing
+          </h2>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             <div>
               <label className={labelClass}>CTA Label</label>
@@ -622,7 +639,9 @@ export default function CategoryForm({
               <input
                 type="checkbox"
                 checked={form.isIndexed}
-                onChange={(event) => updateForm("isIndexed", event.target.checked)}
+                onChange={(event) =>
+                  updateForm("isIndexed", event.target.checked)
+                }
               />
               Indexed
             </label>
@@ -642,7 +661,9 @@ export default function CategoryForm({
               <label className={labelClass}>Post Order</label>
               <select
                 value={form.postOrder}
-                onChange={(event) => updateForm("postOrder", event.target.value)}
+                onChange={(event) =>
+                  updateForm("postOrder", event.target.value)
+                }
                 className={inputClass}
               >
                 <option value="curated">Curated</option>

@@ -11,8 +11,11 @@ import {
   List,
   MapPin,
   AlertTriangle,
+  Trophy,
+  ShieldCheck,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import { adminFetch } from "@/lib/adminApiClient";
 
 // Matches our backend interface
 interface IUniversity {
@@ -32,11 +35,17 @@ const getStatusBadgeClass = (status?: "draft" | "published") => {
     : "bg-amber-500/10 text-amber-300 border-amber-500/20";
 };
 
+const getLnatBadgeClass = (requirement: string) => {
+  return requirement.toLowerCase().includes("required")
+    ? "bg-[#C4A47C]/10 text-[#C4A47C] border-[#C4A47C]/25"
+    : "bg-slate-800/70 text-slate-300 border-slate-700";
+};
+
 export default function UniversityArchivePage() {
   const [universities, setUniversities] = useState<IUniversity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [viewMode, setViewMode] = useState<"table" | "grid">("table");
+  const [viewMode, setViewMode] = useState<"table" | "grid">("grid");
 
   // Delete Modal State
   const [deleteModal, setDeleteModal] = useState({
@@ -47,31 +56,39 @@ export default function UniversityArchivePage() {
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
-    fetchUniversities();
+    let isMounted = true;
+
+    const loadUniversities = async () => {
+      try {
+        const res = await adminFetch("/api/universities?limit=50&status=all");
+        if (!res.ok) throw new Error("Failed to fetch universities");
+        const data = await res.json();
+
+        if (isMounted) {
+          setUniversities(data.universities || []);
+        }
+      } catch {
+        toast.error("Error loading universities");
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    void loadUniversities();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
-
-  const fetchUniversities = async () => {
-    try {
-      // Fetching from the API route we created earlier
-      const res = await fetch("/api/universities?limit=50"); // Get a larger batch for the archive
-      if (!res.ok) throw new Error("Failed to fetch universities");
-      const data = await res.json();
-
-      // The API returns { universities: [...], meta: {...} }
-      setUniversities(data.universities || []);
-    } catch (error) {
-      toast.error("Error loading universities");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const executeDelete = async () => {
     if (!deleteModal.id) return;
     setIsDeleting(true);
 
     try {
-      const res = await fetch(`/api/universities/${deleteModal.id}`, {
+      const res = await adminFetch(`/api/universities/${deleteModal.id}`, {
         method: "DELETE",
       });
 
@@ -79,7 +96,7 @@ export default function UniversityArchivePage() {
 
       setUniversities((prev) => prev.filter((u) => u.id !== deleteModal.id));
       toast.success("University deleted successfully");
-    } catch (error) {
+    } catch {
       toast.error("Failed to delete university");
     } finally {
       setIsDeleting(false);
@@ -109,16 +126,6 @@ export default function UniversityArchivePage() {
           {/* View Toggle */}
           <div className="flex items-center p-1 bg-[#0B1221] border border-slate-800 rounded-lg">
             <button
-              onClick={() => setViewMode("table")}
-              className={`p-2 rounded-md transition-colors ${
-                viewMode === "table"
-                  ? "bg-slate-800 text-[#C4A47C]"
-                  : "text-slate-500 hover:text-slate-300"
-              }`}
-            >
-              <List size={18} />
-            </button>
-            <button
               onClick={() => setViewMode("grid")}
               className={`p-2 rounded-md transition-colors ${
                 viewMode === "grid"
@@ -127,6 +134,16 @@ export default function UniversityArchivePage() {
               }`}
             >
               <LayoutGrid size={18} />
+            </button>
+            <button
+              onClick={() => setViewMode("table")}
+              className={`p-2 rounded-md transition-colors ${
+                viewMode === "table"
+                  ? "bg-slate-800 text-[#C4A47C]"
+                  : "text-slate-500 hover:text-slate-300"
+              }`}
+            >
+              <List size={18} />
             </button>
           </div>
 
@@ -259,75 +276,105 @@ export default function UniversityArchivePage() {
         </div>
       ) : (
         // --- GRID / CARDS VIEW ---
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filteredUniversities.map((uni) => (
             <div
               key={uni.id}
-              className="bg-[#0B1221] border border-slate-800 rounded-xl overflow-hidden group hover:border-slate-700 transition-colors flex flex-col"
+              className="group flex flex-col overflow-hidden rounded-2xl border border-slate-800 bg-[#0B1221] shadow-[0_14px_34px_rgba(0,0,0,0.18)] transition-all duration-300 hover:-translate-y-1 hover:border-[#C4A47C]/35 hover:shadow-[0_20px_48px_rgba(0,0,0,0.28)]"
             >
-              <div className="h-40 w-full bg-slate-900 relative border-b border-slate-800">
-                <img
-                  src={uni.image}
-                  alt={uni.name}
-                  className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
-                />
-                <div
-                  className={`absolute top-3 left-3 px-2.5 py-1 rounded-md border text-[11px] font-medium capitalize backdrop-blur-sm ${getStatusBadgeClass(
-                    uni.status,
-                  )}`}
-                >
-                  {uni.status || "draft"}
+              <div className="relative h-44 w-full overflow-hidden border-b border-slate-800 bg-slate-900">
+                {uni.image ? (
+                  <img
+                    src={uni.image}
+                    alt={uni.name}
+                    className="h-full w-full object-cover opacity-80 transition-all duration-500 group-hover:scale-[1.04] group-hover:opacity-100"
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center bg-slate-900 text-sm text-slate-500">
+                    No image available
+                  </div>
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#070B14] via-[#070B14]/20 to-transparent" />
+
+                <div className="absolute left-3 top-3 flex flex-wrap gap-2">
+                  <span
+                    className={`rounded-full border px-2.5 py-1 text-[11px] font-medium capitalize backdrop-blur-sm ${getStatusBadgeClass(
+                      uni.status,
+                    )}`}
+                  >
+                    {uni.status || "draft"}
+                  </span>
+                  <span
+                    className={`rounded-full border px-2.5 py-1 text-[11px] font-medium backdrop-blur-sm ${getLnatBadgeClass(
+                      uni.lnatRequirement,
+                    )}`}
+                  >
+                    {uni.lnatRequirement}
+                  </span>
                 </div>
-                <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-sm px-2.5 py-1 rounded-md border border-white/10 text-xs font-medium text-white">
-                  Rank: #{uni.globalRanking}
+
+                <div className="absolute bottom-3 left-3 right-3">
+                  <p className="line-clamp-2 text-lg font-semibold leading-tight text-[#FDFBF7]">
+                    {uni.name}
+                  </p>
                 </div>
               </div>
 
-              <div className="p-5 flex-grow flex flex-col">
-                <h3 className="text-[#FDFBF7] font-semibold text-lg line-clamp-1">
-                  {uni.name}
-                </h3>
+              <div className="flex flex-grow flex-col p-5">
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-xl border border-slate-800 bg-slate-900/45 p-3">
+                    <MapPin size={15} className="text-[#C4A47C]" />
+                    <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+                      Location
+                    </p>
+                    <p className="mt-1 line-clamp-2 text-xs font-medium leading-relaxed text-slate-300">
+                      {uni.location}, {uni.country}
+                    </p>
+                  </div>
 
-                <div className="flex items-center gap-1.5 text-slate-400 text-sm mt-1.5">
-                  <MapPin size={14} />
-                  <span className="line-clamp-1">
-                    {uni.location}, {uni.country}
-                  </span>
+                  <div className="rounded-xl border border-slate-800 bg-slate-900/45 p-3">
+                    <Trophy size={15} className="text-[#C4A47C]" />
+                    <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+                      Ranking
+                    </p>
+                    <p className="mt-1 line-clamp-1 text-xs font-medium text-slate-300">
+                      #{uni.globalRanking || "N/A"}
+                    </p>
+                  </div>
                 </div>
 
-                <div className="mt-4 flex items-center justify-between mt-auto pt-4 border-t border-slate-800/50">
-                  <span className="text-xs text-slate-400">
-                    LNAT:{" "}
-                    <span
-                      className={
-                        uni.lnatRequirement === "Required"
-                          ? "text-emerald-400"
-                          : "text-slate-300"
-                      }
-                    >
-                      {uni.lnatRequirement}
+                <div className="mt-4 rounded-xl border border-slate-800 bg-slate-900/30 px-3 py-2.5">
+                  <div className="flex items-center gap-2 text-xs text-slate-400">
+                    <ShieldCheck size={14} className="text-[#C4A47C]" />
+                    <span className="line-clamp-1">
+                      LNAT requirement:{" "}
+                      <span className="font-medium text-slate-200">
+                        {uni.lnatRequirement}
+                      </span>
                     </span>
-                  </span>
-
-                  <div className="flex items-center gap-3">
-                    <Link href={`/admin/universities/edit/${uni.id}`}>
-                      <button className="text-slate-400 hover:text-[#C4A47C] transition-colors">
-                        <Edit size={16} />
-                      </button>
-                    </Link>
-                    <button
-                      onClick={() =>
-                        setDeleteModal({
-                          isOpen: true,
-                          id: uni.id,
-                          name: uni.name,
-                        })
-                      }
-                      className="text-slate-400 hover:text-red-400 transition-colors"
-                    >
-                      <Trash2 size={16} />
-                    </button>
                   </div>
+                </div>
+
+                <div className="mt-auto grid grid-cols-2 gap-3 border-t border-slate-800/50 pt-4">
+                  <Link href={`/admin/universities/edit/${uni.id}`} className="min-w-0">
+                    <button className="flex w-full items-center justify-center gap-2 rounded-md border border-[#C4A47C]/25 bg-[#C4A47C]/10 px-3 py-2.5 text-sm font-medium text-[#C4A47C] transition-colors hover:bg-[#C4A47C]/20">
+                      <Edit size={15} />
+                      Edit
+                    </button>
+                  </Link>
+                  <button
+                    onClick={() =>
+                      setDeleteModal({
+                        isOpen: true,
+                        id: uni.id,
+                        name: uni.name,
+                      })
+                    }
+                    className="flex w-full items-center justify-center gap-2 rounded-md border border-red-500/20 bg-red-500/10 px-3 py-2.5 text-sm font-medium text-red-400 transition-colors hover:bg-red-500/20"
+                  >
+                    <Trash2 size={15} />
+                    Delete
+                  </button>
                 </div>
               </div>
             </div>

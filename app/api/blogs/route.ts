@@ -3,6 +3,12 @@ import { NextResponse } from "next/server";
 import { getBlogsArchive } from "@/services/blogService";
 import connectDB from "@/lib/db";
 import { Blog } from "@/models/Blog";
+import {
+  createSlugConflictResponse,
+  getSlugConflictResponse,
+  isMongoDuplicateSlugError,
+} from "@/lib/slugValidation";
+import { requireAdminRequest } from "@/lib/adminAuth";
 
 export async function GET(request: Request) {
   try {
@@ -11,6 +17,12 @@ export async function GET(request: Request) {
     const limit = parseInt(searchParams.get("limit") || "9");
     const category = searchParams.get("category") || undefined;
     const status = searchParams.get("status") || "published";
+
+    if (status !== "published") {
+      const authError = requireAdminRequest(request);
+      if (authError) return authError;
+    }
+
     const data = await getBlogsArchive({ page, limit, category, status });
 
     return NextResponse.json(data);
@@ -24,12 +36,30 @@ export async function GET(request: Request) {
 
 // POST Create (Admin/CMS)
 export async function POST(request: Request) {
+  const authError = requireAdminRequest(request);
+  if (authError) return authError;
+
+  let submittedSlug = "";
+
   try {
     await connectDB();
     const body = await request.json();
+    submittedSlug = typeof body.slug === "string" ? body.slug : "";
+
+    const slugConflict = await getSlugConflictResponse(
+      Blog,
+      "blog",
+      body.slug,
+    );
+    if (slugConflict) return slugConflict;
+
     const newBlog = await Blog.create(body);
     return NextResponse.json(newBlog, { status: 201 });
-  } catch {
+  } catch (error) {
+    if (isMongoDuplicateSlugError(error)) {
+      return createSlugConflictResponse("blog", submittedSlug);
+    }
+
     return NextResponse.json(
       { error: "Failed to create blog" },
       { status: 500 },

@@ -5,6 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import toast from "react-hot-toast";
 import RichTextEditor from "@/shared/RichTextEditor";
 import { faqCategories } from "@/types/backend.types";
+import { adminFetch } from "@/lib/adminApiClient";
  
 const inputClass = `
   mt-2 w-full px-4 py-3 rounded-md
@@ -35,7 +36,7 @@ export default function EditFAQPage() {
   useEffect(() => {
     const fetchFAQ = async () => {
       try {
-        const res = await fetch(`/api/faqs/${id}`);
+        const res = await adminFetch(`/api/faqs/${id}`);
         if (!res.ok) throw new Error("Failed to fetch FAQ");
 
         const data = await res.json();
@@ -71,7 +72,7 @@ export default function EditFAQPage() {
     setLoading(true);
 
     try {
-      const res = await fetch(`/api/faqs/${id}`, {
+      const res = await adminFetch(`/api/faqs/${id}`, {
         method: "PUT", // Use PUT for updating
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...form, status }),

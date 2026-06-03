@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { ADMIN_TOKEN_STORAGE_KEY } from "@/lib/adminSession";
 
 const menu = [
   { name: "Dashboard", icon: LayoutDashboard, slug: "/admin" },
@@ -84,6 +85,7 @@ export default function Sidebar({
         {/* Logout */}
         <button
           onClick={async () => {
+            window.localStorage.removeItem(ADMIN_TOKEN_STORAGE_KEY);
             await fetch("/api/auth/logout", { method: "POST" });
             router.push("/admin/login");
             router.refresh();
