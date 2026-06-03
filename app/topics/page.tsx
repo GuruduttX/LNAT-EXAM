@@ -1,6 +1,6 @@
-import Link from "next/link";
-
-import Breadcrumbs from "@/components/shared/Breadcrumbs";
+import TopicsArchiveSection from "@/components/Topic/TopicsArchiveSection";
+import TopicsArchiveHero from "@/components/Topic/TopicsArchiveHero";
+import TopicsEnquiryCTA from "@/components/Topic/TopicsEnquiryCTA";
 import { createBreadcrumbSchema } from "@/lib/breadcrumbSchema";
 import { getPublishedCategories } from "@/services/categoryService";
 import { ICategory } from "@/types/backend.types";
@@ -16,6 +16,24 @@ export default async function TopicsPage() {
   const categories = JSON.parse(
     JSON.stringify(categoryDocuments),
   ) as ICategory[];
+  const totalSubtopics = categories.reduce(
+    (total, category) => total + (category.subtopics?.length || 0),
+    0,
+  );
+  const totalLinkedContent = new Set(
+    categories.flatMap((category) => [
+      ...(category.featuredPostSlugs || []).map((slug) => `post:${slug}`),
+      ...(category.featuredUniversitySlugs || []).map(
+        (slug) => `university:${slug}`,
+      ),
+      ...(category.subtopics || []).flatMap((subtopic) => [
+        ...(subtopic.postSlugs || []).map((slug) => `post:${slug}`),
+        ...(subtopic.universitySlugs || []).map(
+          (slug) => `university:${slug}`,
+        ),
+      ]),
+    ]),
+  ).size;
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -34,50 +52,18 @@ export default async function TopicsPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#fbfaf7] px-6 py-20">
+    <main className="min-h-screen bg-[#fbfaf7]">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <div className="mx-auto max-w-6xl">
-        <Breadcrumbs
-          items={[
-            { label: "Home", href: "/" },
-            { label: "Topics", href: "/topics" },
-          ]}
-          className="mb-8"
-        />
-        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#b08d4f]">
-          Topic Hubs
-        </p>
-        <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#0e1b2a] md:text-5xl">
-          Explore the major LNAT content hubs
-        </h1>
-        <p className="mt-6 max-w-3xl text-base leading-8 text-slate-600">
-          These hubs are designed to organise the site into broader themes, so users
-          can move from overview pages into detailed blogs and university profiles.
-        </p>
-
-        <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2">
-          {categories.map((category) => (
-            <Link
-              key={category.slug}
-              href={`topics/${category.slug}`}
-              className="rounded-[28px] border border-[#e4dccf] bg-white p-7 shadow-[0_16px_36px_rgba(20,31,45,0.05)] transition hover:border-[#c5a059]/60"
-            >
-              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#b08d4f]">
-                {category.primaryKeyword}
-              </p>
-              <h2 className="mt-3 text-2xl font-semibold tracking-tight text-[#0e1b2a]">
-                {category.name}
-              </h2>
-              <p className="mt-4 text-sm leading-7 text-slate-600">
-                {category.topicDefinition}
-              </p>
-            </Link>
-          ))}
-        </div>
-      </div>
+      <TopicsArchiveHero
+        totalHubs={categories.length}
+        totalSubtopics={totalSubtopics}
+        totalLinkedContent={totalLinkedContent}
+      />
+      <TopicsArchiveSection categories={categories} />
+      <TopicsEnquiryCTA />
     </main>
   );
 }

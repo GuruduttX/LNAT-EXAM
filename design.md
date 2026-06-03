@@ -174,6 +174,11 @@ Vertical (compact):  py-8 lg:py-10
 Horizontal:          px-4 sm:px-6 lg:px-8
 ```
 
+### Compact Page Component Rule
+- For normal page sections and reusable components, do not use top or bottom padding above `py-10` / `lg:py-10`.
+- Use `py-8 lg:py-10` as the default section rhythm unless the user explicitly asks for a larger hero or feature band.
+- On mobile, keep vertical padding compact and prefer horizontal scroll/carousel patterns where repeated cards would create too much scrolling.
+
 ### Component Spacing Pattern
 - Between sibling section cards: `space-y-5` or `gap-5`
 - Between grid items: `gap-3` to `gap-5`

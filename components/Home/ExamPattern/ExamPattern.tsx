@@ -1594,7 +1594,11 @@ export default function LNATExamPattern() {
   };
 
   return (
-    <section ref={ref} className="relative w-full overflow-hidden bg-[#F7F3EC]">
+    <section
+      id="exam-pattern"
+      ref={ref}
+      className="relative w-full overflow-hidden bg-[#F7F3EC]"
+    >
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap'); * { font-family: 'Poppins', sans-serif; }`}</style>
 
       {/* Dot grid */}

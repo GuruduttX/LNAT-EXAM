@@ -15,8 +15,7 @@ import FAQSection from "@/components/universities/FAQSection";
 import UniversitySources from "@/components/universities/detail/UniversitySources";
 import UniversityFinalCTA from "@/components/universities/detail/UniversityFinalCTA";
 import UniversityQuickFacts from "@/components/universities/detail/UniversityQuickFacts";
-import { createBreadcrumbSchema } from "@/lib/breadcrumbSchema";
-import { getSiteUrl } from "@/lib/siteUrl";
+import { createUniversityPageSchema } from "@/lib/universityPageSchema";
 
 interface PageProps {
   params: Promise<{
@@ -47,6 +46,24 @@ export async function generateMetadata({ params }: PageProps) {
       university.metaDescription ||
       university.shortDescription ||
       `Explore LNAT admissions, student life, and application guidance for ${university.name}.`,
+    alternates: {
+      canonical: university.canonicalUrl || `/universities/${university.slug}`,
+    },
+    openGraph: {
+      type: "article",
+      title:
+        university.metaTitle ||
+        `${university.name} LNAT Guide | LNAT Exam India`,
+      description:
+        university.metaDescription ||
+        university.shortDescription ||
+        `Explore LNAT admissions, student life, and application guidance for ${university.name}.`,
+      images: [
+        university.hero?.carouselImages?.[0]?.url ||
+          university.cardImage?.url ||
+          university.image,
+      ],
+    },
   };
 }
 
@@ -86,28 +103,7 @@ export default async function UniversityDetailPage({ params }: PageProps) {
   const university = JSON.parse(
     JSON.stringify(universityDocument),
   ) as IUniversity;
-  const siteUrl = getSiteUrl();
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": university.schemaType || "CollegeOrUniversity",
-        name: university.name,
-        url: `${siteUrl}/universities/${university.slug}`,
-        description: university.schemaDescription || university.shortDescription,
-        sameAs: university.sameAs,
-      },
-      createBreadcrumbSchema([
-        { label: "Home", href: "/" },
-        { label: "Universities", href: "/universities" },
-        {
-          label: university.shortName || university.name,
-          href: `/universities/${university.slug}`,
-        },
-      ]),
-    ],
-  };
-
+  const structuredData = createUniversityPageSchema(university);
   return (
     <main className="min-h-screen w-full max-w-full overflow-x-clip bg-[#fbfaf7] text-[#0e1b2a]">
       <script

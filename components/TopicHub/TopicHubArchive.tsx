@@ -232,7 +232,7 @@ export default function TopicHubsArchive({
 // Sub-component: HubCardItem
 // ─────────────────────────────────────────────────────────────
 
-function HubCardItem({ hub }: { hub: HubCardData }) {
+export function HubCardItem({ hub }: { hub: HubCardData }) {
   const { category, relatedBlogs } = hub;
 
   return (

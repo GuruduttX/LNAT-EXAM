@@ -24,27 +24,31 @@ export default function Breadcrumbs({
   return (
     <nav
       aria-label="Breadcrumb"
-      className={`flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] ${className}`}
+      className={`flex max-w-full items-center gap-2 overflow-x-auto whitespace-nowrap text-[10px] font-bold uppercase tracking-[0.18em] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${className}`}
     >
       {items.map((item, index) => {
         const isLast = index === items.length - 1;
 
         return (
-          <div key={item.href} className="flex items-center gap-2">
+          <div key={item.href} className="flex shrink-0 items-center gap-2">
             {isLast ? (
-              <span aria-current="page" className={activeText}>
+              <span aria-current="page" className={`${activeText} shrink-0`}>
                 {item.label}
               </span>
             ) : (
               <Link
                 href={item.href}
-                className={`${mutedText} transition-colors hover:text-[#C9A84C]`}
+                className={`${mutedText} shrink-0 transition-colors hover:text-[#C9A84C]`}
               >
                 {item.label}
               </Link>
             )}
             {!isLast ? (
-              <ChevronRight aria-hidden size={11} className={separator} />
+              <ChevronRight
+                aria-hidden
+                size={11}
+                className={`${separator} shrink-0`}
+              />
             ) : null}
           </div>
         );

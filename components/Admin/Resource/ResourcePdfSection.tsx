@@ -2,6 +2,22 @@
 
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { ExternalLink } from "lucide-react";
+
+const pdfCompressionTools = [
+  {
+    label: "iLovePDF",
+    href: "https://www.ilovepdf.com/compress_pdf",
+  },
+  {
+    label: "PDF24 Tools",
+    href: "https://tools.pdf24.org/en/compress-pdf",
+  },
+  {
+    label: "Adobe Acrobat",
+    href: "https://www.adobe.com/acrobat/online/compress-pdf.html",
+  },
+];
 
 interface ResourcePdfSectionProps {
   fileUrl: string;
@@ -96,7 +112,7 @@ export default function ResourcePdfSection({
                 Upload a PDF resource or{" "}
                 <span className="text-[#C4A47C]">browse</span>
               </p>
-              <p className="mt-1 text-xs text-slate-500">Only .pdf up to 15MB</p>
+              <p className="mt-1 text-xs text-slate-500">Only .pdf up to 10MB</p>
             </>
           )}
 
@@ -108,6 +124,26 @@ export default function ResourcePdfSection({
             onChange={handlePdfUpload}
           />
         </label>
+
+        <div className="mt-4 rounded-lg border border-slate-800 bg-slate-900/30 p-4">
+          <p className="text-xs font-medium text-slate-400">
+            PDF larger than 10MB? Compress it using one of these free tools:
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {pdfCompressionTools.map((tool) => (
+              <a
+                key={tool.href}
+                href={tool.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-xs font-medium text-[#C4A47C] transition hover:border-[#C4A47C]/60 hover:bg-slate-800"
+              >
+                {tool.label}
+                <ExternalLink size={13} aria-hidden />
+              </a>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

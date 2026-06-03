@@ -361,6 +361,7 @@ export const enquirySources = [
   "free-resources",
   "about-page",
   "university-page",
+  "topics-page",
 ] as const;
 
 export const enquiryStatuses = [

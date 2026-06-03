@@ -1,68 +1,23 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { motion, type Variants } from "framer-motion";
 import {
-  BookOpen,
-  Landmark,
-  Layers,
-  Clock,
-  Hash,
   ArrowRight,
+  BookOpenCheck,
+  Clock3,
+  GraduationCap,
+  Hash,
+  Layers3,
+  LibraryBig,
 } from "lucide-react";
-import type { Variants } from "framer-motion";
+
 import Breadcrumbs from "@/components/shared/Breadcrumbs";
+import type { ICategory } from "@/types/backend.types";
 
-// --- Design System Animation Variants ---
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 22 },
-  visible: (delay: number = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.65,
-      delay,
-      ease: [0.22, 1, 0.36, 1] as const,
-    },
-  }),
-};
-
-const stagger: Variants = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.09, delayChildren: 0.05 },
-  },
-};
-
-const scaleIn: Variants = {
-  hidden: { opacity: 0, scale: 0.96 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] as const },
-  },
-};
-
-// --- Types mapping to your Mongoose Schema ---
-export interface TopicHubHeroProps {
-  category: {
-    name: string;
-    slug: string;
-    primaryKeyword: string;
-    topicDefinition: string;
-    intro?: string;
-    heroImage?: {
-      url: string;
-      alt: string;
-    };
-    lastUpdated?: Date | string;
-    cta?: {
-      label: string;
-      href: string;
-      type?: "primary" | "secondary";
-    };
-  };
+interface TopicHubHeroProps {
+  category: ICategory;
   stats: {
     posts: number;
     universities: number;
@@ -70,7 +25,38 @@ export interface TopicHubHeroProps {
   };
 }
 
-function formatUpdatedDate(value?: Date | string) {
+const fadeUp: Variants = {
+  hidden: { opacity: 0, y: 18 },
+  visible: (delay: number = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.55,
+      delay,
+      ease: [0.22, 1, 0.36, 1] as const,
+    },
+  }),
+};
+
+const statItems = [
+  {
+    key: "posts",
+    label: "Featured Guides",
+    icon: BookOpenCheck,
+  },
+  {
+    key: "universities",
+    label: "Universities",
+    icon: GraduationCap,
+  },
+  {
+    key: "subtopicSections",
+    label: "Subtopics",
+    icon: Layers3,
+  },
+] as const;
+
+function formatUpdatedDate(value?: Date) {
   if (!value) return "";
 
   const date = new Date(value);
@@ -85,189 +71,168 @@ function formatUpdatedDate(value?: Date | string) {
 
 export default function TopicHubHero({ category, stats }: TopicHubHeroProps) {
   const updatedDate = formatUpdatedDate(category.lastUpdated);
+  const hasImage = Boolean(category.heroImage?.url);
   const isPrimaryCta = category.cta?.type !== "secondary";
 
   return (
-    <section className="relative w-full overflow-hidden bg-[#F7F3EC] pt-10 pb-12 lg:pt-20 lg:pb-20">
-      {/* Subtle Dot Grid Texture Overlay */}
+    <section className="relative overflow-hidden border-b border-black/[0.07] bg-[#F7F3EC] px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
       <div
-        className="absolute inset-0 pointer-events-none z-0
-        [background-image:radial-gradient(circle,rgba(13,27,62,0.04)_1px,transparent_1px)]
-        [background-size:26px_26px]"
+        className="pointer-events-none absolute inset-0 opacity-80
+          [background-image:radial-gradient(circle,rgba(13,27,62,0.04)_1px,transparent_1px)]
+          [background-size:26px_26px]"
+      />
+      <div
+        className="pointer-events-none absolute -right-24 -top-28 h-96 w-96 rounded-full"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(201,168,76,0.14) 0%, transparent 68%)",
+        }}
       />
 
-      <div className="relative z-10 mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-[1280px]">
         <Breadcrumbs
           items={[
             { label: "Home", href: "/" },
             { label: "Topics", href: "/topics" },
             { label: category.name, href: `/topics/${category.slug}` },
           ]}
-          className="mb-8"
+          className="mb-6"
         />
 
-        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
-          {/* LEFT COLUMN: Content & Stats */}
+        <div className="grid items-stretch gap-6 lg:grid-cols-[minmax(0,1.08fr)_minmax(340px,0.92fr)]">
           <motion.div
-            variants={stagger}
             initial="hidden"
             animate="visible"
-            className="flex flex-col items-center text-center md:items-start md:text-left min-w-0"
+            className="flex min-w-0 flex-col justify-center text-center lg:text-left"
           >
-            {/* 1. Metadata Row (Trust & Freshness + Keyword) */}
             <motion.div
+              custom={0}
               variants={fadeUp}
-              className="mb-5 flex flex-wrap items-center justify-center gap-3 md:justify-start"
+              className="flex flex-wrap items-center justify-center gap-2.5 lg:justify-start"
             >
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0D1B3E] text-[10px] font-bold tracking-[0.18em] uppercase text-[#C9A84C]">
+              <span className="inline-flex items-center gap-2 rounded-full bg-[#0D1B3E] px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.18em] text-[#E8C96A]">
+                <LibraryBig className="h-3 w-3" />
                 Topic Guide
               </span>
-
-              <div className="hidden h-3 w-px bg-black/10 md:block" />
-
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-black/[0.05] text-[11px] font-medium text-slate-500 shadow-sm">
-                <Hash size={12} className="text-[#C9A84C]" />
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-black/[0.07] bg-white px-3 py-1.5 text-[10px] font-semibold text-slate-500 shadow-sm">
+                <Hash className="h-3 w-3 text-[#C9A84C]" />
                 {category.primaryKeyword}
               </span>
-
               {updatedDate ? (
-                <>
-                  <div className="hidden h-3 w-px bg-black/10 md:block" />
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-black/[0.05] text-[11px] font-medium text-slate-500 shadow-sm">
-                    <Clock size={12} className="text-[#C9A84C]" />
-                    Updated: {updatedDate}
-                  </span>
-                </>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-black/[0.07] bg-white px-3 py-1.5 text-[10px] font-semibold text-slate-500 shadow-sm">
+                  <Clock3 className="h-3 w-3 text-[#C9A84C]" />
+                  Updated {updatedDate}
+                </span>
               ) : null}
             </motion.div>
 
-            {/* 2. H1 Primary Heading */}
             <motion.h1
+              custom={0.08}
               variants={fadeUp}
-              className="text-[clamp(2rem,5vw,3.8rem)] font-extrabold tracking-tight text-[#0D1B3E] leading-[1.1]"
+              className="mx-auto mt-5 max-w-4xl text-[clamp(1.9rem,4.8vw,3.8rem)] font-extrabold leading-[1.08] tracking-tight text-[#0D1B3E] lg:mx-0"
             >
               {category.name}
             </motion.h1>
 
-            {/* 3. AEO / GEO Topic Definition & Intro */}
-            <motion.div variants={fadeUp} className="mt-5 max-w-2xl lg:mt-6">
-              <p className="text-[15px] font-semibold leading-[1.7] text-[#0D1B3E] md:text-[17px]">
+            <motion.div
+              custom={0.16}
+              variants={fadeUp}
+              className="mx-auto mt-5 max-w-3xl rounded-2xl border border-black/[0.07] bg-white text-left shadow-sm lg:mx-0"
+            >
+              <div className="flex items-center gap-2 border-b border-black/[0.05] px-4 py-3 sm:px-5">
+                <div className="h-4 w-[3px] rounded-full bg-[#C9A84C]" />
+                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#8B6914]">
+                  Quick Answer
+                </p>
+              </div>
+              <p className="px-4 py-4 text-[13px] font-medium leading-relaxed text-[#0D1B3E] sm:px-5 sm:text-[14px]">
                 {category.topicDefinition}
               </p>
-              {category.intro && (
-                <p className="mt-3 text-[14px] leading-[1.8] text-slate-600 md:text-[15px]">
-                  {category.intro}
-                </p>
-              )}
             </motion.div>
 
-            {/* 4. Dynamic CTA from Schema */}
-            {category.cta && (
+            {category.cta?.label && category.cta?.href ? (
               <motion.div
+                custom={0.24}
                 variants={fadeUp}
-                className="mt-6 lg:mt-8 w-full sm:w-auto"
+                className="mt-5 flex justify-center lg:justify-start"
               >
                 <Link
                   href={category.cta.href}
-                  className={`group inline-flex w-full items-center justify-center gap-2.5 rounded-xl px-6 py-3.5 font-bold text-sm transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] sm:w-auto ${
+                  className={`group inline-flex items-center justify-center gap-2.5 rounded-full px-5 py-3 text-[13px] font-bold transition-all duration-300 hover:-translate-y-0.5 ${
                     isPrimaryCta
-                      ? "text-[#0D1B3E]"
-                      : "bg-white text-[#0D1B3E] border border-black/[0.07] hover:shadow-md"
+                      ? "bg-[#0D1B3E] text-white shadow-[0_10px_24px_rgba(13,27,62,0.18)] hover:bg-[#162447]"
+                      : "border border-black/[0.07] bg-white text-[#0D1B3E] shadow-sm hover:border-[#C9A84C]/50"
                   }`}
-                  style={
-                    isPrimaryCta
-                      ? {
-                          background:
-                            "linear-gradient(135deg, #C9A84C 0%, #E8C96A 60%, #C9A84C 100%)",
-                          boxShadow: "0 4px 20px rgba(201,168,76,0.45)",
-                        }
-                      : undefined
-                  }
                 >
                   {category.cta.label}
-                  <ArrowRight
-                    size={15}
-                    className="transition-transform duration-200 group-hover:translate-x-1"
-                  />
+                  <ArrowRight className="h-4 w-4 text-[#C9A84C] transition-transform group-hover:translate-x-1" />
                 </Link>
               </motion.div>
-            )}
-
-            {/* 5. Stats Cards Dashboard (Mobile Swipe -> Desktop Grid) */}
-            <motion.div variants={fadeUp} className="w-full mt-10 lg:mt-12">
-              <div className="flex gap-4 overflow-x-auto pb-4 pt-2 -mx-2 px-2 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-3 md:overflow-visible md:pb-0 md:mx-0 md:px-0">
-                {/* Stat 1 */}
-                <div className="shrink-0 snap-start w-[75vw] max-w-[240px] md:w-auto md:max-w-none rounded-2xl bg-white p-5 border border-black/[0.07] shadow-sm flex flex-col gap-3 transition-transform hover:-translate-y-1">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#C9A84C]/10 text-[#C9A84C]">
-                    <BookOpen size={18} strokeWidth={2} />
-                  </div>
-                  <div>
-                    <div className="text-[#0D1B3E] font-extrabold text-3xl leading-none mb-1">
-                      {stats.posts}
-                    </div>
-                    <div className="text-slate-500 text-[11px] font-bold uppercase tracking-[0.1em]">
-                      Featured Guides
-                    </div>
-                  </div>
-                </div>
-
-                {/* Stat 2 */}
-                <div className="shrink-0 snap-start w-[75vw] max-w-[240px] md:w-auto md:max-w-none rounded-2xl bg-white p-5 border border-black/[0.07] shadow-sm flex flex-col gap-3 transition-transform hover:-translate-y-1">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#0D1B3E]/5 text-[#0D1B3E]">
-                    <Landmark size={18} strokeWidth={2} />
-                  </div>
-                  <div>
-                    <div className="text-[#0D1B3E] font-extrabold text-3xl leading-none mb-1">
-                      {stats.universities}
-                    </div>
-                    <div className="text-slate-500 text-[11px] font-bold uppercase tracking-[0.1em]">
-                      Universities
-                    </div>
-                  </div>
-                </div>
-
-                {/* Stat 3 */}
-                <div className="shrink-0 snap-start w-[75vw] max-w-[240px] md:w-auto md:max-w-none rounded-2xl bg-white p-5 border border-black/[0.07] shadow-sm flex flex-col gap-3 transition-transform hover:-translate-y-1">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#C9A84C]/10 text-[#C9A84C]">
-                    <Layers size={18} strokeWidth={2} />
-                  </div>
-                  <div>
-                    <div className="text-[#0D1B3E] font-extrabold text-3xl leading-none mb-1">
-                      {stats.subtopicSections}
-                    </div>
-                    <div className="text-slate-500 text-[11px] font-bold uppercase tracking-[0.1em]">
-                      Subtopics
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
+            ) : null}
           </motion.div>
 
-          {/* RIGHT COLUMN: Hero Image */}
-          {category.heroImage?.url && (
-            <motion.div
-              variants={scaleIn}
-              initial="hidden"
-              animate="visible"
-              className="relative w-full h-[320px] md:h-[460px] lg:h-[580px] mt-4 lg:mt-0"
-            >
-              {/* Offset Gold Geometric Shadow */}
-              <div className="absolute -bottom-4 -right-4 md:-bottom-6 md:-right-6 w-[80%] h-[80%] rounded-3xl bg-[#C9A84C]/15 -z-10" />
-
-              <div className="relative w-full h-full overflow-hidden rounded-3xl border border-black/[0.05] shadow-[0_16px_40px_rgba(13,27,62,0.12)] bg-white">
+          <motion.aside
+            initial={{ opacity: 0, x: 18 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.65, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden rounded-3xl border border-[#C9A84C]/15 bg-[#0D1B3E] shadow-[0_18px_48px_rgba(13,27,62,0.22)]"
+          >
+            <div className="relative h-48 overflow-hidden sm:h-56 lg:h-60">
+              {hasImage ? (
                 <Image
-                  src={category.heroImage.url}
-                  alt={category.heroImage.alt || category.name}
+                  src={category.heroImage!.url}
+                  alt={category.heroImage?.alt || category.name}
                   fill
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  draggable={false}
+                  sizes="(max-width: 1024px) 100vw, 44vw"
                   priority
-                  className="object-cover object-center"
+                  className="object-cover"
                 />
+              ) : (
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(201,168,76,0.24),transparent_38%),linear-gradient(135deg,#0A1628_0%,#111D3C_100%)]">
+                  <div className="absolute inset-0 opacity-60 [background-image:radial-gradient(circle,rgba(255,255,255,0.1)_1px,transparent_1px)] [background-size:22px_22px]" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="flex h-20 w-20 items-center justify-center rounded-3xl border border-[#C9A84C]/25 bg-white/[0.05] text-[#E8C96A] backdrop-blur-sm">
+                      <LibraryBig className="h-9 w-9" />
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0D1B3E] via-[#0D1B3E]/20 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 px-5 pb-4 sm:px-6">
+                <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#E8C96A]">
+                  Structured Learning Path
+                </p>
+                <p className="mt-2 max-w-md text-[13px] leading-relaxed text-white/70">
+                  Move from the core answer into focused guides, related
+                  universities, and practical next steps.
+                </p>
               </div>
-            </motion.div>
-          )}
+            </div>
+
+            <div className="grid grid-cols-3 border-t border-white/10">
+              {statItems.map(({ key, label, icon: Icon }, index) => (
+                <motion.div
+                  key={key}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.45,
+                    delay: 0.28 + index * 0.08,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                  className="border-r border-white/10 px-3 py-4 last:border-r-0 sm:px-4"
+                >
+                  <Icon className="h-4 w-4 text-[#C9A84C]" />
+                  <p className="mt-3 text-2xl font-extrabold leading-none text-white">
+                    {stats[key]}
+                  </p>
+                  <p className="mt-2 text-[9px] font-bold uppercase leading-relaxed tracking-[0.12em] text-white/45">
+                    {label}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.aside>
         </div>
       </div>
     </section>
