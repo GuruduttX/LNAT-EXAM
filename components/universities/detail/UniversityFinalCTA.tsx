@@ -124,7 +124,7 @@ export default function UniversityFinalCTA({
 
             {/* Secondary Action: WhatsApp (Design System Ghost Button + Live Dot) */}
             <a
-              href="https://wa.me/1234567890" // Replace with your actual WhatsApp link
+              href="https://wa.me/9479982443" // Replace with your actual WhatsApp link
               target="_blank"
               rel="noreferrer"
               className="group relative flex w-full items-center justify-center gap-2.5 rounded-xl border border-white/20 bg-white/[0.05] px-6 py-4 text-[14px] font-bold text-white backdrop-blur-sm transition-all duration-300 hover:bg-white/10 active:scale-[0.98]"

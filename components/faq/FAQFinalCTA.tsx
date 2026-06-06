@@ -32,7 +32,11 @@ export default function FAQFinalCTA() {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
-    <EnquiryPopupForm isOpen={isOpen} onClose={()=> setIsOpen(false)} source="faq-page"/>
+      <EnquiryPopupForm
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        source="faq-page"
+      />
       <section
         ref={ref}
         className="relative w-full bg-[#F7F3EC] px-4 py-12 sm:px-6 md:py-16 lg:px-8"
@@ -135,7 +139,7 @@ export default function FAQFinalCTA() {
               >
                 {/* Primary Action: Lead Form */}
                 <button
-                  onClick={()=> setIsOpen(true)} // Replace with your contact/query route
+                  onClick={() => setIsOpen(true)} // Replace with your contact/query route
                   className="group flex w-full items-center justify-center gap-2.5 rounded-xl px-7 py-4 text-[14px] font-bold text-[#0D1B3E] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] sm:w-auto"
                   style={{
                     background:
@@ -153,7 +157,7 @@ export default function FAQFinalCTA() {
 
                 {/* Secondary Action: WhatsApp (With Live Indicator) */}
                 <a
-                  href="https://wa.me/1234567890" // Replace with actual WhatsApp link
+                  href="https://wa.me/9479982443" // Replace with actual WhatsApp link
                   target="_blank"
                   rel="noreferrer"
                   className="group relative flex w-full items-center justify-center gap-2.5 rounded-xl border border-white/20 bg-white/8 px-7 py-4 text-[14px] font-bold text-white backdrop-blur-sm transition-all duration-300 hover:bg-white/15 active:scale-[0.98] sm:w-auto"

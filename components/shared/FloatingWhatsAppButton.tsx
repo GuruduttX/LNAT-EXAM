@@ -3,17 +3,14 @@
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 
-const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER?.replace(
-  /\D/g,
-  "",
-);
+const whatsappNumber = "9479982443";
 
 const whatsappMessage = encodeURIComponent(
   "Hi, I want guidance for my LNAT and law admissions journey.",
 );
 
 const whatsappHref = whatsappNumber
-  ? `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`
+  ? `https://wa.me/9479982443?text=${whatsappMessage}`
   : "#";
 
 export default function FloatingWhatsAppButton() {
