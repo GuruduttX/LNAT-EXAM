@@ -280,7 +280,7 @@ export default function UniversityHero({ university }: UniversityHeroProps) {
               text-[10px] font-bold uppercase tracking-[0.2em] text-[#C9A84C]"
           >
             <span className="h-px w-8 bg-[#C9A84C]/40" />
-            {university.hero?.eyebrow || "University Guide"}
+            {university.hero?.eyebrow || "Oxford Guide"}
           </motion.p>
 
           {/* H1 */}

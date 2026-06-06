@@ -8,10 +8,22 @@ import {
   useInView,
   type Variants,
 } from "framer-motion";
-import { ChevronLeft, ChevronRight, X, Images, MapPin } from "lucide-react";
+import {
+  Bus,
+  ChevronLeft,
+  ChevronRight,
+  CircleDollarSign,
+  Images,
+  MapPin,
+  ShieldCheck,
+  Sparkles,
+  Theater,
+  X,
+} from "lucide-react";
 
 // Types mapping to your schema
 type MediaAsset = { url: string; alt: string; caption?: string };
+type FeatureBlock = { title: string; description: string; iconName?: string };
 
 interface UniversityCityLifeProps {
   university: {
@@ -19,6 +31,12 @@ interface UniversityCityLifeProps {
     location?: string;
     cityLife?: {
       cityOverview?: string;
+      whyStudentsLoveTheCity?: FeatureBlock[];
+      neighbourhoodHighlights?: FeatureBlock[];
+      transportAndConnectivity?: string;
+      cultureAndLifestyle?: string;
+      safetyAndPracticality?: string;
+      costOfLiving?: string;
     };
     gallery?: {
       cityLifeImages?: MediaAsset[];
@@ -56,8 +74,53 @@ export default function UniversityCityLife({
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const cityOverview = university.cityLife?.cityOverview;
+  const cityLife = university.cityLife;
   const cityImages = university.gallery?.cityLifeImages || [];
   const cityName = university.city || university.location || "the city";
+  const practicalNotes = [
+    {
+      label: "Transport",
+      text: cityLife?.transportAndConnectivity,
+      icon: Bus,
+    },
+    {
+      label: "Culture",
+      text: cityLife?.cultureAndLifestyle,
+      icon: Theater,
+    },
+    {
+      label: "Safety",
+      text: cityLife?.safetyAndPracticality,
+      icon: ShieldCheck,
+    },
+    {
+      label: "Cost of living",
+      text: cityLife?.costOfLiving,
+      icon: CircleDollarSign,
+    },
+  ].filter((item) => item.text);
+  const practicalNotePages = practicalNotes.reduce<(typeof practicalNotes)[]>(
+    (pages, note, index) => {
+      if (index % 2 === 0) {
+        pages.push([note]);
+      } else {
+        pages[pages.length - 1].push(note);
+      }
+
+      return pages;
+    },
+    [],
+  );
+  const cityHighlights = [
+    ...(cityLife?.whyStudentsLoveTheCity || []).map((item) => ({
+      ...item,
+      label: "Why students love it",
+    })),
+    ...(cityLife?.neighbourhoodHighlights || []).map((item) => ({
+      ...item,
+      label: "Neighbourhood",
+    })),
+  ];
 
   // Lightbox Navigation Logic
   const openGallery = (index: number) => {
@@ -93,7 +156,14 @@ export default function UniversityCityLife({
   }, [galleryOpen, nextImage, prevImage]);
 
   // If no content, don't render the section
-  if (!cityOverview && cityImages.length === 0) return null;
+  if (
+    !cityOverview &&
+    cityImages.length === 0 &&
+    !practicalNotes.length &&
+    !cityHighlights.length
+  ) {
+    return null;
+  }
 
   return (
     <section
@@ -155,6 +225,43 @@ export default function UniversityCityLife({
                 </button>
               </motion.div>
             )}
+
+            {practicalNotes.length > 0 && (
+              <motion.div
+                variants={stagger}
+                className="-mx-4 mt-8 flex snap-x snap-mandatory overflow-x-auto px-4 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:px-0"
+              >
+                {practicalNotePages.map((page, pageIndex) => (
+                  <motion.div
+                    key={`practical-note-page-${pageIndex}`}
+                    variants={fadeUp}
+                    custom={pageIndex * 0.08}
+                    className="mx-auto mr-4 w-[calc(100%-1rem)] max-w-[520px] shrink-0 snap-center space-y-3 md:mr-5 md:w-[calc(100%-2rem)]"
+                  >
+                    {page.map((item, noteIndex) => {
+                      const Icon = item.icon;
+                      const index = pageIndex * 2 + noteIndex;
+
+                      return (
+                        <div
+                          key={item.label}
+                          className="rounded-2xl border border-black/[0.07] bg-[#F7F3EC] p-4"
+                        >
+                          <div className="mb-3 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.16em] text-[#C9A84C]">
+                            <Icon size={14} />
+                            {String(index + 1).padStart(2, "0")} ·{" "}
+                            {item.label}
+                          </div>
+                          <p className="text-[13px] leading-6 text-slate-600">
+                            {item.text}
+                          </p>
+                        </div>
+                      );
+                    })}
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
           </motion.div>
 
           {/* =========================================
@@ -202,6 +309,37 @@ export default function UniversityCityLife({
             </motion.div>
           )}
         </div>
+
+        {cityHighlights.length > 0 && (
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            animate={inView ? "visible" : "hidden"}
+            className="-mx-4 mt-8 flex snap-x snap-mandatory overflow-x-auto px-4 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:grid-cols-2 md:gap-4 md:overflow-visible md:px-0 md:pb-0 xl:grid-cols-4"
+          >
+            {cityHighlights.map((item, index) => (
+              <motion.article
+                key={`${item.label}-${item.title}-${index}`}
+                variants={fadeUp}
+                custom={index * 0.08}
+                className="mr-4 min-h-[210px] w-[82vw] max-w-[320px] shrink-0 snap-center rounded-[24px] border border-black/[0.07] bg-[#FDFBF7] p-5 shadow-[0_12px_30px_rgba(20,31,45,0.04)] md:mr-0 md:w-full md:max-w-none"
+              >
+                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-2xl bg-[#C9A84C]/10 text-[#C9A84C]">
+                  <Sparkles size={18} />
+                </div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#C9A84C]">
+                  {item.label}
+                </p>
+                <h3 className="mt-3 text-[16px] font-extrabold text-[#0D1B3E]">
+                  {item.title}
+                </h3>
+                <p className="mt-3 text-[13px] leading-7 text-slate-600">
+                  {item.description}
+                </p>
+              </motion.article>
+            ))}
+          </motion.div>
+        )}
       </div>
 
       {/* =========================================

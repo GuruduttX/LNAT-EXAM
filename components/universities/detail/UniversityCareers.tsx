@@ -2,11 +2,25 @@
 
 import { useRef } from "react";
 import { motion, useInView, type Variants } from "framer-motion";
-import { Briefcase, Building2, Award, ArrowRight } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import {
+  Award,
+  BadgeCheck,
+  Briefcase,
+  Building2,
+  Handshake,
+  TrendingUp,
+} from "lucide-react";
 
 interface FamousAlumnus {
   name: string;
   designation: string;
+}
+
+interface CareerCard {
+  title: string;
+  text?: string;
+  icon: LucideIcon;
 }
 
 interface UniversityCareersProps {
@@ -14,12 +28,15 @@ interface UniversityCareersProps {
     careers?: {
       employabilityOverview?: string;
       topRecruiters?: string[];
+      alumniOutcomes?: string;
+      internshipsAndPlacements?: string;
+      reputationForLaw?: string;
     };
     famousAlumni?: FamousAlumnus[];
+    notableAlumni?: string[];
   };
 }
 
-// Design System: Framer Motion Variants
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 22 },
   visible: (delay: number = 0) => ({
@@ -40,6 +57,40 @@ const stagger: Variants = {
   },
 };
 
+function OutcomeCard({
+  card,
+  index,
+}: {
+  card: CareerCard;
+  index: number;
+}) {
+  const Icon = card.icon;
+
+  return (
+    <motion.article
+      variants={fadeUp}
+      custom={index * 0.08}
+      className="group relative mr-4 min-h-[240px] w-[82vw] max-w-[360px] shrink-0 snap-center overflow-hidden rounded-[28px] border border-black/[0.07] bg-white p-5 shadow-[0_14px_34px_rgba(20,31,45,0.055)] transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A84C]/35 md:mr-5 md:w-[360px]"
+    >
+      <div className="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-[#0D1B3E]/[0.06] blur-2xl transition-opacity group-hover:bg-[#C9A84C]/10" />
+      <div className="relative">
+        <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#0D1B3E] text-[#C9A84C]">
+          <Icon size={20} strokeWidth={2.2} />
+        </div>
+        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#C9A84C]">
+          Outcome {String(index + 1).padStart(2, "0")}
+        </p>
+        <h3 className="mt-3 text-[18px] font-extrabold leading-tight text-[#0D1B3E]">
+          {card.title}
+        </h3>
+        <p className="mt-4 text-[13px] leading-7 text-slate-600">
+          {card.text}
+        </p>
+      </div>
+    </motion.article>
+  );
+}
+
 export default function UniversityCareers({
   university,
 }: UniversityCareersProps) {
@@ -47,11 +98,28 @@ export default function UniversityCareers({
   const inView = useInView(ref, { once: true, margin: "-8% 0px" });
 
   const { careers, famousAlumni } = university;
+  const careerCards: CareerCard[] = [
+    {
+      title: "Alumni outcomes",
+      text: careers?.alumniOutcomes,
+      icon: TrendingUp,
+    },
+    {
+      title: "Internships & placements",
+      text: careers?.internshipsAndPlacements,
+      icon: Handshake,
+    },
+    {
+      title: "Law reputation",
+      text: careers?.reputationForLaw,
+      icon: BadgeCheck,
+    },
+  ].filter((item) => item.text);
 
-  // Defensive rendering
   if (
     !careers?.employabilityOverview &&
     !careers?.topRecruiters?.length &&
+    !careerCards.length &&
     !famousAlumni?.length
   ) {
     return null;
@@ -60,154 +128,136 @@ export default function UniversityCareers({
   return (
     <section
       ref={ref}
-      className="relative w-full border-t border-black/[0.07] bg-[#F7F3EC] px-4 py-8 sm:px-6 md:py-10 lg:px-8"
+      className="relative w-full overflow-hidden border-t border-black/[0.07] bg-[#F7F3EC] px-4 py-8 text-[#0D1B3E] sm:px-6 md:py-10 lg:px-8"
     >
-      {/* Design System: Dot grid texture */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-50
-        [background-image:radial-gradient(circle,rgba(13,27,62,0.04)_1px,transparent_1px)]
-        [background-size:26px_26px]"
-      />
+      <div className="pointer-events-none absolute inset-0 opacity-55 [background-image:radial-gradient(circle,rgba(13,27,62,0.04)_1px,transparent_1px)] [background-size:26px_26px]" />
+      <div className="pointer-events-none absolute right-0 top-0 h-72 w-72 rounded-full bg-[#C9A84C]/10 blur-3xl" />
 
-      <div className="relative z-10 mx-auto max-w-[1280px]">
-        {/* Section Header */}
+      <div className="relative z-10 mx-auto w-full max-w-[1280px] min-w-0">
         <motion.div
           variants={stagger}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
-          className="mb-8 md:mb-10"
+          className="mx-auto max-w-3xl text-center"
         >
           <motion.div
             variants={fadeUp}
-            className="mb-3 flex items-center justify-center gap-2 md:justify-start"
+            className="mb-3 flex items-center justify-center gap-2"
           >
-            <div className="h-px w-6 bg-[#C9A84C]/40 md:hidden" />
-            <span className="text-center text-[10px] font-bold uppercase tracking-[0.18em] text-[#C9A84C] md:text-start">
+            <div className="h-px w-8 bg-[#C9A84C]/40" />
+            <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#C9A84C]">
               Outcomes
             </span>
             <div className="h-px w-8 bg-[#C9A84C]/40" />
           </motion.div>
           <motion.h2
             variants={fadeUp}
-            className="text-center text-[clamp(1.5rem,3vw,2.4rem)] font-extrabold leading-tight tracking-tight text-[#0D1B3E] md:text-start"
+            className="text-[clamp(1.5rem,3vw,2.4rem)] font-extrabold leading-tight tracking-tight text-[#0D1B3E]"
           >
-            Careers &{" "}
+            Career pathways with{" "}
             <span className="bg-gradient-to-r from-[#C9A84C] to-[#E8C96A] bg-clip-text text-transparent">
-              Credibility
+              real credibility
             </span>
           </motion.h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-14">
-          {/* =========================================
-              LEFT COLUMN: CAREER PROSPECTS
-              ========================================= */}
+        {careers?.employabilityOverview ? (
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            animate={inView ? "visible" : "hidden"}
+            className="mx-auto mt-8 max-w-4xl overflow-hidden rounded-[32px] border border-[#C9A84C]/20 bg-[#0D1B3E] p-5 shadow-[0_20px_56px_rgba(13,27,62,0.18)] md:p-7"
+          >
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#C9A84C]/20 bg-[#C9A84C]/10 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.18em] text-[#E8C96A]">
+              <Briefcase size={14} />
+              Career prospects
+            </div>
+            <p className="text-center text-[15px] leading-8 text-white/78 md:text-start">
+              {careers.employabilityOverview}
+            </p>
+          </motion.div>
+        ) : null}
+
+        {careerCards.length > 0 ? (
           <motion.div
             variants={stagger}
             initial="hidden"
             animate={inView ? "visible" : "hidden"}
-            className="flex flex-col h-full"
+            className="-mx-4 mt-8 flex snap-x snap-mandatory overflow-x-auto px-4 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:px-0"
+          >
+            {careerCards.map((card, index) => (
+              <OutcomeCard key={card.title} card={card} index={index} />
+            ))}
+          </motion.div>
+        ) : null}
+
+        {careers?.topRecruiters?.length ? (
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            animate={inView ? "visible" : "hidden"}
+            className="mt-5 rounded-[28px] border border-black/[0.07] bg-white p-5 shadow-[0_14px_34px_rgba(20,31,45,0.045)]"
+          >
+            <div className="mb-4 flex items-center justify-center gap-2 md:justify-start">
+              <Building2 size={15} className="text-[#C9A84C]" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
+                Recruiters & pathways
+              </span>
+            </div>
+            <div className="flex gap-2.5 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:flex-wrap md:overflow-visible md:pb-0">
+              {careers.topRecruiters.map((recruiter, index) => (
+                <span
+                  key={`${recruiter}-${index}`}
+                  className="shrink-0 rounded-full border border-[#0D1B3E]/10 bg-[#F7F3EC] px-4 py-2 text-[12px] font-semibold text-[#0D1B3E] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#0D1B3E] hover:text-white"
+                >
+                  {recruiter}
+                </span>
+              ))}
+            </div>
+          </motion.div>
+        ) : null}
+
+        {famousAlumni?.length ? (
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            animate={inView ? "visible" : "hidden"}
+            className="mt-8"
           >
             <motion.div
               variants={fadeUp}
-              className="flex h-full flex-col overflow-hidden rounded-2xl border border-black/[0.07] bg-white shadow-sm"
+              className="mb-5 flex items-center justify-center gap-2 md:justify-start"
             >
-              {/* Header */}
-              <div className="flex items-center gap-3 border-b border-black/[0.05] bg-[#FDFBF7] px-6 py-4">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#0D1B3E]/[0.06] text-[#0D1B3E]">
-                  <Briefcase size={16} />
-                </div>
-                <h3 className="text-[15px] font-bold text-[#0D1B3E]">
-                  Career Prospects
-                </h3>
-              </div>
+              <Award size={16} className="text-[#C9A84C]" />
+              <h3 className="text-[18px] font-extrabold text-[#0D1B3E]">
+                Famous alumni
+              </h3>
+            </motion.div>
 
-              {/* Body */}
-              <div className="flex flex-1 flex-col p-6">
-                {careers?.employabilityOverview && (
-                  <p className="mb-8 text-[14px] leading-relaxed text-slate-600">
-                    {careers.employabilityOverview}
-                  </p>
-                )}
-
-                {careers?.topRecruiters && careers.topRecruiters.length > 0 && (
-                  <div className="mt-auto">
-                    <div className="mb-4 flex items-center gap-2">
-                      <Building2 size={14} className="text-[#C9A84C]" />
-                      <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
-                        Top Recruiters & Pathways
-                      </span>
-                    </div>
-
-                    {/* Interactive Tag Cloud */}
-                    <div className="flex flex-wrap gap-2.5">
-                      {careers.topRecruiters.map((recruiter, index) => (
-                        <span
-                          key={`${recruiter}-${index}`}
-                          className="inline-flex cursor-default items-center gap-1.5 rounded-full border border-[#0D1B3E]/12 bg-[#0D1B3E]/[0.04] px-4 py-1.5 text-[12px] font-semibold text-[#0D1B3E] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#0D1B3E] hover:text-white"
-                        >
-                          {recruiter}
-                        </span>
-                      ))}
-                    </div>
+            <div className="-mx-4 flex snap-x snap-mandatory overflow-x-auto px-4 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:px-0">
+              {famousAlumni.map((alumnus, index) => (
+                <motion.article
+                  key={`${alumnus.name}-${index}`}
+                  variants={fadeUp}
+                  custom={index * 0.08}
+                  className="mr-4 flex min-h-[160px] w-[78vw] max-w-[320px] shrink-0 snap-center flex-col justify-between rounded-[26px] border border-black/[0.07] bg-white p-5 shadow-[0_14px_34px_rgba(20,31,45,0.045)] transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A84C]/35 md:w-[320px]"
+                >
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#0D1B3E] text-[#C9A84C]">
+                    <Award size={19} strokeWidth={1.7} />
                   </div>
-                )}
-              </div>
-            </motion.div>
+                  <div className="mt-5">
+                    <p className="text-[15px] font-extrabold text-[#0D1B3E]">
+                      {alumnus.name}
+                    </p>
+                    <p className="mt-1 text-[13px] leading-6 text-slate-500">
+                      {alumnus.designation}
+                    </p>
+                  </div>
+                </motion.article>
+              ))}
+            </div>
           </motion.div>
-
-          {/* =========================================
-              RIGHT COLUMN: FAMOUS ALUMNI
-              ========================================= */}
-          {famousAlumni && famousAlumni.length > 0 && (
-            <motion.div
-              variants={stagger}
-              initial="hidden"
-              animate={inView ? "visible" : "hidden"}
-              className="flex flex-col"
-            >
-              <motion.div
-                variants={fadeUp}
-                className="mb-5 flex items-center justify-between"
-              >
-                <h3 className="text-[18px] font-bold text-[#0D1B3E]">
-                  Notable Alumni
-                </h3>
-              </motion.div>
-
-              <div className="flex flex-col gap-3">
-                {famousAlumni.map((alumnus, index) => (
-                  <motion.div
-                    key={`${alumnus.name}-${index}`}
-                    variants={fadeUp}
-                    custom={index * 0.1}
-                    className="group flex items-center gap-4 rounded-2xl border border-black/[0.05] bg-white p-4 transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A84C]/30 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)]"
-                  >
-                    {/* Dynamic Icon Container (inverts on hover) */}
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#C9A84C]/[0.08] text-[#C9A84C] transition-colors duration-300 group-hover:bg-[#C9A84C] group-hover:text-white">
-                      <Award size={20} strokeWidth={1.5} />
-                    </div>
-
-                    {/* Content */}
-                    <div className="flex flex-1 flex-col">
-                      <p className="text-[15px] font-bold text-[#0D1B3E] transition-colors group-hover:text-[#C9A84C]">
-                        {alumnus.name}
-                      </p>
-                      <p className="mt-0.5 text-[13px] leading-snug text-slate-500">
-                        {alumnus.designation}
-                      </p>
-                    </div>
-
-                    {/* Subtle interaction indicator */}
-                    <div className="mr-2 text-slate-300 opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:text-[#C9A84C] group-hover:opacity-100">
-                      <ArrowRight size={16} />
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </div>
+        ) : null}
       </div>
     </section>
   );

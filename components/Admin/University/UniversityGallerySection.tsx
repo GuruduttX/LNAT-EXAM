@@ -9,6 +9,8 @@ const sectionClass =
 interface UniversityGallerySectionProps {
   campusImages: IMediaAsset[];
   cityImages: IMediaAsset[];
+  studentLifeImages: IMediaAsset[];
+  academicImages: IMediaAsset[];
   onCampusChange: (
     index: number,
     key: keyof IMediaAsset,
@@ -19,21 +21,43 @@ interface UniversityGallerySectionProps {
     key: keyof IMediaAsset,
     value: string,
   ) => void;
+  onStudentLifeChange: (
+    index: number,
+    key: keyof IMediaAsset,
+    value: string,
+  ) => void;
+  onAcademicChange: (
+    index: number,
+    key: keyof IMediaAsset,
+    value: string,
+  ) => void;
   onAddCampus: () => void;
   onAddCity: () => void;
+  onAddStudentLife: () => void;
+  onAddAcademic: () => void;
   onRemoveCampus: (index: number) => void;
   onRemoveCity: (index: number) => void;
+  onRemoveStudentLife: (index: number) => void;
+  onRemoveAcademic: (index: number) => void;
 }
 
 export default function UniversityGallerySection({
   campusImages,
   cityImages,
+  studentLifeImages,
+  academicImages,
   onCampusChange,
   onCityChange,
+  onStudentLifeChange,
+  onAcademicChange,
   onAddCampus,
   onAddCity,
+  onAddStudentLife,
+  onAddAcademic,
   onRemoveCampus,
   onRemoveCity,
+  onRemoveStudentLife,
+  onRemoveAcademic,
 }: UniversityGallerySectionProps) {
   return (
     <div className={sectionClass}>
@@ -84,6 +108,46 @@ export default function UniversityGallerySection({
           className="text-sm text-[#C4A47C]"
         >
           + Add city-life image
+        </button>
+
+        <h3 className="pt-4 text-sm font-medium text-slate-300">
+          Student Life Images
+        </h3>
+        {studentLifeImages.map((image, index) => (
+          <GalleryImageField
+            key={`student-life-${index}`}
+            folder="LNAT_EXAM/UniversityGallery/StudentLife"
+            image={image}
+            onChange={(key, value) => onStudentLifeChange(index, key, value)}
+            onRemove={() => onRemoveStudentLife(index)}
+          />
+        ))}
+        <button
+          type="button"
+          onClick={onAddStudentLife}
+          className="text-sm text-[#C4A47C]"
+        >
+          + Add student-life image
+        </button>
+
+        <h3 className="pt-4 text-sm font-medium text-slate-300">
+          Academic Images
+        </h3>
+        {academicImages.map((image, index) => (
+          <GalleryImageField
+            key={`academic-${index}`}
+            folder="LNAT_EXAM/UniversityGallery/Academic"
+            image={image}
+            onChange={(key, value) => onAcademicChange(index, key, value)}
+            onRemove={() => onRemoveAcademic(index)}
+          />
+        ))}
+        <button
+          type="button"
+          onClick={onAddAcademic}
+          className="text-sm text-[#C4A47C]"
+        >
+          + Add academic image
         </button>
       </div>
     </div>

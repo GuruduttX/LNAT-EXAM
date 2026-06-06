@@ -40,6 +40,23 @@ export default function BlogContentLayout({
   displayUpdatedAt,
 }: BlogContentLayoutProps) {
   const [isTocOpen, setIsTocOpen] = useState(false);
+
+  const scrollToHeading = (id: string) => {
+    const heading = document.getElementById(id);
+    if (!heading) return;
+
+    const navbarOffset = 112;
+    const top =
+      heading.getBoundingClientRect().top + window.scrollY - navbarOffset;
+
+    window.scrollTo({
+      top: Math.max(top, 0),
+      behavior: "smooth",
+    });
+
+    window.history.replaceState(null, "", `#${id}`);
+  };
+
   return (
     <section className="bg-[#F7F3EC] px-4 py-8 sm:px-6 lg:px-8 lg:py-14 text-[#0D1B3E]">
       <div className="mx-auto max-w-7xl">
@@ -107,7 +124,13 @@ export default function BlogContentLayout({
                           <a
                             key={item.id}
                             href={`#${item.id}`}
-                            onClick={() => setIsTocOpen(false)} // Closes TOC on click
+                            onClick={(event) => {
+                              event.preventDefault();
+                              setIsTocOpen(false);
+                              window.setTimeout(() => {
+                                scrollToHeading(item.id);
+                              }, 360);
+                            }}
                             className={`block rounded-xl px-4 py-2.5 text-[13px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A84C] ${
                               item.level === 3
                                 ? "ml-4 border-l-2 border-black/[0.04] text-slate-500 hover:border-[#C9A84C]/40 hover:bg-[#FDFBF7] hover:text-[#0D1B3E]"

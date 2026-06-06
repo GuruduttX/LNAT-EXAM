@@ -72,7 +72,7 @@ export async function getPublishedUniversities() {
   await connectDB();
 
   return University.find({ status: "published" })
-    .sort({ featured: -1, sortOrder: 1, name: 1 })
+    .sort({ name: 1 })
     .lean();
 }
 
@@ -80,7 +80,7 @@ export async function getFeaturedUniversities(limit = 6) {
   await connectDB();
 
   return University.find({ status: "published" })
-    .sort({ featured: -1, sortOrder: 1, name: 1 })
+    .sort({ featured: -1, name: 1 })
     .limit(limit)
     .select(
       "name slug location locationLabel city country image cardImage shortDescription excerpt40to60 globalRanking nationalRanking lawSchoolRanking lnatRequirement",

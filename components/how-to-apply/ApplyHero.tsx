@@ -179,7 +179,7 @@ export default function ApplyHero() {
                 ease: [0.22, 1, 0.36, 1],
                 delay: 0.2,
               }}
-              className="relative h-100 sm:h-125 lg:h-137.5 w-full flex items-center justify-center lg:justify-end"
+              className="relative h-100 sm:h-125 lg:h-137.5 w-full hidden md:flex items-center justify-center lg:justify-end"
             >
               {/* Main Image Container */}
               <div className="relative w-full max-w-120 aspect-4/5 lg:aspect-4/5 rounded-3xl overflow-hidden border border-black/[0.07] shadow-[0_16px_40px_rgba(0,0,0,0.08)]">

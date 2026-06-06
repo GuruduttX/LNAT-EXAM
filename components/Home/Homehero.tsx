@@ -273,7 +273,7 @@ export default function HomeHero() {
         </div>
 
         {/* ── Content wrapper ── */}
-        <div className="relative z-10 h-[94%] mx-auto max-w-325 px-6 lg:px-14 xl:px-20 flex flex-col">
+        <div className="relative z-10 md:h-[94%] gap-16 mx-auto max-w-325 px-6 lg:px-14 xl:px-20 flex flex-col">
           {/* Nav accent */}
           <motion.div
             initial={{ opacity: 0, y: -10 }}

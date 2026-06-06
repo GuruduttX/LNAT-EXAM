@@ -3,9 +3,11 @@
 import { useRef } from "react";
 import { motion, useInView, type Variants } from "framer-motion";
 import {
+  CheckCircle2,
   Landmark,
   Target,
   Calendar,
+  FileText,
   Lightbulb,
 } from "lucide-react";
 
@@ -19,7 +21,12 @@ interface UniversityAdmissionsProps {
       overview?: string;
       howLNATIsUsed?: string;
       targetLNATScore?: string;
+      essayPolicy?: string;
       applicationTips?: string[];
+      requiredQualifications?: string;
+      deadlinesNotes?: string;
+      interviewRequired?: boolean;
+      essayConsidered?: boolean;
     };
   };
 }
@@ -46,11 +53,29 @@ export default function UniversityAdmissions({
   const inView = useInView(ref, { once: true, margin: "-8% 0px" });
 
   const { admissions, lnatRequirement, applicationDeadline } = university;
+  const policyCards = [
+    {
+      title: "Essay policy",
+      text: admissions?.essayPolicy,
+      icon: FileText,
+    },
+    {
+      title: "Required qualifications",
+      text: admissions?.requiredQualifications,
+      icon: CheckCircle2,
+    },
+    {
+      title: "Deadline notes",
+      text: admissions?.deadlinesNotes,
+      icon: Calendar,
+    },
+  ].filter((item) => item.text);
 
   // Defensive rendering: If no admissions data exists, don't render the section.
   if (
     !admissions?.overview &&
     !admissions?.howLNATIsUsed &&
+    !policyCards.length &&
     !admissions?.applicationTips?.length
   ) {
     return null;
@@ -131,7 +156,7 @@ export default function UniversityAdmissions({
                 </div>
 
                 {/* Target Score Row */}
-                {admissions.targetLNATScore && (
+                {admissions?.targetLNATScore && (
                   <div className="flex items-start gap-4">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#C9A84C]/20 text-[#E8C96A]">
                       <Target size={18} />
@@ -161,6 +186,29 @@ export default function UniversityAdmissions({
                     </p>
                   </div>
                 </div>
+
+                <div className="grid gap-3 border-t border-white/10 pt-5 sm:grid-cols-2 lg:grid-cols-1">
+                  <div className="rounded-xl bg-white/5 p-4">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/40">
+                      Interview
+                    </p>
+                    <p className="mt-1 text-[13px] font-bold text-white">
+                      {admissions?.interviewRequired
+                        ? "Usually required"
+                        : "Not marked as required"}
+                    </p>
+                  </div>
+                  <div className="rounded-xl bg-white/5 p-4">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/40">
+                      Essay
+                    </p>
+                    <p className="mt-1 text-[13px] font-bold text-white">
+                      {admissions?.essayConsidered
+                        ? "Considered in review"
+                        : "Not marked as considered"}
+                    </p>
+                  </div>
+                </div>
               </div>
             </motion.div>
           </div>
@@ -175,7 +223,7 @@ export default function UniversityAdmissions({
             className="flex flex-col"
           >
             {/* Overview */}
-            {admissions.overview && (
+            {admissions?.overview && (
               <motion.p
                 variants={fadeUp}
                 className="mb-8 text-center text-[14px] leading-relaxed text-slate-600 md:text-start"
@@ -185,7 +233,7 @@ export default function UniversityAdmissions({
             )}
 
             {/* How LNAT is Used (Design System 6.5 SectionCard) */}
-            {admissions.howLNATIsUsed && (
+            {admissions?.howLNATIsUsed && (
               <motion.div
                 variants={fadeUp}
                 className="mb-8 overflow-hidden rounded-2xl border border-black/[0.07] bg-[#FDFBF7] shadow-sm"
@@ -204,8 +252,38 @@ export default function UniversityAdmissions({
               </motion.div>
             )}
 
+            {policyCards.length > 0 && (
+              <motion.div
+                variants={stagger}
+                className="-mx-4 mb-8 flex snap-x snap-mandatory overflow-x-auto px-4 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:grid-cols-3 md:gap-4 md:overflow-visible md:px-0 md:pb-0"
+              >
+                {policyCards.map((item, index) => {
+                  const Icon = item.icon;
+
+                  return (
+                    <motion.article
+                      key={item.title}
+                      variants={fadeUp}
+                      custom={index * 0.08}
+                      className="mr-4 min-h-[220px] w-[82vw] max-w-[320px] shrink-0 snap-center rounded-2xl border border-black/[0.07] bg-white p-5 shadow-sm md:mr-0 md:w-full md:max-w-none"
+                    >
+                      <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-2xl bg-[#C9A84C]/10 text-[#C9A84C]">
+                        <Icon size={18} />
+                      </div>
+                      <h3 className="text-[15px] font-extrabold text-[#0D1B3E]">
+                        {item.title}
+                      </h3>
+                      <p className="mt-3 text-[13px] leading-7 text-slate-600">
+                        {item.text}
+                      </p>
+                    </motion.article>
+                  );
+                })}
+              </motion.div>
+            )}
+
             {/* Application Tips (Interactive Step List) */}
-            {admissions.applicationTips &&
+            {admissions?.applicationTips &&
               admissions.applicationTips.length > 0 && (
                 <motion.div variants={fadeUp}>
                   <div className="mb-5 flex items-center gap-2.5">

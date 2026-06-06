@@ -15,7 +15,13 @@ import FAQSection from "@/components/universities/FAQSection";
 import UniversitySources from "@/components/universities/detail/UniversitySources";
 import UniversityFinalCTA from "@/components/universities/detail/UniversityFinalCTA";
 import UniversityQuickFacts from "@/components/universities/detail/UniversityQuickFacts";
+import UniversityDirectAnswers from "@/components/universities/detail/UniversityDirectAnswers";
+import UniversityAcademicStrengths from "@/components/universities/detail/UniversityAcademicStrengths";
+import UniversityStudentExperience from "@/components/universities/detail/UniversityStudentExperience";
+import UniversityTrustSignals from "@/components/universities/detail/UniversityTrustSignals";
+import UniversityRelatedLinks from "@/components/universities/detail/UniversityRelatedLinks";
 import { createUniversityPageSchema } from "@/lib/universityPageSchema";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 interface PageProps {
   params: Promise<{
@@ -32,6 +38,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
   const university = await getUniversityBySlug(slug);
+  const canonicalUrl = `${getSiteUrl()}/universities/${slug}`;
 
   if (!university) {
     return {
@@ -47,7 +54,7 @@ export async function generateMetadata({ params }: PageProps) {
       university.shortDescription ||
       `Explore LNAT admissions, student life, and application guidance for ${university.name}.`,
     alternates: {
-      canonical: university.canonicalUrl || `/universities/${university.slug}`,
+      canonical: canonicalUrl,
     },
     openGraph: {
       type: "article",
@@ -140,13 +147,22 @@ export default async function UniversityDetailPage({ params }: PageProps) {
           />
         </div>
       </section> */}
-      <UniversityQuickFacts university={{
-    globalRanking: university.globalRanking,
-    lawSchoolRanking: university.lawSchoolRanking,
-    applicationDeadline: university.applicationDeadline,
-    tuitionFee: university.tuitionFee,
-    acceptanceRate: university.acceptanceRate,
-  }}/>
+      <UniversityQuickFacts
+        university={{
+          globalRanking: university.globalRanking,
+          lawSchoolRanking: university.lawSchoolRanking,
+          applicationDeadline: university.applicationDeadline,
+          tuitionFee: university.tuitionFee,
+          acceptanceRate: university.acceptanceRate,
+        }}
+      />
+      <UniversityDirectAnswers
+        university={{
+          name: university.name,
+          lnatRequirement: university.lnatRequirement,
+          directAnswers: university.directAnswers,
+        }}
+      />
       <Section
         eyebrow="Quick Answer"
         title={`Why study at ${university.name}?`}
@@ -170,15 +186,31 @@ export default async function UniversityDetailPage({ params }: PageProps) {
         }}
       />
 
+      <UniversityAcademicStrengths
+        university={{
+          name: university.name,
+          strengths: university.strengths,
+        }}
+      />
+
       <UniversityCityLife
         university={{
           city: university.city,
           location: university.location,
-          cityLife: {
-            cityOverview: university.cityLife?.cityOverview,
-          },
+          cityLife: university.cityLife,
           gallery: {
             cityLifeImages: university.gallery?.cityLifeImages,
+          },
+        }}
+      />
+
+      <UniversityStudentExperience
+        university={{
+          name: university.name,
+          studentExperience: university.studentExperience,
+          gallery: {
+            studentLifeImages: university.gallery?.studentLifeImages,
+            academicImages: university.gallery?.academicImages,
           },
         }}
       />
@@ -188,36 +220,51 @@ export default async function UniversityDetailPage({ params }: PageProps) {
           name: university.name,
           lnatRequirement: university.lnatRequirement,
           applicationDeadline: university.applicationDeadline,
-          admissions: {
-            overview: university.admissions?.overview,
-            howLNATIsUsed: university.admissions?.howLNATIsUsed,
-            targetLNATScore: university.admissions?.targetLNATScore,
-            applicationTips: university.admissions?.applicationTips,
-          },
+          admissions: university.admissions,
         }}
       />
 
       <UniversityCareers
         university={{
-          careers: {
-            employabilityOverview: university.careers?.employabilityOverview,
-            topRecruiters: university.careers?.topRecruiters,
-          },
+          careers: university.careers,
           famousAlumni: university.famousAlumni,
+          notableAlumni: university.notableAlumni,
+        }}
+      />
+
+      <UniversityTrustSignals
+        university={{
+          reviewedBy: university.reviewedBy,
+          lastFactCheckedAt: university.lastFactCheckedAt,
+          awardsAndRecognition: university.awardsAndRecognition,
+          notableAlumni: university.notableAlumni,
+          testimonials: university.testimonials,
         }}
       />
 
       <FAQSection faqItems={university.faqs} />
 
-      <UniversitySources university={{
-        sourceReferences: university.sourceReferences
-      }}/>
+      <UniversitySources
+        university={{
+          sourceReferences: university.sourceReferences,
+        }}
+      />
 
-      <UniversityFinalCTA university={{
-    name: university.name,
-    shortName: university.shortName
-  }
-} />
+      <UniversityRelatedLinks
+        university={{
+          relatedBlogs: university.relatedBlogs,
+          relatedResources: university.relatedResources,
+          relatedUniversities: university.relatedUniversities,
+          comparisonLinks: university.comparisonLinks,
+        }}
+      />
+
+      <UniversityFinalCTA
+        university={{
+          name: university.name,
+          shortName: university.shortName,
+        }}
+      />
     </main>
   );
 }

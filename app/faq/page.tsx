@@ -6,6 +6,12 @@ import { getPublishedFAQs } from "@/services/faqService";
 import FAQFinalCTA from "@/components/faq/FAQFinalCTA";
 import { createBreadcrumbSchema } from "@/lib/breadcrumbSchema";
 
+export const metadata = {
+  title: "LNAT FAQs | LNAT Exam India",
+  description:
+    "Find clear answers to common LNAT questions about registration, exam format, essay writing, scoring, fees, logistics, and university admissions.",
+};
+
 async function getFaqsFromDB(): Promise<FAQItem[]> {
   const faqDocuments = await getPublishedFAQs();
 

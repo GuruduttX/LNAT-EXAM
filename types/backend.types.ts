@@ -167,7 +167,6 @@ export interface IUniversity {
   // SEO / schema
   metaTitle?: string;
   metaDescription?: string;
-  canonicalUrl?: string;
   focusKeyword?: string;
   secondaryKeywords?: string[];
   schemaTitle?: string;
@@ -278,7 +277,6 @@ export interface IUniversity {
     profileUrl?: string;
   };
   featured?: boolean;
-  sortOrder?: number;
   status?: "draft" | "published";
   createdAt?: Date;
   updatedAt?: Date;

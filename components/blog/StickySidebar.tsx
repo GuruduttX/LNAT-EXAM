@@ -72,6 +72,8 @@ export default function StickySidebar({
         </div>
       ) : null} */}
 
+      <StickyConsultationForm />
+
       <div className="rounded-2xl border border-[#C9A84C]/15 bg-[#0D1B3E] p-6 text-white shadow-[0_16px_40px_rgba(13,27,62,0.2)] overflow-hidden">
         <div className="flex items-start gap-3">
           {/* Design System standard icon container */}
@@ -114,8 +116,6 @@ export default function StickySidebar({
           </div>
         </div>
       </div>
-
-      <StickyConsultationForm />
 
       <div className="group relative overflow-hidden rounded-[28px] border border-[#D9D0C1] bg-white p-6 shadow-[0_14px_32px_rgba(20,31,45,0.05)] transition-colors hover:border-[#C9A84C]/40">
         <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-[#C9A84C]/10 blur-2xl transition-all group-hover:bg-[#C9A84C]/20" />

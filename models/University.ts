@@ -151,7 +151,6 @@ const universitySchema = new Schema(
     },
     metaTitle: { type: String },
     metaDescription: { type: String },
-    canonicalUrl: { type: String, trim: true },
     focusKeyword: { type: String, trim: true },
     secondaryKeywords: [{ type: String, trim: true }],
 
@@ -316,10 +315,6 @@ const universitySchema = new Schema(
       type: Boolean,
       default: false,
       index: true,
-    },
-    sortOrder: {
-      type: Number,
-      default: 0,
     },
     status: {
       type: String,
