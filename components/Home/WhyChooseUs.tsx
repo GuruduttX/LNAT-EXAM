@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { motion, type Variants } from "framer-motion";
 import {
   GraduationCap,
@@ -11,6 +11,7 @@ import {
   Award,
   ArrowRight,
 } from "lucide-react";
+import EnquiryPopupForm from "@/utils/EnquiryForm";
 
 // --- Types & Data ---
 
@@ -99,7 +100,10 @@ const fadeUpItem: Variants = {
 // --- Component ---
 
 export default function WhyChooseUs() {
+  const [isOpen, setIsOpen] = useState(false);
   return (
+    <>
+    <EnquiryPopupForm isOpen={isOpen} onClose={()=> setIsOpen(false)}/>
     <section className="relative w-full border-b border-black/[0.05] bg-[#FDFBF7] py-12 md:py-16 lg:py-20 overflow-hidden">
       
       {/* Design System Texture */}
@@ -169,8 +173,9 @@ export default function WhyChooseUs() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="mt-4 flex justify-center md:mt-8  "
         >
-          <a
-            href="/consultation" // Update with your actual route
+          <button
+            onClick={()=> setIsOpen(true)}
+            // Update with your actual route
             className="group flex w-full items-center justify-center gap-2.5 rounded-xl px-7 py-3.5 text-[14px] font-bold text-[#0D1B3E] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] sm:w-auto"
             style={{
               background: "linear-gradient(135deg, #C9A84C 0%, #E8C96A 60%, #C9A84C 100%)",
@@ -179,7 +184,7 @@ export default function WhyChooseUs() {
           >
             Get Expert Guidance
             <ArrowRight size={16} className="transition-transform duration-200 group-hover:translate-x-1" />
-          </a>
+          </button>
         </motion.div>
 
         {/* Muted Editorial Trust Strip (Mobile Optimized) */}
@@ -205,5 +210,6 @@ export default function WhyChooseUs() {
         
       </div>
     </section>
+    </>
   );
 }

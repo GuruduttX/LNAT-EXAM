@@ -180,6 +180,7 @@ export default function LNATTimeline() {
   return (
     <section
       ref={containerRef}
+      id="exam-timeline"
       className="relative w-full border-y border-black/[0.07] bg-[#F7F3EC] py-14 md:py-20 overflow-hidden"
     >
       {/* Design System Texture */}

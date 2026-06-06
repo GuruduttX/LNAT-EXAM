@@ -21,8 +21,8 @@ export const metadata: Metadata = {
   description:
     "Comprehensive guide for Indian students taking the LNAT. Learn about top UK law universities, exam patterns, deadlines, and expert preparation strategies.",
   robots: {
-    index: false,
-    follow: false
+    index: true,
+    follow: true
   },
 };
 

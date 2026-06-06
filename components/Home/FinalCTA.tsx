@@ -8,6 +8,7 @@ import {
   MessageCircle,
   ShieldCheck,
 } from "lucide-react";
+import Link from "next/link";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -93,8 +94,8 @@ export default function FinalCTA() {
           variants={itemVariants}
           className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto"
         >
-          <a
-            href="#"
+          <Link
+            href="/free-resources"
             className="group relative inline-flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-3.5 bg-[#FDFCFB] text-[#070B14] overflow-hidden transition-all duration-300 hover:bg-white hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(253,252,251,0.15)]"
           >
             <span className="text-sm font-medium tracking-wide">
@@ -104,10 +105,10 @@ export default function FinalCTA() {
               className="w-4 h-4 text-[#9A7B4F] transition-transform duration-300 group-hover:translate-x-1"
               strokeWidth={2}
             />
-          </a>
+          </Link>
 
-          <a
-            href="#"
+          <Link
+            href="#exam-timeline"
             className="group inline-flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-3.5 bg-transparent border border-white/20 text-[#FDFCFB] transition-all duration-300 hover:bg-white/5 hover:border-white/40"
           >
             <BookOpen
@@ -117,7 +118,7 @@ export default function FinalCTA() {
             <span className="text-sm font-medium tracking-wide">
               Explore Timeline
             </span>
-          </a>
+          </Link>
 
           <a
             href="https://wa.me/YOUR_NUMBER_HERE"

@@ -4,7 +4,7 @@ export async function GET() {
   const siteUrl = getSiteUrl();
 
   const robots = `User-agent: *
-    Disallow: /
+    Allow: /
     Disallow: /admin/
     Disallow: /api/
 
@@ -14,7 +14,7 @@ export async function GET() {
     User-agent: PerplexityBot
     User-agent: Google-Extended
     User-agent: CCBot
-    Disallow: /
+    Allow: /
     Disallow: /admin/
     Disallow: /api/
 
