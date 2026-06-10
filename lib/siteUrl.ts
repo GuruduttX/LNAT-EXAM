@@ -1,4 +1,4 @@
-const DEFAULT_SITE_URL = "https://www.lnatexamindia.com";
+const DEFAULT_SITE_URL = "https://lnatexamindia.com";
 
 export function getSiteUrl() {
   const configuredUrl =
