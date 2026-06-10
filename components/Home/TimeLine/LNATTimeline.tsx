@@ -166,16 +166,39 @@ const updatesData = [
 
 export default function LNATTimeline() {
   const containerRef = useRef<HTMLElement>(null);
+  const timelineCardRefs = useRef<Record<number, HTMLDivElement | null>>({});
   const isInView = useInView(containerRef, { once: true, margin: "-10% 0px" });
 
   const [activeFilter, setActiveFilter] =
     useState<(typeof FILTERS)[number]>("ALL");
-  const [expandedId, setExpandedId] = useState<number | null>(5);
+  const [expandedId, setExpandedId] = useState<number | null>(null);
 
   const filteredTimeline = useMemo(() => {
     if (activeFilter === "ALL") return timelineData;
     return timelineData.filter((item) => item.category.includes(activeFilter));
   }, [activeFilter]);
+
+  const openTimelineItem = (id: number, shouldScroll = false) => {
+    const selectedItem = timelineData.find((item) => item.id === id);
+    const isVisibleInCurrentFilter =
+      activeFilter === "ALL" || selectedItem?.category.includes(activeFilter);
+
+    if (!isVisibleInCurrentFilter) {
+      setActiveFilter("ALL");
+    }
+
+    setExpandedId(id);
+
+    if (!shouldScroll) return;
+
+    window.setTimeout(() => {
+      timelineCardRefs.current[id]?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center",
+      });
+    }, 80);
+  };
 
   return (
     <section
@@ -234,7 +257,7 @@ export default function LNATTimeline() {
                   return (
                     <React.Fragment key={`rail-${item.id}`}>
                       <button
-                        onClick={() => setExpandedId(item.id)}
+                        onClick={() => openTimelineItem(item.id, true)}
                         className={`group relative shrink-0 snap-center rounded-2xl border px-5 py-3 text-left transition-all duration-300 md:py-4 ${
                           isActive
                             ? "border-[#C9A84C]/40 bg-white shadow-[0_12px_30px_rgba(13,27,62,0.08)]"
@@ -304,6 +327,9 @@ export default function LNATTimeline() {
                   return (
                     <motion.div
                       key={`main-${item.id}`}
+                      ref={(node) => {
+                        timelineCardRefs.current[item.id] = node;
+                      }}
                       layout
                       className="relative w-[85vw] max-w-[340px] shrink-0 snap-center md:w-full md:max-w-none md:shrink"
                     >

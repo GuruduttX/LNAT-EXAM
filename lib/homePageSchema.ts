@@ -7,7 +7,7 @@ interface FeaturedUniversitySchemaItem {
 }
 
 const homepageDescription =
-  "Comprehensive LNAT guidance for Indian students exploring UK law admissions, university requirements, exam preparation, and application strategy.";
+  "Expert LNAT coaching in India for Oxford, Cambridge, UCL, LSE and JGLS law admissions, including Section A drills, Section B essay feedback and full mock tests.";
 
 export function createHomePageSchema(
   featuredUniversities: FeaturedUniversitySchemaItem[],
@@ -29,7 +29,7 @@ export function createHomePageSchema(
         url: `${siteUrl}/`,
         email: "contact@lnatexamindia.com",
         description:
-          "LNAT preparation and UK law admissions guidance for Indian students.",
+          "Specialist LNAT coaching and law admissions guidance for Indian students applying to UK universities and Jindal Global Law School.",
         areaServed: {
           "@type": "Country",
           name: "India",
@@ -55,7 +55,7 @@ export function createHomePageSchema(
         "@type": "WebPage",
         "@id": webpageId,
         url: `${siteUrl}/`,
-        name: "LNAT Exam India | Premium Preparation & Admissions Guide",
+        name: "LNAT Coaching in India | LNAT Exam Preparation & Classes",
         description: homepageDescription,
         inLanguage: "en-IN",
         isPartOf: { "@id": websiteId },

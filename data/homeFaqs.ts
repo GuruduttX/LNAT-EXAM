@@ -33,13 +33,13 @@ export const homeFaqs: HomeFAQ[] = [
     id: "05",
     question: "How long does it take to prepare for the LNAT?",
     answer:
-      "Most students prepare for roughly 6 to 12 weeks of regular, timed practice. Because the LNAT tests reasoning rather than knowledge, effective preparation means timed Section A practice, writing Section B essays under 40-minute conditions, and full-length mock tests — not memorising content..",
+      "Most students prepare for roughly 6 to 12 weeks of regular, timed practice. Because the LNAT tests reasoning rather than knowledge, effective preparation means timed Section A practice, writing Section B essays under 40-minute conditions, and full-length mock tests — not memorising content.",
   },
   {
     id: "06",
     question: "What LNAT score is considered good?",
     answer:
-      "There is no universal pass mark. As a general guide, a score of 25+ out of 42 is competitive, while the most selective universities such as Oxford see shortlisted and offer-holder averages near 29-31. Target scores vary by university, so set yours against your chosen course",
+      "There is no universal pass mark. As a general guide, a score of 25+ out of 42 is competitive, while the most selective universities such as Oxford see shortlisted and offer-holder averages near 29-31. Target scores vary by university, so set yours against your chosen course.",
   },
   {
     id: "07",

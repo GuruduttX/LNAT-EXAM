@@ -27,12 +27,20 @@ const TopicHubsPreview = dynamic(
   () => import("@/components/Home/TopicHubsPreview"),
 );
 const WhyChooseUs = dynamic(() => import("@/components/Home/WhyChooseUs"));
+const ProgrammesPreview = dynamic(
+  () => import("@/components/Home/ProgrammesPreview"),
+);
+const PreparationProcess = dynamic(
+  () => import("@/components/Home/PreparationProcess"),
+);
+const WhoWeHelp = dynamic(() => import("@/components/Home/WhoWeHelp"));
+const MentorPreview = dynamic(() => import("@/components/Home/MentorPreview"));
 const FAQPreview = dynamic(() => import("@/components/Home/FAQPreview"));
 const FinalCTA = dynamic(() => import("@/components/Home/FinalCTA"));
 
-const title = "LNAT Exam India | Premium Preparation & Admissions Guide";
+const title = "LNAT Coaching in India | LNAT Exam Preparation & Classes";
 const description =
-  "Comprehensive LNAT guidance for Indian students exploring UK law admissions, university requirements, exam preparation, deadlines, and application strategy.";
+  "Expert LNAT coaching in India for Oxford, Cambridge, UCL, LSE & JGLS law admissions. Section A drills, essay feedback & full mock tests. Talk to a mentor on WhatsApp.";
 
 // Change these slugs whenever you want different topic hubs on the home page.
 const homeTopicHubSlugs = [
@@ -133,6 +141,10 @@ export default async function Home() {
       <FeaturedUniversities universities={universities} />
       <TopicHubsPreview topicHubs={topicHubs} />
       <WhyChooseUs />
+      <ProgrammesPreview />
+      <PreparationProcess />
+      <WhoWeHelp />
+      <MentorPreview />
       <FAQPreview />
       <FinalCTA />
     </main>

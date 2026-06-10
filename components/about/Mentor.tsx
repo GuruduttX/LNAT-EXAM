@@ -36,6 +36,54 @@ const scaleIn: Variants = {
   },
 };
 
+function MentorImageCollage({
+  inView,
+  className = "",
+}: {
+  inView: boolean;
+  className?: string;
+}) {
+  return (
+    <motion.div
+      variants={stagger}
+      initial="hidden"
+      animate={inView ? "visible" : "hidden"}
+      className={`relative mx-auto w-full max-w-sm pb-10 lg:mx-0 lg:max-w-none lg:pb-0 ${className}`}
+    >
+      <div className="absolute left-8 top-8 h-3/4 w-3/4 rounded-full bg-[#C9A84C]/10 blur-3xl" />
+
+      <div className="relative mx-auto aspect-[4/5] w-full max-w-[340px] sm:max-w-[390px] lg:mx-0 lg:max-w-none">
+        <motion.div
+          variants={scaleIn}
+          className="absolute right-0 top-0 h-[84%] w-[84%] overflow-hidden rounded-3xl border border-black/[0.05] shadow-[0_16px_40px_rgba(13,27,62,0.12)]"
+        >
+          <Image
+            src="/images/LNAT-mentor.webp"
+            alt="Mr. Alastair Murray, lead LNAT mentor"
+            fill
+            sizes="(max-width: 1024px) 82vw, 40vw"
+            className="object-cover object-center"
+          />
+        </motion.div>
+
+        <motion.div
+          variants={fadeUp}
+          custom={0.3}
+          className="absolute bottom-0 left-0 h-[43%] w-[64%] overflow-hidden rounded-2xl border-4 border-white shadow-[0_24px_48px_rgba(13,27,62,0.18)] lg:-bottom-16"
+        >
+          <Image
+            src="/images/LNAT-mentor-2.webp"
+            alt="Mr. Alastair Murray working with academic materials"
+            fill
+            sizes="(max-width: 1024px) 58vw, 30vw"
+            className="object-cover object-center"
+          />
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+}
+
 export default function MentorIntroduction() {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, margin: "-8% 0px" });
@@ -44,62 +92,22 @@ export default function MentorIntroduction() {
     <section
       id="mentor"
       ref={ref}
-      className="bg-white px-4 py-16 sm:px-6 md:py-24 lg:px-8"
+      className="bg-white px-4 py-10 sm:px-6 md:py-16 lg:px-8 lg:py-20"
     >
       <div className="mx-auto max-w-[1280px]">
-        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
-          {/* LEFT COLUMN: Overlapping Images Layout */}
-          <motion.div
-            variants={stagger}
-            initial="hidden"
-            animate={inView ? "visible" : "hidden"}
-            className="relative mx-auto w-full max-w-md lg:mx-0 lg:max-w-none"
-          >
-            {/* Gold Accent background blob */}
-            <div className="absolute left-10 top-10 h-3/4 w-3/4 rounded-full bg-[#C9A84C]/10 blur-3xl" />
-
-            <div className="relative aspect-[4/5] w-full sm:w-[85%]">
-              {/* Main Portrait Image (Passport style) */}
-              <motion.div
-                variants={scaleIn}
-                className="absolute right-0 top-0 h-[85%] w-[85%] overflow-hidden rounded-3xl border border-black/[0.05] shadow-[0_16px_40px_rgba(13,27,62,0.12)]"
-              >
-                <Image
-                  src="/images/LNAT-mentor.webp" // Replace with your main passport image path
-                  alt="Lead Mentor Portrait"
-                  fill
-                  sizes="(max-width: 1024px) 80vw, 40vw"
-                  className="object-cover object-center"
-                />
-              </motion.div>
-
-              {/* Overlapping "Working" Image */}
-              <motion.div
-                variants={fadeUp}
-                custom={0.3}
-                className="absolute -bottom-20 -left-10 h-[45%] w-[65%] overflow-hidden rounded-2xl border-4 border-white shadow-[0_24px_48px_rgba(13,27,62,0.18)]"
-              >
-                <Image
-                  src="/images/LNAT-mentor-2.webp" // Replace with your desk/working image path
-                  alt="Mentor working at desk"
-                  fill
-                  sizes="(max-width: 1024px) 50vw, 30vw"
-                  className="object-cover object-center"
-                />
-              </motion.div>
-            </div>
-          </motion.div>
+        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+          <MentorImageCollage inView={inView} className="hidden lg:block" />
 
           {/* RIGHT COLUMN: Content & Experience Breakdown */}
           <motion.div
             variants={stagger}
             initial="hidden"
             animate={inView ? "visible" : "hidden"}
-            className="flex flex-col"
+            className="flex flex-col text-center lg:text-left"
           >
             <motion.div
               variants={fadeUp}
-              className="mb-4 flex items-center gap-3"
+              className="mb-4 flex items-center justify-center gap-3 lg:justify-start"
             >
               <div className="h-px w-8 bg-[#C9A84C]/40" />
               <span className="text-[10px] font-bold tracking-[0.18em] uppercase text-[#C9A84C]">
@@ -119,7 +127,7 @@ export default function MentorIntroduction() {
 
             <motion.p
               variants={fadeUp}
-              className="mt-5 text-[14px] leading-relaxed text-slate-600 md:text-[15px]"
+              className="mx-auto mt-5 max-w-2xl text-[14px] leading-relaxed text-slate-600 md:text-[15px] lg:mx-0"
             >
               With years of experience assessing candidates for the British
               Council and IDP, our mentor knows exactly what top universities
@@ -127,11 +135,13 @@ export default function MentorIntroduction() {
               strategy.
             </motion.p>
 
+            <MentorImageCollage inView={inView} className="mt-8 lg:hidden" />
+
             {/* Experience List */}
             <motion.div variants={fadeUp} className="mt-10 flex flex-col gap-4">
               {/* Experience 1: IDP/British Council (Most prestigious, goes first) */}
               <div
-                className="group flex flex-col gap-4 rounded-2xl border border-black/[0.07] bg-[#FDFBF7] p-5 transition-all duration-300 sm:flex-row sm:items-start"
+                className="group flex flex-col items-center gap-4 rounded-2xl border border-black/[0.07] bg-[#FDFBF7] p-5 text-center transition-all duration-300 sm:flex-row sm:items-start sm:text-left"
                 style={{ boxShadow: "0 2px 10px rgba(0,0,0,0.04)" }}
                 onMouseEnter={(e) => {
                   const el = e.currentTarget;
@@ -174,7 +184,7 @@ export default function MentorIntroduction() {
 
               {/* Experience 2: Chitkara University */}
               <div
-                className="group flex flex-col gap-4 rounded-2xl border border-black/[0.07] bg-white p-5 transition-all duration-300 sm:flex-row sm:items-start"
+                className="group flex flex-col items-center gap-4 rounded-2xl border border-black/[0.07] bg-white p-5 text-center transition-all duration-300 sm:flex-row sm:items-start sm:text-left"
                 style={{ boxShadow: "0 2px 10px rgba(0,0,0,0.04)" }}
                 onMouseEnter={(e) => {
                   const el = e.currentTarget;
@@ -220,7 +230,7 @@ export default function MentorIntroduction() {
 
               {/* Experience 3: Austech */}
               <div
-                className="group flex flex-col gap-4 rounded-2xl border border-black/[0.07] bg-white p-5 transition-all duration-300 sm:flex-row sm:items-start"
+                className="group flex flex-col items-center gap-4 rounded-2xl border border-black/[0.07] bg-white p-5 text-center transition-all duration-300 sm:flex-row sm:items-start sm:text-left"
                 style={{ boxShadow: "0 2px 10px rgba(0,0,0,0.04)" }}
                 onMouseEnter={(e) => {
                   const el = e.currentTarget;
