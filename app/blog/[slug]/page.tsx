@@ -5,6 +5,7 @@ import BlogContentLayout from "@/components/blog/BlogContentLayout";
 import { getBlogBySlug, getPublishedBlogSlugs } from "@/services/blogService";
 import { IBlog } from "@/types/backend.types";
 import { createBreadcrumbSchema } from "@/lib/breadcrumbSchema";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 interface BlogDetailsPageProps {
   params: Promise<{
@@ -79,6 +80,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: BlogDetailsPageProps) {
   const { slug } = await params;
   const blogDocument = await getBlogBySlug(slug);
+  const siteUrl = getSiteUrl();
 
   if (!blogDocument) {
     return {
@@ -86,9 +88,44 @@ export async function generateMetadata({ params }: BlogDetailsPageProps) {
     };
   }
 
+  const title =
+    blogDocument.meta?.title ||
+    blogDocument.structuredData?.title ||
+    blogDocument.title;
+  const description =
+    blogDocument.meta?.description ||
+    blogDocument.structuredData?.description ||
+    blogDocument.excerpt;
+  const image =
+    blogDocument.heroImage?.url ||
+    blogDocument.featuredImage ||
+    blogDocument.image;
+  const canonicalUrl = `${siteUrl}/blog/${blogDocument.slug}`;
+
   return {
-    title: blogDocument.meta?.title || blogDocument.title,
-    description: blogDocument.meta?.description || blogDocument.excerpt,
+    title,
+    description,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      type: "article",
+      url: canonicalUrl,
+      title,
+      description,
+      images: image ? [{ url: image, alt: blogDocument.alt || title }] : [],
+      publishedTime: blogDocument.publishedAt || undefined,
+      modifiedTime: blogDocument.updatedAt?.toISOString(),
+      authors: [blogDocument.author.name],
+      section: blogDocument.category,
+      tags: blogDocument.tags || [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: image ? [image] : [],
+    },
   };
 }
 
@@ -103,6 +140,13 @@ export default async function BlogDetailsPage({
   }
 
   const blog = JSON.parse(JSON.stringify(blogDocument)) as IBlog;
+  const siteUrl = getSiteUrl();
+  const pageUrl = `${siteUrl}/blog/${blog.slug}`;
+  const schemaTitle =
+    blog.structuredData?.title || blog.meta?.title || blog.title;
+  const schemaDescription =
+    blog.structuredData?.description || blog.meta?.description || blog.excerpt;
+  const heroImage = blog.heroImage?.url || blog.featuredImage || blog.image;
   const { enhancedContent, tocItems } = enrichContentWithHeadingIds(
     blog.content || "",
   );
@@ -139,10 +183,12 @@ export default async function BlogDetailsPage({
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "BlogPosting",
-        headline: blog.title,
-        description: blog.meta?.description || blog.excerpt,
-        image: [blog.heroImage?.url || blog.featuredImage || blog.image],
+        "@type": ["Article", "BlogPosting"],
+        "@id": `${pageUrl}#article`,
+        headline: schemaTitle,
+        name: schemaTitle,
+        description: schemaDescription,
+        image: heroImage ? [heroImage] : undefined,
         datePublished: blog.publishedAt || blog.createdAt,
         dateModified: blog.updatedAt || blog.publishedAt || blog.createdAt,
         author: {
@@ -150,15 +196,26 @@ export default async function BlogDetailsPage({
           name: blog.author.name,
           jobTitle: blog.author.role || undefined,
         },
-        reviewedBy: blog.reviewedBy?.name
+        publisher: {
+          "@type": "Organization",
+          name: "LNAT Exam India",
+          url: siteUrl,
+        },
+        mainEntityOfPage: {
+          "@type": "WebPage",
+          "@id": pageUrl,
+        },
+        articleSection: blog.category,
+        keywords: blog.tags?.join(", ") || undefined,
+        about: blog.primaryCategorySlug
           ? {
-              "@type": "Person",
-              name: blog.reviewedBy.name,
-              jobTitle: blog.reviewedBy.role || undefined,
+              "@type": "Thing",
+              name: blog.primaryCategorySlug
+                .split("-")
+                .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+                .join(" "),
             }
           : undefined,
-        mainEntityOfPage: `https://www.lnatexamindia.com/blog/${blog.slug}`,
-        articleSection: blog.category,
         wordCount: blog.wordCount,
         citation: blog.sources || [],
       },
@@ -172,7 +229,7 @@ export default async function BlogDetailsPage({
                 name: faq.question,
                 acceptedAnswer: {
                   "@type": "Answer",
-                  text: faq.answer,
+                  text: stripHtml(faq.answer),
                 },
               })),
             },

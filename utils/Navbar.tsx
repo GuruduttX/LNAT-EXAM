@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
@@ -23,6 +24,7 @@ const navLinks = [
   { label: "Free Resources", href: "/free-resources" },
   { label: "FAQ", href: "/faq" },
   { label: "How to Apply", href: "/how-to-apply" },
+  { label: "About", href: "/about" },
 ];
 
 const universityLinks = [
@@ -58,56 +60,17 @@ function NavLogo() {
   return (
     <Link
       href="/"
-      className="flex items-center gap-2.5 group"
+      className="group flex items-center"
       aria-label="LNAT Exam India — Home"
     >
-      {/* Monogram emblem */}
-      <div
-        className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover:shadow-md"
-        style={{
-          background: "linear-gradient(135deg, #0D1B3E 0%, #162447 100%)",
-          border: "1px solid rgba(201,168,76,0.35)",
-        }}
-      >
-        <span
-          style={{
-            fontFamily: "'Cormorant Garamond', Georgia, serif",
-            fontSize: "13px",
-            color: "#C9A84C",
-            fontWeight: 600,
-            letterSpacing: "0.02em",
-          }}
-        >
-          L
-        </span>
-      </div>
-
-      {/* Brand text */}
-      <div className="flex flex-col leading-none">
-        <span
-          style={{
-            fontFamily: "'Cormorant Garamond', Georgia, serif",
-            fontSize: "17px",
-            fontWeight: 500,
-            color: "#0A1628",
-            letterSpacing: "-0.01em",
-          }}
-        >
-          LNAT Exam India
-        </span>
-        <span
-          style={{
-            fontFamily: "'Libre Baskerville', Georgia, serif",
-            fontSize: "8.5px",
-            color: "#8B6914",
-            letterSpacing: "0.18em",
-            textTransform: "uppercase",
-            marginTop: "1px",
-          }}
-        >
-          Admissions Guidance
-        </span>
-      </div>
+      <Image
+        src="/images/LnatLogo.webp"
+        alt="LNAT Exam India"
+        width={280}
+        height={82}
+        priority
+        className="h-14 w-auto transition-transform duration-300 group-hover:scale-[1.02] md:h-16 lg:h-[72px]"
+      />
     </Link>
   );
 }

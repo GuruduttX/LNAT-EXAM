@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import {
@@ -248,13 +249,13 @@ export default function HomeHero() {
       >
         {/* ── Background image ── */}
         <div className="absolute inset-0">
-          <img
+          <Image
             src={BG_IMAGE}
             alt="Oxford University"
-            className="w-full h-full object-cover object-center"
-            fetchPriority="high"
-            width="1400"
-            height="820"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center"
           />
           <div
             className="absolute inset-0"
@@ -341,13 +342,12 @@ export default function HomeHero() {
                 className="text-white/60 leading-[1.8] mb-6 max-w-[500px] font-light"
                 style={{ fontSize: "clamp(0.8rem, 1vw, 0.93rem)" }}
               >
-                India&apos;s most trusted platform for LNAT preparation. Personalised
-                mentorship, comprehensive study plans, and end-to-end admissions
-                support — built for{" "}
-                <span className="text-white font-semibold">
-                  Indian students
-                </span>{" "}
-                aiming for the world&apos;s best universities.
+                Get the LNAT score that opens the door to law at Oxford,
+                Cambridge, UCL, LSE — and Jindal Global Law School in India. We
+                coach Indian students through every part of the Law National
+                Aptitude Test: fast, accurate Section A reasoning, a clear and
+                arguable Section B essay, and the timing discipline that
+                separates an average score from an offer-winning one.
               </motion.p>
 
               {/* CTAs */}
@@ -424,13 +424,13 @@ export default function HomeHero() {
                     height: "360px",
                   }}
                 >
-                  <img
+                  <Image
                     src={STUDENT_IMAGE}
                     alt="Students studying for LNAT"
-                    className="w-full h-full object-cover object-top"
-                    fetchPriority="high"
-                    width="800"
-                    height="360"
+                    fill
+                    priority
+                    sizes="(min-width: 1024px) 360px, 45vw"
+                    className="object-cover object-top"
                   />
                   <div
                     className="absolute inset-0"

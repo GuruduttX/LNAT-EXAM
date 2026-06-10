@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import {
   CalendarDays,
   Clock3,
-  ShieldCheck,
   User,
   CheckCircle2,
   ListRestart,
@@ -120,25 +119,6 @@ function BlogTrustStrip({
           </div>
         </div>
 
-        {/* Reviewer (Strict SOP: Only show if exists) */}
-        {blog.reviewedBy?.name && (
-          <>
-            <div className="hidden h-8 w-px bg-slate-200 md:block" />
-            <div className="flex items-center gap-3 text-left">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#C9A84C]/10 text-[#C9A84C]">
-                <ShieldCheck size={16} />
-              </div>
-              <div>
-                <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-[#C9A84C]">
-                  Reviewed By
-                </p>
-                <p className="text-[13px] font-bold text-[#0D1B3E]">
-                  {blog.reviewedBy.name}
-                </p>
-              </div>
-            </div>
-          </>
-        )}
       </div>
 
       <div className="hidden h-8 w-px bg-slate-200 lg:block" />

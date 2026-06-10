@@ -1,25 +1,26 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { motion, useInView, type Variants } from "framer-motion";
 import { BookOpen, Target, ShieldCheck, ArrowRight } from "lucide-react";
-import Link from "next/link";
+import EnquiryPopupForm from "@/utils/EnquiryForm";
+
 
 const SERVICES = [
   {
     icon: BookOpen,
-    title: "UCAS & Personal Statement",
-    desc: "We translate your Indian academic background (CBSE/ISC/IB) into a compelling UCAS narrative, crafting a personal statement that Oxford and UCL admissions tutors actually want to read.",
+    title: "Shortlist and UCAS planning",
+    desc: "We help you connect your Indian academic profile with realistic UK law choices, UCAS deadlines, personal statement planning and the five-choice application strategy.",
   },
   {
     icon: Target,
-    title: "LNAT Strategy & Preparation",
-    desc: "Gain access to elite practice banks, mock simulators, and 1-on-1 essay grading. We identify your weak points in critical reasoning and fix them before test day.",
+    title: "LNAT timing and preparation",
+    desc: "We map your LNAT test date around Oxford, Cambridge, London universities or JGLS, then align Section A and essay preparation to that timeline.",
   },
   {
     icon: ShieldCheck,
-    title: "End-to-End Application Tracking",
-    desc: "From shortlisting the right 5 universities to booking your Pearson VUE slot and managing interview invites, we handle the logistics so you can focus on studying.",
+    title: "JGLS and UK route clarity",
+    desc: "We explain how one LNAT sitting can support UK applications and JGLS, while keeping Section A-only and essay-heavy strategies separate.",
   },
 ];
 
@@ -40,8 +41,10 @@ const stagger: Variants = {
 export default function ApplyHowWeHelp() {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, margin: "-8% 0px" });
-
+  const [isOpen, setIsOpen] = useState(false);
   return (
+    <>
+    <EnquiryPopupForm isOpen={isOpen} onClose={()=> setIsOpen(false)}/>
     <section
       ref={ref}
       className="relative w-full bg-white px-4 py-14 sm:px-6 md:py-20 lg:px-8 border-b border-black/[0.07]"
@@ -68,18 +71,18 @@ export default function ApplyHowWeHelp() {
             variants={fadeUp}
             className="text-[clamp(1.5rem,4vw,2.8rem)] font-extrabold leading-tight tracking-tight text-[#0D1B3E] max-w-2xl"
           >
-            Don't Navigate the UK Process{" "}
+            Build a personalised application{" "}
             <span className="bg-gradient-to-r from-[#C9A84C] to-[#E8C96A] bg-clip-text text-transparent">
-              Alone.
+              timeline
             </span>
           </motion.h2>
           <motion.p
             variants={fadeUp}
             className="mt-4 max-w-xl text-[14px] leading-relaxed text-slate-500"
           >
-            Applying as an international student from India leaves zero room for
-            error. We provide premium guidance to secure your spot at top-tier
-            institutions.
+            Applying from India means managing grades, LNAT booking, UCAS
+            choices, personal statement work and deadlines together. We help you
+            turn that into a clear plan.
           </motion.p>
         </motion.div>
 
@@ -117,8 +120,8 @@ export default function ApplyHowWeHelp() {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="mt-10 flex justify-center"
         >
-          <Link
-            href="/consultation"
+          <button
+            onClick={()=> setIsOpen(true)}
             className="group inline-flex items-center justify-center gap-2.5 rounded-xl px-8 py-4 text-[14px] font-bold text-[#0D1B3E] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
             style={{
               background:
@@ -131,9 +134,10 @@ export default function ApplyHowWeHelp() {
               size={16}
               className="transition-transform duration-200 group-hover:translate-x-1"
             />
-          </Link>
+          </button>
         </motion.div>
       </div>
     </section>
+    </>
   );
 }

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -14,14 +13,16 @@ import {
 } from "lucide-react";
 
 import AboutCTA from "@/components/about/AboutCTA";
-import Breadcrumbs from "@/components/shared/Breadcrumbs";
+import FAQSection from "@/components/universities/FAQSection";
 import { createBreadcrumbSchema } from "@/lib/breadcrumbSchema";
 import { getSiteUrl } from "@/lib/siteUrl";
+import AboutHero from "@/components/about/AboutHero";
+import MentorIntroduction from "@/components/about/Mentor";
 
 export const metadata: Metadata = {
-  title: "About LNAT Exam India | Admissions Guidance for Indian Students",
+  title: "About LNAT Exam India | Specialist LNAT Coaching for India",
   description:
-    "Learn how LNAT Exam India helps Indian students navigate LNAT preparation and UK law admissions through structured guidance, university research, and carefully reviewed resources.",
+    "LNAT Exam India is a specialist LNAT coaching brand for Indian law aspirants — meet our mentors, method and mission.",
   alternates: {
     canonical: "/about",
   },
@@ -30,42 +31,145 @@ export const metadata: Metadata = {
 const purposeItems = [
   {
     icon: GraduationCap,
-    title: "LNAT preparation",
+    title: "Section A reasoning and timing",
     description:
-      "Clear explanations of the exam format, reasoning skills, essay expectations, and preparation milestones.",
+      "We coach the reasoning, passage analysis, assumptions, conclusions and time pressure that cause most lost marks.",
   },
   {
     icon: Landmark,
-    title: "University research",
+    title: "Section B essay coaching",
     description:
-      "Structured university guides that help students compare LNAT requirements, admissions context, and academic fit.",
+      "Students practise essays under real exam conditions and receive feedback on argument, structure and clarity.",
   },
   {
     icon: BookOpenCheck,
-    title: "Admissions clarity",
+    title: "Mocks and application guidance",
     description:
-      "Practical guidance that connects exam preparation with the wider UK law application journey.",
+      "Full-length mocks, registration support, UCAS/JGLS timelines and university shortlisting are connected into one plan.",
   },
 ];
 
 const editorialSteps = [
   {
     icon: SearchCheck,
-    title: "Start with authoritative sources",
+    title: "Timed deliberate practice",
     description:
-      "Time-sensitive exam details should be checked against official LNAT and university sources before publication.",
+      "Scores move through repeated timed work, review of every error and clear targets tied to the student’s test date.",
   },
   {
     icon: FileCheck2,
-    title: "Show when facts were reviewed",
+    title: "Honest mentor feedback",
     description:
-      "University guides and editorial content are designed to surface freshness dates and source references where relevant.",
+      "Students receive specific feedback on weak question types, essay habits and the next practice priority.",
   },
   {
     icon: ShieldCheck,
-    title: "Avoid unsupported claims",
+    title: "No score guarantees",
     description:
-      "Results, testimonials, and credentials should only be published when they can be verified and represented accurately.",
+      "We promise current preparation and straight answers, not invented statistics, guaranteed scores or admission promises.",
+  },
+];
+
+const aboutFaqItems = [
+  {
+    question: "Who is LNAT Exam India for?",
+    answer:
+      "Indian students and parents preparing for the LNAT for UK law universities or JGLS, from first-time researchers to applicants who need a stronger score.",
+  },
+  {
+    question: "Do you offer online or in-person classes?",
+    answer:
+      "Both formats can be supported depending on the programme and location. Message us for the current online and in-person options.",
+  },
+  {
+    question: "How long are your LNAT programmes?",
+    answer:
+      "Programmes typically run several weeks and are scaled to the student’s test date. We build the timeline around the earliest university deadline.",
+  },
+  {
+    question: "What does a programme include?",
+    answer:
+      "Section A teaching and drills, Section B essay coaching with marked feedback, full-length mocks and mentor support, depending on the programme chosen.",
+  },
+  {
+    question: "How much does coaching cost?",
+    answer:
+      "Fees depend on the programme format and support level. Message us for current options; we recommend the most cost-effective fit, not the most expensive one.",
+  },
+  {
+    question: "Do you offer a free trial or consultation?",
+    answer:
+      "You can request an initial consultation to discuss your target universities, test date and preparation stage.",
+  },
+  {
+    question: "Who are your mentors?",
+    answer:
+      "Our mentors bring language assessment, exam preparation and admissions guidance experience. Full mentor details are shown on this page where credentials can be verified.",
+  },
+  {
+    question: "Do you guarantee a score or admission?",
+    answer:
+      "No. The LNAT is one part of a competitive application and outcomes depend on many factors. We promise honest, expert preparation, not guarantees.",
+  },
+  {
+    question: "What results have your students achieved?",
+    answer:
+      "We only publish outcomes that can be verified and shared with consent. We do not publish invented score improvements or admission claims.",
+  },
+  {
+    question: "Do you help with JGLS preparation?",
+    answer:
+      "Yes. Since JGLS uses the LNAT-UK Section A only, we offer focused India-route preparation as well as full UK-application coaching.",
+  },
+  {
+    question: "Do you help with the UCAS application?",
+    answer:
+      "Our core focus is the LNAT, with support around timelines, university shortlisting and application planning where relevant.",
+  },
+  {
+    question: "Can I prepare alongside school or boards?",
+    answer:
+      "Yes. Most students do; timed practice and mocks can be spread across the weeks before the test.",
+  },
+  {
+    question: "How do I enrol?",
+    answer:
+      "Message us on WhatsApp or use the enquiry form. We will discuss your target universities, timeline and the right programme.",
+  },
+  {
+    question: "What are your batch sizes?",
+    answer:
+      "Batch structure depends on the programme. We keep feedback-focused formats so students can receive individual correction and guidance.",
+  },
+  {
+    question: "Do you provide study materials and mocks?",
+    answer:
+      "Yes. Programmes can include practice sets, marked essays and full-length mocks. We also point students to official LNAT practice papers.",
+  },
+  {
+    question: "What payment options do you accept?",
+    answer:
+      "Payment options are shared during enrolment based on the current programme and location.",
+  },
+  {
+    question: "What is your refund or rescheduling policy?",
+    answer:
+      "Policy details are shared before enrolment so students and parents can make an informed decision.",
+  },
+  {
+    question: "Which universities do you prepare students for?",
+    answer:
+      "All nine UK LNAT universities, with Oxbridge focus where needed, plus JGLS in India.",
+  },
+  {
+    question: "How is your coaching different from generic tutoring?",
+    answer:
+      "We specialise in the LNAT and the universities that use it, with India-specific guidance rather than general tutoring with LNAT added as an extra subject.",
+  },
+  {
+    question: "How can I contact you?",
+    answer:
+      "Use the enquiry form or WhatsApp button on the website. We usually reply as soon as the admissions guidance team is available.",
   },
 ];
 
@@ -75,7 +179,7 @@ export default function AboutPage() {
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "Organization",
+        "@type": "EducationalOrganization",
         "@id": `${siteUrl}/#organization`,
         name: "LNAT Exam India",
         url: siteUrl,
@@ -94,6 +198,17 @@ export default function AboutPage() {
           "@id": `${siteUrl}/#organization`,
         },
       },
+      {
+        "@type": "FAQPage",
+        mainEntity: aboutFaqItems.map((faq) => ({
+          "@type": "Question",
+          name: faq.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: faq.answer,
+          },
+        })),
+      },
       createBreadcrumbSchema([
         { label: "Home", href: "/" },
         { label: "About", href: "/about" },
@@ -102,78 +217,13 @@ export default function AboutPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#F7F3EC]">
+    <main className="min-h-screen bg-white">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
-      <section className="relative overflow-hidden border-b border-black/[0.07] bg-[#F7F3EC] px-4 pb-12 pt-10 sm:px-6 md:pb-16 lg:px-8">
-        <DotGrid />
-        <div className="relative mx-auto grid max-w-[1280px] items-center gap-10 lg:grid-cols-[1.04fr_0.96fr] lg:gap-16">
-          <div className="text-center lg:text-left">
-            <Breadcrumbs
-              items={[
-                { label: "Home", href: "/" },
-                { label: "About", href: "/about" },
-              ]}
-              className="mb-7 justify-center lg:justify-start"
-            />
-            <SectionLabel text="About LNAT Exam India" />
-            <h1 className="text-[clamp(2rem,5vw,3.8rem)] font-extrabold leading-[1.08] tracking-tight text-[#0D1B3E]">
-              Clearer guidance for an{" "}
-              <span className="bg-gradient-to-r from-[#C9A84C] to-[#E8C96A] bg-clip-text text-transparent">
-                ambitious law journey
-              </span>
-            </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-[15px] leading-[1.85] text-slate-600 md:text-[16px] lg:mx-0">
-              LNAT Exam India is built to help Indian students understand the
-              LNAT and explore UK law admissions with greater clarity. We bring
-              exam guidance, university research, and practical resources into
-              one focused platform.
-            </p>
-
-            <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row lg:items-start">
-              <Link
-                href="/how-to-apply"
-                className="group inline-flex w-full items-center justify-center gap-2.5 rounded-xl bg-[#0D1B3E] px-6 py-3.5 text-[14px] font-bold text-white transition-colors hover:bg-[#162447] sm:w-auto"
-              >
-                Explore how to apply
-                <ArrowRight
-                  size={15}
-                  className="text-[#C9A84C] transition-transform duration-200 group-hover:translate-x-1"
-                />
-              </Link>
-              <Link
-                href="/free-resources"
-                className="inline-flex w-full items-center justify-center gap-2.5 rounded-xl border border-black/[0.07] bg-white px-6 py-3.5 text-[14px] font-bold text-[#0D1B3E] transition-colors hover:border-[#C9A84C]/45 sm:w-auto"
-              >
-                Browse free resources
-              </Link>
-            </div>
-          </div>
-
-          <div className="relative mx-auto w-full max-w-2xl lg:max-w-none">
-            <div className="absolute -bottom-4 -right-4 h-[88%] w-[88%] rounded-3xl bg-[#C9A84C]/15" />
-            <div className="relative overflow-hidden rounded-3xl border border-black/[0.07] bg-white shadow-[0_20px_54px_rgba(13,27,62,0.14)]">
-              <Image
-                src="/images/most-beautiful-campuses-oxford-university.webp"
-                alt="Historic university architecture representing UK law admissions"
-                width={1200}
-                height={900}
-                priority
-                className="h-[320px] w-full object-cover md:h-[460px] lg:h-[540px]"
-              />
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#0A1628]/80 to-transparent px-6 pb-6 pt-20">
-                <p className="max-w-md text-[13px] font-medium leading-relaxed text-white/85">
-                  Focused on the questions Indian students face while preparing
-                  for the LNAT and researching UK law universities.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <AboutHero />
 
       <section className="relative px-4 py-12 sm:px-6 md:py-16 lg:px-8">
         <DotGrid />
@@ -181,12 +231,14 @@ export default function AboutPage() {
           <div className="mx-auto max-w-3xl text-center">
             <SectionLabel text="Our Purpose" centered />
             <h2 className="text-[clamp(1.5rem,3vw,2.4rem)] font-extrabold leading-tight tracking-tight text-[#0D1B3E]">
-              A focused starting point for better decisions
+              Why we exist
             </h2>
             <p className="mt-4 text-[14px] leading-relaxed text-slate-500">
-              The LNAT is only one part of a larger admissions process. Our aim
-              is to make that process easier to understand without reducing it
-              to shortcuts or unsupported promises.
+              Indian test-prep is built around CLAT, LSAT-India and domestic
+              entrances; few coaches understand the LNAT or how UK universities
+              use it. Families researching law abroad often get generic advice
+              or material written for UK students. We exist to fix that with
+              rigorous, honest, India-specific LNAT preparation.
             </p>
           </div>
 
@@ -210,19 +262,20 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-
+      
+      <MentorIntroduction />
       <section className="border-y border-black/[0.07] bg-[#FDFBF7] px-4 py-12 sm:px-6 md:py-16 lg:px-8">
         <div className="mx-auto grid max-w-[1280px] gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:gap-16">
           <div>
             <SectionLabel text="Our Approach" />
             <h2 className="text-[clamp(1.5rem,3vw,2.4rem)] font-extrabold leading-tight tracking-tight text-[#0D1B3E]">
-              Structured guidance, not information overload
+              What we do
             </h2>
             <p className="mt-5 text-[14px] leading-[1.85] text-slate-600">
-              Students should be able to move from a broad question to the
-              right level of detail without getting lost in disconnected
-              articles. That is why this site is organised around topic hubs,
-              university guides, practical FAQs, and free resources.
+              We coach Section A reasoning and timing, teach and mark Section B
+              essays, run full-length mocks that reflect the real test
+              environment, and guide the whole journey across shortlisting,
+              UCAS/JGLS timelines, registration and deadlines.
             </p>
             <Link
               href="/topics"
@@ -240,15 +293,15 @@ export default function AboutPage() {
             <div className="flex items-center gap-3 border-b border-white/10 pb-5">
               <HeartHandshake size={20} className="text-[#C9A84C]" />
               <h3 className="text-[18px] font-bold text-white">
-                What students should expect
+                Our method & promise
               </h3>
             </div>
             <div className="mt-6 space-y-5">
               {[
-                "Plain-language explanations before deeper detail.",
-                "Clear links between LNAT preparation and university admissions.",
-                "Transparent references for facts that can change over time.",
-                "No fabricated outcomes, urgency, or unsupported guarantees.",
+                "A plan matched to target universities and deadlines.",
+                "Regular timed practice and full-length mocks.",
+                "Specific feedback on reasoning, timing and essay writing.",
+                "Expert, current preparation without guaranteed score or admission claims.",
               ].map((item) => (
                 <div key={item} className="flex gap-3">
                   <ShieldCheck
@@ -271,12 +324,12 @@ export default function AboutPage() {
           <div className="max-w-3xl">
             <SectionLabel text="Editorial Accuracy" />
             <h2 className="text-[clamp(1.5rem,3vw,2.4rem)] font-extrabold leading-tight tracking-tight text-[#0D1B3E]">
-              Trust depends on keeping important facts current
+              Current guidance matters because LNAT details can change
             </h2>
             <p className="mt-4 text-[14px] leading-relaxed text-slate-500">
-              Exam fees, dates, and university requirements can change. Our
-              content structure is designed to keep source references,
-              fact-check dates, and editorial review visible where they matter.
+              Exam fees, dates, test formats and university requirements can
+              change. We check time-sensitive claims against official LNAT and
+              university sources before relying on them in student guidance.
             </p>
           </div>
 
@@ -344,6 +397,13 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      <FAQSection
+        faqItems={aboutFaqItems}
+        eyebrow="Coaching FAQ"
+        heading="Frequently asked questions about"
+        highlightedHeading="our coaching"
+      />
 
       <AboutCTA />
     </main>

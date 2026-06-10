@@ -100,7 +100,7 @@ export default function ApplyHero() {
               >
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-[#C9A84C]/[0.08] border border-[#C9A84C]/20 px-3 py-1.5 text-[10px] font-bold tracking-[0.12em] uppercase text-[#C9A84C]">
                   <div className="w-1.5 h-1.5 rounded-full bg-[#C9A84C] animate-pulse" />
-                  Admissions Protocol
+                  India Application Guide
                 </span>
               </motion.div>
 
@@ -109,9 +109,10 @@ export default function ApplyHero() {
                 variants={fadeUp}
                 className="text-[clamp(1.9rem,4.8vw,3.8rem)] font-extrabold leading-tight tracking-tight text-[#0D1B3E] mb-5"
               >
-                Navigate Your <br className="hidden lg:block" />
+                How to Apply for UK & JGLS Law from India:{" "}
+                <br className="hidden lg:block" />
                 <span className="bg-linear-to-r from-[#C9A84C] to-[#E8C96A] bg-clip-text text-transparent">
-                  Application Journey.
+                  Full Guide
                 </span>
               </motion.h1>
 
@@ -120,9 +121,10 @@ export default function ApplyHero() {
                 variants={fadeUp}
                 className="text-[14px] text-slate-500 leading-relaxed mb-8 max-w-xl mx-auto lg:mx-0"
               >
-                A structured, step-by-step framework to demystify the UCAS
-                application, secure your LNAT examination date, and prepare for
-                the rigors of elite UK law admissions.
+                To apply for UK law from India: meet the academic requirements,
+                register and sit the LNAT, apply through UCAS with up to five
+                choices, submit your personal statement and reference, and
+                attend interviews where required. JGLS uses the LNAT directly.
               </motion.p>
 
               {/* CTA Buttons */}
@@ -150,7 +152,7 @@ export default function ApplyHero() {
                 {/* Secondary Action (Light Card Style) */}
                 <button className="group inline-flex w-full items-center justify-center gap-2.5 rounded-xl border border-black/[0.07] bg-white px-6 py-3.5 text-[14px] font-bold text-[#0D1B3E] shadow-sm transition-all duration-300 hover:bg-slate-50 hover:shadow-md sm:w-auto">
                   <Download size={14} className="text-[#C9A84C]" />
-                  Download Guide
+                  View Key Deadlines
                 </button>
               </motion.div>
 
@@ -160,8 +162,8 @@ export default function ApplyHero() {
                 className="flex items-center justify-center lg:justify-start gap-2 pt-6 border-t border-black/[0.05] text-[11px] font-semibold text-slate-400"
               >
                 <ShieldCheck size={14} className="text-[#C9A84C]" />
-                <span className="uppercase tracking-wider">
-                  Trusted UK Law Admissions Guidance
+                  <span className="uppercase tracking-wider">
+                  Oxford and Cambridge have the earliest deadline
                 </span>
               </motion.div>
             </motion.div>

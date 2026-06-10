@@ -120,6 +120,7 @@ export default function ResourcesClient({ resources = [] }: ResourcesClientProps
 
   return (
     <section
+      id="resource-library"
       ref={ref}
       className="relative w-full overflow-hidden bg-[#F7F3EC] px-4 py-8 sm:px-6 md:py-10 lg:px-8"
     >

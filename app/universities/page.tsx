@@ -10,26 +10,111 @@ import NextStepCTA from "@/components/universities/NextStepCTA";
 import { createBreadcrumbSchema } from "@/lib/breadcrumbSchema";
 
 export const metadata = {
-  title: "LNAT Universities Hub | LNAT Exam India",
+  title: "LNAT Universities 2027: Full List of UK Unis + JGLS (India)",
   description:
-    "Explore LNAT universities through a premium topic hub with rankings, city context, admissions fit, and detailed university profiles.",
+    "Every university that requires the LNAT — Oxford, Cambridge, UCL, LSE, KCL, Durham, Bristol, Glasgow, SOAS and JGLS — with scores and guides.",
 };
 
 const faqItems = [
   {
-    question: "How should I use this page to shortlist universities?",
+    question: "Which universities require the LNAT?",
     answer:
-      "Start by comparing cities, law-school reputation, LNAT requirements, and the kind of student experience you want. Then open the universities that feel strongest for your shortlist.",
+      "Nine UK universities: Oxford, Cambridge, UCL, LSE, King's College London, Durham, Bristol, Glasgow and SOAS. Internationally, IE University (Spain), NUS and SUSS (Singapore) and Jindal Global Law School (India) also require it.",
   },
   {
-    question: "What should I compare before opening an individual university guide?",
+    question: "How many universities use the LNAT?",
     answer:
-      "Start with country, city, LNAT requirement, law-school reputation, teaching environment, and your likely admissions competitiveness. Then open the full profile for detail.",
+      "Currently nine in the UK, plus a handful internationally. The list changes occasionally as universities join or leave the consortium, so confirm for your entry year.",
   },
   {
-    question: "Should I use this hub only for UK universities?",
+    question: "Is the LNAT only for UK universities?",
     answer:
-      "No. The hub can include any university relevant to LNAT-driven law admissions, but it is especially useful for comparing the strongest LNAT-linked options in one place.",
+      "No. Beyond the nine UK universities, IE University in Spain, NUS and SUSS in Singapore, and JGLS in India use the LNAT. JGLS is the only Indian member of the LNAT Consortium.",
+  },
+  {
+    question: "Do all Russell Group universities require the LNAT?",
+    answer:
+      "No. Only some Russell Group law schools use the LNAT. Many top UK law courses do not require it at all, so always check each university individually.",
+  },
+  {
+    question: "Which universities stopped using the LNAT?",
+    answer:
+      "The University of Nottingham stopped requiring the LNAT from 2022 entry. Requirements can change, so verify the current list on the official LNAT website before applying.",
+  },
+  {
+    question: "Does Oxford require the LNAT?",
+    answer:
+      "Yes, for the BA in Jurisprudence and Law with Law Studies in Europe, including overseas and Indian applicants. Oxford uses both Section A and the Section B essay.",
+  },
+  {
+    question: "Does Cambridge require the LNAT?",
+    answer:
+      "Yes. Cambridge introduced the LNAT for 2022 entry, replacing its earlier Cambridge Law Test, and uses both sections in assessment.",
+  },
+  {
+    question: "Does UCL require the LNAT?",
+    answer:
+      "Yes. UCL requires the LNAT and applies a benchmark score approach, considering it alongside your academic record and personal statement.",
+  },
+  {
+    question: "Does LSE require the LNAT?",
+    answer:
+      "Yes. LSE requires the LNAT and relies mainly on the Section A multiple-choice score; it typically asks applicants to sit the test earlier than some other universities.",
+  },
+  {
+    question: "Does King's College London require the LNAT?",
+    answer:
+      "Yes. KCL requires the LNAT for its law programmes and, like other London universities, asks applicants to sit it relatively early in the cycle.",
+  },
+  {
+    question: "Which universities use the Section B essay?",
+    answer:
+      "Oxford reads and centrally marks the essay; Bristol weights it at around 40%. Several others consider it variably, while some rely mainly on Section A. Check each university for your year.",
+  },
+  {
+    question: "What LNAT score do top universities want?",
+    answer:
+      "There is no fixed cut-off anywhere. A score of 25+ is broadly competitive; Oxford and Cambridge see shortlisted or offer averages near 29-31. Set your target against your specific universities.",
+  },
+  {
+    question: "Which LNAT university is easiest to get into?",
+    answer:
+      "No university publishes a cut-off, so none is officially easiest. Competitiveness depends on the course, the year and the whole application, not the LNAT alone.",
+  },
+  {
+    question: "Can I use one LNAT score for several universities?",
+    answer:
+      "Yes. You sit the LNAT once per cycle and your results are sent automatically to all the LNAT universities among your UCAS choices. You do not take it separately for each.",
+  },
+  {
+    question: "Do universities see which other universities I applied to?",
+    answer:
+      "No. Universities receive your LNAT results, but UCAS does not show them the other course choices on your application, so each assesses you independently.",
+  },
+  {
+    question: "How long is an LNAT score valid?",
+    answer:
+      "Your LNAT result is used for the admissions cycle in which you take it. If you apply again in a later cycle, you generally need to sit the test again. Confirm the current rule before relying on an old score.",
+  },
+  {
+    question: "Do Scottish universities require the LNAT?",
+    answer:
+      "The University of Glasgow requires the LNAT for its main law programmes. Other Scottish universities may not, so check each one's admissions page.",
+  },
+  {
+    question: "Which university weights the LNAT most heavily?",
+    answer:
+      "Bristol has stated a 60/40 split between Section A and the essay, with the LNAT forming a large part of the application. UCL uses a benchmark. Weighting varies, so research your targets.",
+  },
+  {
+    question: "Does JGLS in India require the LNAT?",
+    answer:
+      "Yes. JGLS has made the LNAT-UK its mandatory entrance test for its integrated law programmes and assesses only Section A. It is the first Indian law school to adopt the LNAT.",
+  },
+  {
+    question: "How do I decide which LNAT universities to target?",
+    answer:
+      "Match your academic profile, target score and essay strength to how each university uses the test, then balance ambitious and realistic choices across your five UCAS slots. We can help you build that shortlist.",
   },
 ];
 
@@ -64,17 +149,21 @@ export default async function UniversitiesArchivePage() {
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
-      {
-        "@type": "CollectionPage",
-        name: "LNAT Universities Hub",
-        description:
-          "A topic hub for exploring LNAT universities, comparing fit, and moving into detailed university guides.",
-        url: "https://www.lnatexamindia.com/universities",
-      },
       createBreadcrumbSchema([
         { label: "Home", href: "/" },
         { label: "Universities", href: "/universities" },
       ]),
+      {
+        "@type": "FAQPage",
+        mainEntity: faqItems.map((faq) => ({
+          "@type": "Question",
+          name: faq.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: faq.answer,
+          },
+        })),
+      },
       {
         "@type": "ItemList",
         name: "Published LNAT University Profiles",
@@ -171,6 +260,8 @@ export default async function UniversitiesArchivePage() {
           </div>
         </div>
       </section>
+
+      <ArchiveClient universities={universities} />
 
       {spotlightUniversities.length > 0 ? (
         <section className="relative w-full overflow-hidden bg-white px-4 py-8 sm:px-6 md:py-10 lg:px-8">
@@ -278,17 +369,24 @@ export default async function UniversitiesArchivePage() {
             <div className="mb-4 flex items-center justify-center gap-3 md:justify-start">
               <div className="h-px w-6 bg-[#C9A84C]/40 md:hidden" />
               <p className="text-center text-[10px] font-bold uppercase tracking-[0.18em] text-[#C9A84C] md:text-start">
-                What To Compare
+                Scores And Shortlisting
               </p>
               <div className="h-px w-8 bg-[#C9A84C]/40" />
             </div>
 
             <h2 className="text-center text-[clamp(1.5rem,3vw,2.4rem)] font-extrabold leading-tight tracking-tight text-[#0D1B3E] md:text-start max-w-3xl">
-              The questions that matter when choosing a{" "}
+              What score do these{" "}
               <span className="bg-gradient-to-r from-[#C9A84C] to-[#E8C96A] bg-clip-text text-transparent">
-                university
+                universities expect?
               </span>
             </h2>
+
+            <p className="mx-auto mt-4 max-w-3xl text-center text-[14px] leading-relaxed text-slate-500 md:mx-0 md:text-start">
+              There is no universal pass mark. A Section A score of 25+ out of
+              42 is broadly competitive; the most selective, Oxford and
+              Cambridge, see shortlisted and offer-holder averages near 29-31.
+              Treat all figures as indicative, not official cut-offs.
+            </p>
           </div>
 
           {/* Cards Grid */}
@@ -296,27 +394,27 @@ export default async function UniversitiesArchivePage() {
             {[
               {
                 icon: Globe2,
-                title: "Admissions Fit",
+                title: "Oxbridge",
                 description:
-                  "Compare LNAT requirement, deadlines, selectivity, and how competitive a university may feel for your profile.",
+                  "Aim for a top Section A score and a strong essay. Oxford and Cambridge also sit inside the earliest UCAS deadline window in mid-October.",
               },
               {
                 icon: GraduationCap,
-                title: "Law-School Positioning",
+                title: "London Universities",
                 description:
-                  "Use rankings and reputation as a starting point, then go deeper into the full university guide.",
+                  "UCL, LSE and King's College London tend to weight Section A heavily and often expect applicants to test earlier in the cycle.",
               },
               {
                 icon: Compass,
-                title: "City And Student Life",
+                title: "Durham, Bristol, Glasgow And SOAS",
                 description:
-                  "The right law school also has to match the city you will live in and the kind of student life you want.",
+                  "These universities assess LNAT performance alongside grades, personal statement strength and the wider application context.",
               },
               {
                 icon: CheckCircle2,
-                title: "Next-Step Research",
+                title: "India: JGLS",
                 description:
-                  "Once a university looks promising, open its full guide and compare admissions, city life, and outcomes in more detail.",
+                  "JGLS assesses only Section A, so Indian applicants can prioritise multiple-choice preparation instead of essay-heavy LNAT strategy.",
               },
             ].map((item) => (
               <div
@@ -341,12 +439,21 @@ export default async function UniversitiesArchivePage() {
               </div>
             ))}
           </div>
+
+          <div className="mt-8 rounded-2xl border border-[#C9A84C]/20 bg-[#F7F3EC] p-5 text-center shadow-[0_2px_10px_rgba(0,0,0,0.04)] md:p-6 md:text-start">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#C9A84C]">
+              Next Step
+            </p>
+            <p className="mt-3 text-[14px] leading-relaxed text-slate-600">
+              Explore each university&apos;s guide above for its requirement,
+              target score, deadlines and how it assesses applicants, written
+              specifically for Indian students.
+            </p>
+          </div>
         </div>
       </section>
 
-      <ArchiveClient universities={universities} />
-
-      <FAQSection faqItems={faqItems}/>
+      <FAQSection faqItems={faqItems} />
 
       <NextStepCTA />
     </main>

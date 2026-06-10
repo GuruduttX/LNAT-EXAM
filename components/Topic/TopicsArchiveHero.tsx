@@ -92,30 +92,30 @@ export default function TopicsArchiveHero({
             </div>
 
             <h1 className="max-w-4xl text-[clamp(1.9rem,4.8vw,3.8rem)] font-extrabold leading-[1.08] tracking-tight text-[#0D1B3E]">
-              Explore the major LNAT{" "}
+              LNAT Topics: Everything About the{" "}
               <span className="bg-gradient-to-r from-[#C9A84C] to-[#E8C96A] bg-clip-text text-transparent">
-                content hubs
+                Exam, in One Place
               </span>
             </h1>
 
             <p className="mt-4 max-w-2xl text-[14px] leading-relaxed text-slate-500">
-              Start with a broad LNAT topic, then move into focused guides,
-              university profiles, and practical admissions answers without
-              losing the bigger picture.
+              This hub maps every LNAT topic: the exam format and sections,
+              scoring, registration and deadlines, the universities that use
+              it, the India/JGLS route, and how to prepare. Each path links to a
+              complete guide.
             </p>
 
             <div className="mt-6 max-w-3xl rounded-2xl border border-black/[0.07] bg-white shadow-sm">
               <div className="flex items-center gap-2 border-b border-black/[0.05] px-5 py-3">
                 <div className="h-4 w-[3px] rounded-full bg-[#0D1B3E]" />
                 <h2 className="text-[13px] font-bold text-[#0D1B3E]">
-                  What is an LNAT topic hub?
+                  Quick answer
                 </h2>
               </div>
               <p className="px-5 py-4 text-[13px] leading-relaxed text-slate-500">
-                A topic hub is a structured starting point for one broad area of
-                LNAT preparation or UK law admissions. Each hub connects the
-                most relevant explanations, subtopics, and university guides in
-                one research path.
+                Use this page to move from overview to detail: format, Section
+                A, Section B, scoring, registration, universities, India/JGLS
+                and preparation are organised into linked topic paths.
               </p>
             </div>
           </motion.div>
@@ -131,11 +131,11 @@ export default function TopicsArchiveHero({
                 Browse With Context
               </p>
               <h2 className="mt-3 text-xl font-bold leading-snug text-white">
-                Build a focused reading path before going deeper.
+                Build a focused reading path before you start preparation.
               </h2>
               <p className="mt-3 text-[13px] leading-relaxed text-white/50">
-                Use the archive to choose your starting theme, then follow the
-                connected content inside each hub.
+                Pick the area you need now, then use the connected guide pages
+                to go deeper without losing the wider admissions context.
               </p>
             </div>
 

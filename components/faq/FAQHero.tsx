@@ -23,53 +23,53 @@ import Breadcrumbs from "@/components/shared/Breadcrumbs";
 const LNAT_FAQS = [
   {
     id: 1,
-    q: "Is the LNAT required for all UK law schools?",
-    a: "No, but it is mandatory for the most prestigious 'Russell Group' universities, including Oxford, Cambridge, UCL, LSE, and King's College London. If you are targeting top-tier UK law schools from India, taking the LNAT is non-negotiable.",
+    q: "What is the LNAT?",
+    a: "The LNAT is a 2h15m computer-based admissions test for undergraduate law. It has 42 multiple-choice questions and one essay, and it tests reasoning and writing rather than legal knowledge.",
   },
   {
     id: 2,
-    q: "Can I use my CLAT preparation for the LNAT?",
-    a: "While both test reading comprehension and logical reasoning, they are very different. CLAT is heavily knowledge-based (Current Affairs, Legal Reasoning), whereas the LNAT assumes zero prior legal or general knowledge and focuses entirely on critical thinking, deduction, and essay writing.",
+    q: "What is the full form of LNAT?",
+    a: "LNAT stands for Law National Aptitude Test, also called the National Admissions Test for Law.",
   },
   {
     id: 3,
-    q: "How much does the LNAT cost for students testing in India?",
-    a: "For candidates taking the test at an international test centre (outside the UK/EU), the LNAT costs £120. Payment must be made online via major credit/debit cards during registration.",
+    q: "What is the LNAT exam pattern?",
+    a: "Section A has 42 multiple-choice questions on 12 passages in 95 minutes. Section B is one essay from three prompts in 40 minutes.",
   },
   {
     id: 4,
-    q: "Where are the LNAT test centres located in India?",
-    a: "The LNAT is administered through Pearson VUE. Test centres are typically available in major Indian metropolitan cities including New Delhi, Mumbai, Bangalore, Chennai, and Hyderabad. You can select your preferred centre during registration.",
+    q: "What is a good LNAT score?",
+    a: "There is no universal pass mark. A score of 25+ is broadly competitive, while the most selective universities often see higher averages.",
   },
   {
     id: 5,
-    q: "Does my Class 12 board percentage matter if I take the LNAT?",
-    a: "Absolutely. UK universities look at your UCAS application holistically. Your Class 12 board scores (CBSE/ISC/State) or IB/A-Level predicted grades must meet the university's minimum entry requirements. The LNAT acts as a differentiator among applicants who all have top grades.",
+    q: "Which universities require the LNAT?",
+    a: "Nine UK universities require it: Oxford, Cambridge, UCL, LSE, KCL, Durham, Bristol, Glasgow and SOAS, with additional international universities including JGLS.",
   },
   {
     id: 6,
-    q: "When should I book the LNAT for Oxford or Cambridge?",
-    a: "Oxford and Cambridge have an earlier UCAS deadline (typically October 15th). You must register for and sit the LNAT *before* this deadline, usually by mid-October. Booking opens in August, and Indian test slots fill up very quickly.",
+    q: "Is the LNAT required in India?",
+    a: "Yes. JGLS requires LNAT-UK as its mandatory entrance test, and Indian students applying to UK LNAT universities also need it.",
   },
   {
     id: 7,
-    q: "Is the essay section (Section B) graded by the computer?",
-    a: "No. Section A (multiple choice) is computer-marked out of 42. Section B (the essay) is not marked by the LNAT consortium at all. Instead, it is sent directly to the universities you apply to, where admissions tutors read it to assess your ability to argue logically and write persuasively.",
+    q: "When does registration open?",
+    a: "Registration opens on 1 August for entry the following year, and testing runs from 1 September to 31 July.",
   },
   {
     id: 8,
-    q: "Do UK law schools prefer CBSE, ISC, or IB boards?",
-    a: "Top UK universities accept CBSE, ISC, and IB equally. However, they have strict equivalent requirements (e.g., 90-95% overall in CBSE/ISC, or 38-40 points in IB). The LNAT levels the playing field regardless of which board you studied under.",
+    q: "Can I retake the LNAT?",
+    a: "No. You get one sitting per admissions cycle, and only the first attempt counts.",
   },
   {
     id: 9,
-    q: "Are there scholarships available for Indian law students in the UK?",
-    a: "Yes, though they are highly competitive. Universities like UCL, KCL, and Oxford offer specific international scholarships (like the Felix Scholarship). A high LNAT score can indirectly strengthen your application for merit-based financial aid.",
+    q: "How long should I prepare?",
+    a: "Usually 6-12 weeks of timed practice, with an earlier start recommended for Oxbridge applicants.",
   },
   {
     id: 10,
-    q: "What is considered a 'good' LNAT score for an international applicant?",
-    a: "The average global LNAT score usually hovers around 22/42. To be competitive for elite universities like Oxford or UCL, you should aim for a score of 27 or higher. However, scores are assessed alongside your personal statement, essay, and academic grades.",
+    q: "Do you offer LNAT coaching?",
+    a: "Yes. We offer online and in-person LNAT coaching with mentor feedback and full mocks.",
   },
 ];
 
@@ -157,7 +157,7 @@ export default function FAQHero() {
               >
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-[#0D1B3E]/12 bg-[#0D1B3E]/[0.06] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-[#0D1B3E]">
                   <Globe2 size={12} className="text-[#C9A84C]" />
-                  India Application Helpdesk
+                  Complete LNAT Answer Hub
                 </span>
               </motion.div>
 
@@ -166,9 +166,10 @@ export default function FAQHero() {
                 variants={fadeUp}
                 className="text-center text-[clamp(1.9rem,4.5vw,3.5rem)] font-extrabold leading-tight tracking-tight text-[#0D1B3E] lg:text-start"
               >
-                Your Pathway to UK Law, <br className="hidden lg:block" />
+                LNAT FAQ: The Complete Answer Hub{" "}
+                <br className="hidden lg:block" />
                 <span className="bg-gradient-to-r from-[#C9A84C] to-[#E8C96A] bg-clip-text text-transparent">
-                  Demystified.
+                  for Indian Students
                 </span>
               </motion.h1>
 
@@ -177,9 +178,9 @@ export default function FAQHero() {
                 variants={fadeUp}
                 className="mx-auto mt-5 max-w-xl text-center text-[14px] leading-relaxed text-slate-500 lg:mx-0 lg:text-start"
               >
-                From test centre logistics in New Delhi to balancing CBSE boards
-                with LNAT prep—find exact answers tailored for Indian students
-                targeting Oxford, Cambridge, and UCL.
+                The complete LNAT FAQ for Indian students, grouped by theme and
+                updated each cycle. If your question is not here, message us and
+                we will answer it.
               </motion.p>
 
               {/* CTA Buttons */}

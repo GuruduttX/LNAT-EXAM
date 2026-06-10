@@ -13,43 +13,43 @@ import {
 const TIMELINE_STEPS = [
   {
     numeral: "I",
-    title: "The UCAS Application",
-    subtitle: "University Application Process",
+    title: "Choose your universities",
+    subtitle: "Shortlist LNAT universities",
     icon: Landmark,
     content:
-      "Before sitting the LNAT, you must begin your primary university application via UCAS. Ensure you note the specific UCAS deadlines for your target institutions (typically October 15th for Oxbridge, January 31st for others). You will need your UCAS Personal Identifier number to register for the LNAT.",
+      "Choose your universities from the nine UK LNAT universities, and include JGLS if you are applying in India. Your shortlist determines your LNAT timing, essay strategy and deadline pressure.",
   },
   {
     numeral: "II",
-    title: "Account Creation & Registration",
-    subtitle: "Step-by-Step LNAT Registration",
+    title: "Check academic requirements",
+    subtitle: "Grades and equivalency",
     icon: UserPlus,
     content:
-      "Navigate to the official Pearson VUE LNAT portal. You must create an online account using your exact legal name as it appears on your passport. During this phase, you will link your LNAT profile to the specific universities you are applying to.",
+      "Check academic requirements for each course, including A-levels, IB or accepted equivalents. Oxford, for example, lists A-levels AAA or IB 38 with 6,6,6 at Higher Level; Indian-board equivalency must be confirmed university by university.",
   },
   {
     numeral: "III",
-    title: "Booking Your Examination",
-    subtitle: "The Booking Process",
+    title: "Register and sit the LNAT",
+    subtitle: "Pearson VUE booking",
     icon: CalendarCheck,
     content:
-      "Once registered, select your preferred Pearson VUE test center (available in major Indian cities like Delhi, Mumbai, Bangalore). Testing slots in major international hubs fill rapidly. We strongly advise booking your slot at least two months prior to your university's specific deadline.",
+      "Register and book through Pearson VUE, pay the international fee, choose your test centre and sit the LNAT once in the cycle. Oxford and Cambridge applicants must finish earliest.",
   },
   {
     numeral: "IV",
-    title: "Before The Test",
-    subtitle: "Preparation & Logistics",
+    title: "Apply through UCAS",
+    subtitle: "One application, five choices",
     icon: Laptop,
     content:
-      "In the weeks prior, familiarize yourself with the desktop interface using the official practice simulator. On the day before, confirm your test center location in India, ensure your primary ID (passport) is ready, and print your booking confirmation.",
+      "Submit one UCAS application with up to five choices, a personal statement and a reference. You cannot apply to both Oxford and Cambridge in the same cycle.",
   },
   {
     numeral: "V",
-    title: "After The Test",
-    subtitle: "What Happens Next",
+    title: "Interview and respond to offers",
+    subtitle: "Final admissions stage",
     icon: MailCheck,
     content:
-      "You will not receive your results immediately. Your scores and essay are sent directly to your selected universities. If you tested before January 26th, your personal results will be emailed to you by mid-February. The universities will use these scores alongside your UCAS application to make decisions.",
+      "Attend interviews if shortlisted, especially for Oxbridge, then respond to conditional or unconditional offers through UCAS. JGLS has its own direct admissions process in India.",
   },
 ];
 
@@ -90,14 +90,14 @@ export default function ApplyTimeline() {
             <div className="h-px w-6 bg-[#C9A84C]/40" />
           </div>
           <h2 className="text-[clamp(1.5rem,4vw,2.8rem)] font-extrabold leading-tight tracking-tight text-[#0D1B3E] max-w-2xl">
-            How to Apply for the{" "}
+            The application steps for{" "}
             <span className="bg-gradient-to-r from-[#C9A84C] to-[#E8C96A] bg-clip-text text-transparent">
-              LNAT in India
+              UK & JGLS law
             </span>
           </h2>
           <p className="mt-4 max-w-xl text-[14px] leading-relaxed text-slate-500">
-            A comprehensive roadmap from starting your UCAS application to
-            receiving your final LNAT scores.
+            A practical roadmap from shortlisting and academic requirements to
+            LNAT booking, UCAS submission, interviews and offers.
           </p>
         </motion.div>
 

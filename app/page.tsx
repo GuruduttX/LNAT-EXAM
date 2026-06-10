@@ -1,18 +1,74 @@
+import dynamic from "next/dynamic";
+import type { Metadata } from "next";
+
 import HomeHero from "@/components/Home/Homehero";
-import TrustedUniversities from "@/components/Home/Trusteduniversities";
-import LNATOverview from "@/components/Home/LNATOverview";
-import ExamPattern from "@/components/Home/ExamPattern/ExamPattern";
-import LNATTimeline from "@/components/Home/TimeLine/LNATTimeline";
-import FeaturedUniversities from "@/components/Home/FeaturedUniversities/FeaturedUniversities";
-import WhyChooseUs from "@/components/Home/WhyChooseUs";
-import FAQPreview from "@/components/Home/FAQPreview";
-import FinalCTA from "@/components/Home/FinalCTA";
 import type { FeaturedUniversityCardData } from "@/components/Home/FeaturedUniversities/UniversityGrid";
+import type { HomeTopicHubCardData } from "@/components/Home/TopicHubsPreview";
+import type { ICategorySubtopic } from "@/types/backend.types";
 import { getFeaturedUniversities } from "@/services/universityService";
+import { getPublishedCategoriesBySlugs } from "@/services/categoryService";
 import { createHomePageSchema } from "@/lib/homePageSchema";
+import { getSiteUrl } from "@/lib/siteUrl";
+
+const TrustedUniversities = dynamic(
+  () => import("@/components/Home/Trusteduniversities"),
+);
+const LNATOverview = dynamic(() => import("@/components/Home/LNATOverview"));
+const ExamPattern = dynamic(
+  () => import("@/components/Home/ExamPattern/ExamPattern"),
+);
+const LNATTimeline = dynamic(
+  () => import("@/components/Home/TimeLine/LNATTimeline"),
+);
+const FeaturedUniversities = dynamic(
+  () => import("@/components/Home/FeaturedUniversities/FeaturedUniversities"),
+);
+const TopicHubsPreview = dynamic(
+  () => import("@/components/Home/TopicHubsPreview"),
+);
+const WhyChooseUs = dynamic(() => import("@/components/Home/WhyChooseUs"));
+const FAQPreview = dynamic(() => import("@/components/Home/FAQPreview"));
+const FinalCTA = dynamic(() => import("@/components/Home/FinalCTA"));
+
+const title = "LNAT Exam India | Premium Preparation & Admissions Guide";
+const description =
+  "Comprehensive LNAT guidance for Indian students exploring UK law admissions, university requirements, exam preparation, deadlines, and application strategy.";
+
+// Change these slugs whenever you want different topic hubs on the home page.
+const homeTopicHubSlugs = [
+  "lnat-guide",
+  "lnat-preparation",
+  "uk-law-universities",
+  "law-admissions",
+];
+
+export const revalidate = 3600;
+
+export const metadata: Metadata = {
+  title,
+  description,
+  alternates: {
+    canonical: getSiteUrl(),
+  },
+  openGraph: {
+    type: "website",
+    url: getSiteUrl(),
+    title,
+    description,
+    siteName: "LNAT Exam India",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+  },
+};
 
 export default async function Home() {
-  const universityDocuments = await getFeaturedUniversities(6);
+  const [universityDocuments, topicHubDocuments] = await Promise.all([
+    getFeaturedUniversities(6),
+    getPublishedCategoriesBySlugs(homeTopicHubSlugs),
+  ]);
   const universities = universityDocuments.map(
     (university): FeaturedUniversityCardData => ({
       id: university._id.toString(),
@@ -35,6 +91,32 @@ export default async function Home() {
       lnatRequired: university.lnatRequirement === "Required",
     }),
   );
+  const topicHubs = topicHubDocuments.slice(0, 4).map(
+    (category): HomeTopicHubCardData => {
+      const guideSlugs = new Set([
+        ...(category.featuredPostSlugs || []),
+        ...(category.subtopics || []).flatMap(
+          (subtopic: ICategorySubtopic) => subtopic.postSlugs || [],
+        ),
+      ]);
+      const universitySlugs = new Set([
+        ...(category.featuredUniversitySlugs || []),
+        ...(category.subtopics || []).flatMap(
+          (subtopic: ICategorySubtopic) => subtopic.universitySlugs || [],
+        ),
+      ]);
+
+      return {
+        slug: category.slug,
+        name: category.name,
+        primaryKeyword: category.primaryKeyword,
+        topicDefinition: category.topicDefinition,
+        subtopicCount: category.subtopics?.length || 0,
+        guideCount: guideSlugs.size,
+        universityCount: universitySlugs.size,
+      };
+    },
+  );
   const structuredData = createHomePageSchema(universities);
 
   return (
@@ -49,6 +131,7 @@ export default async function Home() {
       <ExamPattern />
       <LNATTimeline />
       <FeaturedUniversities universities={universities} />
+      <TopicHubsPreview topicHubs={topicHubs} />
       <WhyChooseUs />
       <FAQPreview />
       <FinalCTA />

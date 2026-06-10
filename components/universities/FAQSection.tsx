@@ -16,6 +16,9 @@ interface FAQItem {
 
 interface FAQSectionProps {
   faqItems?: FAQItem[];
+  eyebrow?: string;
+  heading?: string;
+  highlightedHeading?: string;
 }
 
 const fadeUp: Variants = {
@@ -53,7 +56,12 @@ const modalContent: Variants = {
   },
 };
 
-export default function FAQSection({ faqItems }: FAQSectionProps) {
+export default function FAQSection({
+  faqItems,
+  eyebrow = "FAQ",
+  heading = "Common questions when comparing",
+  highlightedHeading = "LNAT universities",
+}: FAQSectionProps) {
   const [activeFaq, setActiveFaq] = useState<FAQItem | null>(null);
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, margin: "-8% 0px" });
@@ -94,7 +102,7 @@ export default function FAQSection({ faqItems }: FAQSectionProps) {
           >
             <div className="h-px w-6 bg-[#C9A84C]/40 md:hidden" />
             <p className="text-center text-[10px] font-bold uppercase tracking-[0.18em] text-[#C9A84C] md:text-start">
-              FAQ
+              {eyebrow}
             </p>
             <div className="h-px w-8 bg-[#C9A84C]/40" />
           </motion.div>
@@ -103,9 +111,9 @@ export default function FAQSection({ faqItems }: FAQSectionProps) {
             variants={fadeUp}
             className="text-center text-[clamp(1.5rem,3vw,2.4rem)] font-extrabold leading-tight tracking-tight text-[#0D1B3E] md:text-start max-w-3xl"
           >
-            Common questions when comparing{" "}
+            {heading}{" "}
             <span className="bg-gradient-to-r from-[#C9A84C] to-[#E8C96A] bg-clip-text text-transparent">
-              LNAT universities
+              {highlightedHeading}
             </span>
           </motion.h2>
         </motion.div>

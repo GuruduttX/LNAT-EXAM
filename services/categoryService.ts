@@ -14,6 +14,30 @@ export async function getPublishedCategories() {
     .lean();
 }
 
+export async function getPublishedCategoriesBySlugs(slugs: string[]) {
+  await connectDB();
+
+  const requestedSlugs = slugs.map((slug) => slug.trim()).filter(Boolean);
+  if (!requestedSlugs.length) {
+    return [];
+  }
+
+  const categories = await Category.find({
+    status: "published",
+    slug: { $in: requestedSlugs },
+  }).lean();
+
+  const slugOrder = new Map(
+    requestedSlugs.map((slug, index) => [slug, index]),
+  );
+
+  return categories.sort(
+    (a, b) =>
+      (slugOrder.get(a.slug) ?? Number.MAX_SAFE_INTEGER) -
+      (slugOrder.get(b.slug) ?? Number.MAX_SAFE_INTEGER),
+  );
+}
+
 export async function getPublishedCategorySlugs() {
   await connectDB();
   const categories = await Category.find({ status: "published" })

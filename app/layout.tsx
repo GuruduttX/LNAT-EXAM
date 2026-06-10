@@ -20,6 +20,16 @@ export const metadata: Metadata = {
   title: "LNAT Exam India | Premium Preparation & Admissions Guide",
   description:
     "Comprehensive guide for Indian students taking the LNAT. Learn about top UK law universities, exam patterns, deadlines, and expert preparation strategies.",
+  icons: {
+    icon: [
+      {
+        url: "/images/LnatLogo.webp",
+        type: "image/webp",
+      },
+    ],
+    shortcut: "/images/LnatLogo.webp",
+    apple: "/images/LnatLogo.webp",
+  },
   robots: {
     index: true,
     follow: true

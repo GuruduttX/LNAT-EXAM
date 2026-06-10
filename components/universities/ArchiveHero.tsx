@@ -106,9 +106,9 @@ export default function ArchiveHero({
               className="font-extrabold text-[#0D1B3E] tracking-tight leading-tight mb-6
                 text-[clamp(1.9rem,4.8vw,3.8rem)]"
             >
-              Explore Global Law Schools. <br />
+              LNAT Universities: <br />
               <span className="bg-gradient-to-r from-[#C9A84C] to-[#E8C96A] bg-clip-text text-transparent">
-                Find Your Perfect Fit.
+                The Complete List for 2027 Entry
               </span>
             </motion.h1>
 
@@ -128,11 +128,11 @@ export default function ArchiveHero({
               </div>
               <div className="p-5">
                 <p className="text-[14px] text-slate-500 leading-relaxed">
-                  The LNAT is required by premier undergraduate law programs
-                  worldwide to assess analytical and logical reasoning skills.
-                  This directory helps you navigate these institutions, compare
-                  their admissions criteria, and shortlist law schools based on
-                  your academic profile.
+                  Nine UK universities require the LNAT for undergraduate law —
+                  Oxford, Cambridge, UCL, LSE, King's College London, Durham,
+                  Bristol, Glasgow and SOAS. Internationally, IE University
+                  (Spain), NUS and SUSS (Singapore) and, in India, Jindal Global
+                  Law School (JGLS) also use it.
                 </p>
               </div>
             </motion.div>

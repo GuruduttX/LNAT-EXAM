@@ -38,6 +38,11 @@ const blogCategories = [
   "Studying Law in the UK",
 ];
 
+const LOCKED_BLOG_AUTHOR = {
+  name: "Mr. Alastair Murray",
+  role: "LNAT Mentor",
+} as const;
+
 type FAQItem = { question: string; answer: string };
 
 interface BlogFormProps {
@@ -67,10 +72,6 @@ function createInitialState(initialData?: Partial<IBlog> & { _id?: string }) {
     category: initialData?.category || "",
     primaryCategorySlug: initialData?.primaryCategorySlug || "",
     slug: initialData?.slug || "",
-    authorName: initialData?.author?.name || "Editorial Team",
-    authorRole: initialData?.author?.role || "",
-    reviewedByName: initialData?.reviewedBy?.name || "",
-    reviewedByRole: initialData?.reviewedBy?.role || "",
     image: initialData?.image || initialData?.featuredImage || "",
     alt: initialData?.alt || initialData?.heroImage?.alt || "",
     excerpt: initialData?.excerpt || "",
@@ -189,16 +190,9 @@ export default function BlogForm({ mode, initialData }: BlogFormProps) {
       primaryCategorySlug: form.primaryCategorySlug || undefined,
       slug: form.slug,
       author: {
-        name: form.authorName,
-        role: form.authorRole || undefined,
+        name: LOCKED_BLOG_AUTHOR.name,
+        role: LOCKED_BLOG_AUTHOR.role,
       },
-      reviewedBy:
-        form.reviewedByName
-          ? {
-              name: form.reviewedByName,
-              role: form.reviewedByRole || undefined,
-            }
-          : undefined,
       excerpt: form.excerpt,
       tldr: form.tldr || undefined,
       keyTakeaways: toLines(form.keyTakeaways),
@@ -248,7 +242,6 @@ export default function BlogForm({ mode, initialData }: BlogFormProps) {
             form.category,
             form.primaryCategorySlug,
             form.slug,
-            form.authorName,
             form.image,
             form.alt,
             form.excerpt,
@@ -394,44 +387,20 @@ export default function BlogForm({ mode, initialData }: BlogFormProps) {
           </div>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <div>
-              <label className={labelClass}>Author Name</label>
-              <input
-                value={form.authorName}
-                onChange={(event) => updateForm("authorName", event.target.value)}
-                className={inputClass}
-              />
-            </div>
-            <div>
-              <label className={labelClass}>Author Role</label>
-              <input
-                value={form.authorRole}
-                onChange={(event) => updateForm("authorRole", event.target.value)}
-                placeholder="e.g. LNAT Mentor"
-                className={inputClass}
-              />
-            </div>
-            <div>
-              <label className={labelClass}>Reviewed By</label>
-              <input
-                value={form.reviewedByName}
-                onChange={(event) =>
-                  updateForm("reviewedByName", event.target.value)
-                }
-                placeholder="Optional reviewer name"
-                className={inputClass}
-              />
-            </div>
-            <div>
-              <label className={labelClass}>Reviewer Role</label>
-              <input
-                value={form.reviewedByRole}
-                onChange={(event) =>
-                  updateForm("reviewedByRole", event.target.value)
-                }
-                placeholder="e.g. Admissions Advisor"
-                className={inputClass}
-              />
+            <div className="md:col-span-2">
+              <label className={labelClass}>Author</label>
+              <div className="rounded-md border border-slate-800 bg-slate-900/50 px-4 py-3">
+                <p className="text-sm font-semibold text-[#FDFBF7]">
+                  {LOCKED_BLOG_AUTHOR.name}
+                </p>
+                <p className="mt-1 text-xs text-slate-500">
+                  {LOCKED_BLOG_AUTHOR.role}
+                </p>
+                <p className="mt-3 text-xs leading-5 text-slate-500">
+                  Blog authorship is locked for editorial consistency, so every
+                  post uses the same trusted publisher identity.
+                </p>
+              </div>
             </div>
           </div>
         </section>

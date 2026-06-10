@@ -100,14 +100,6 @@ export default function StickySidebar({
               {displayUpdatedAt || "Recently"}
             </span>
           </div>
-          {blog.reviewedBy?.name ? (
-            <div className="flex items-center justify-between gap-3">
-              <span className="font-medium text-white/50">Reviewer</span>
-              <span className="text-right font-bold text-white">
-                {blog.reviewedBy.name}
-              </span>
-            </div>
-          ) : null}
           <div className="flex items-center justify-between gap-3">
             <span className="font-medium text-white/50">Category</span>
             <span className="text-right font-bold text-white">

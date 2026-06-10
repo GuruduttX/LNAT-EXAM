@@ -10,8 +10,10 @@ const footerLinks = {
     { label: "About", href: "/about" },
     { label: "Universities", href: "/universities" },
     { label: "Free Resources", href: "/free-resources" },
+    { label: "Blogs", href: "/blog" },
     { label: "FAQ", href: "/faq" },
     { label: "How to Apply", href: "/how-to-apply" },
+    
   ],
   institutions: [
     { label: "University of Oxford", href: "#" },

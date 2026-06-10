@@ -100,16 +100,17 @@ export default function ArchiveClient({ universities }: ArchiveClientProps) {
 
             {/* Heading */}
             <h2 className="text-center text-[clamp(1.5rem,3vw,2.4rem)] font-extrabold leading-tight tracking-tight text-[#0D1B3E] md:text-start">
-              Browse universities by fit, geography, and{" "}
+              The complete list of{" "}
               <span className="bg-gradient-to-r from-[#C9A84C] to-[#E8C96A] bg-clip-text text-transparent">
-                LNAT relevance
+                LNAT universities
               </span>
             </h2>
 
             <p className="mx-auto mt-4 max-w-xl text-center text-[14px] leading-relaxed text-slate-500 md:mx-0 md:text-start">
-              Use this directory after reading the hub above. Shortlist
-              universities, compare environments, and then open each profile for
-              admissions strategy, city-life context, and source-backed details.
+              The LNAT is required by a fixed group of universities under the
+              LNAT Consortium and delivered by Pearson VUE. Each uses your score
+              differently — some read the Section B essay, others use only
+              Section A — so your strategy should follow your shortlist.
             </p>
           </div>
 

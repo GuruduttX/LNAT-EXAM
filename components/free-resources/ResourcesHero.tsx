@@ -84,7 +84,7 @@ export default function ResourcesHero() {
             >
               <div className="h-px w-6 bg-[#C9A84C]/40 md:hidden" />
               <span className="text-center text-[10px] font-bold uppercase tracking-[0.18em] text-[#C9A84C] md:text-start">
-                Academic Library
+                Free LNAT Resources
               </span>
               <div className="h-px w-8 bg-[#C9A84C]/40" />
             </motion.div>
@@ -94,9 +94,9 @@ export default function ResourcesHero() {
               variants={fadeUp}
               className="text-center text-[clamp(1.9rem,4.8vw,3.8rem)] font-extrabold leading-tight tracking-tight text-white md:text-start"
             >
-              Curated Resources for <br className="hidden lg:block" />
+              Free LNAT Resources for <br className="hidden lg:block" />
               <span className="bg-gradient-to-r from-[#C9A84C] to-[#E8C96A] bg-clip-text text-transparent">
-                Elite Admissions.
+                Indian Students
               </span>
             </motion.h1>
 
@@ -105,9 +105,9 @@ export default function ResourcesHero() {
               variants={fadeUp}
               className="mx-auto mt-5 max-w-xl text-center text-[14px] leading-relaxed text-white/60 md:mx-0 md:text-start"
             >
-              Access our comprehensive collection of LNAT guides, essay
-              frameworks, and strategic checklists designed to secure your
-              placement in the UK's most prestigious law schools.
+              Start preparing for free with official LNAT practice papers and
+              sample essays from lnat.ac.uk, plus our own free guides, essay
+              structure template and reading-list support.
             </motion.p>
 
             {/* Trust Pills */}
@@ -117,11 +117,11 @@ export default function ResourcesHero() {
             >
               <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-[10px] font-semibold text-white/70 backdrop-blur-sm">
                 <FileText size={12} className="text-[#C9A84C]" />
-                Section A & B Covered
+                Official practice links
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-[10px] font-semibold text-white/70 backdrop-blur-sm">
                 <CheckCircle2 size={12} className="text-[#C9A84C]" />
-                Oxford & UCL Verified
+                Free downloadable guides
               </span>
             </motion.div>
           </motion.div>
@@ -178,20 +178,20 @@ export default function ResourcesHero() {
                     Featured Guide
                   </div>
                   <div className="mt-0.5 text-[14px] font-bold text-white">
-                    Mastering Section B
+                    Essay Structure Template
                   </div>
                 </div>
               </div>
               <p className="text-[12px] leading-relaxed text-white/50">
-                A complete breakdown of high-scoring essay structures used by
-                successful Oxford applicants.
+                A practical framework for writing clear, timed Section B
+                arguments without copying sample essays.
               </p>
               <div className="mt-5 flex items-center justify-between border-t border-white/10 pt-4">
                 <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-white/40">
                   PDF Download
                 </span>
                 <span className="text-[11px] font-bold text-[#E8C96A]">
-                  24 Pages
+                  Free PDF
                 </span>
               </div>
             </motion.div>
