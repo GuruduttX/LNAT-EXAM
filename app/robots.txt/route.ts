@@ -9,11 +9,22 @@ Disallow: /admin/
 Disallow: /api/
 
 User-agent: GPTBot
+Disallow: /admin/
+Disallow: /api/
+
 User-agent: ClaudeBot
+Disallow: /admin/
+Disallow: /api/
+
 User-agent: PerplexityBot
+Disallow: /admin/
+Disallow: /api/
+
 User-agent: Google-Extended
+Disallow: /admin/
+Disallow: /api/
+
 User-agent: CCBot
-Allow: /
 Disallow: /admin/
 Disallow: /api/
 

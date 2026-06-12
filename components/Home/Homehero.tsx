@@ -206,8 +206,7 @@ export default function HomeHero() {
       />
 
       <section
-        className="relative w-full overflow-hidden bg-[#F7F3EC]"
-        style={{ height: "107vh", maxHeight: "820px", minHeight: "650px" }}
+        className="relative w-full overflow-hidden bg-[#F7F3EC] h-[100vh] max-h-[850px] min-h-[650px]"
       >
         {/* ── Background image ── */}
         <div className="absolute inset-0">
@@ -236,7 +235,7 @@ export default function HomeHero() {
         </div>
 
         {/* ── Content wrapper ── */}
-        <div className="relative z-10 md:h-[94%] gap-16 mx-auto max-w-325 px-6 lg:px-14 xl:px-20 flex flex-col">
+        <div className="relative z-10 md:h-[94%] gap-5 md:gap-10 mx-auto max-w-325 px-6 lg:px-14 xl:px-20 flex flex-col">
           {/* Nav accent */}
           <motion.div
             initial={{ opacity: 0, y: -10 }}
