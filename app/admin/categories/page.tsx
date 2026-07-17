@@ -12,7 +12,6 @@ interface ICategoryListItem {
   slug: string;
   primaryKeyword: string;
   status: "draft" | "published";
-  isIndexed: boolean;
   updatedAt?: string;
 }
 
@@ -129,7 +128,6 @@ export default function CategoriesPage() {
                   <th className="px-6 py-4 font-medium">Category</th>
                   <th className="px-6 py-4 font-medium">Primary Keyword</th>
                   <th className="px-6 py-4 font-medium">Status</th>
-                  <th className="px-6 py-4 font-medium">Indexed</th>
                   <th className="px-6 py-4 font-medium">Updated</th>
                   <th className="px-6 py-4 text-right font-medium">Actions</th>
                 </tr>
@@ -155,9 +153,6 @@ export default function CategoriesPage() {
                       >
                         {category.status}
                       </span>
-                    </td>
-                    <td className="px-6 py-4 text-slate-300">
-                      {category.isIndexed ? "Yes" : "No"}
                     </td>
                     <td className="px-6 py-4 text-slate-300">
                       {category.updatedAt

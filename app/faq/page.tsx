@@ -10,6 +10,9 @@ export const metadata = {
   title: "LNAT FAQ 2027: Format, Score, Fees, Deadlines, Universities & India",
   description:
     "The most complete LNAT FAQ for Indian students — format, scoring, universities, JGLS, fees, registration, deadlines, results and preparation.",
+  alternates: {
+    canonical: "/faq",
+  },
 };
 
 const contentPackFaqs = [

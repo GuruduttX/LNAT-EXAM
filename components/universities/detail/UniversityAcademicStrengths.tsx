@@ -50,7 +50,7 @@ function StrengthCard({
     <motion.article
       variants={fadeUp}
       custom={index * 0.08}
-      className="mr-4 min-h-[220px] w-[82vw] max-w-[330px] shrink-0 snap-center rounded-[24px] border border-black/[0.07] bg-white p-5 shadow-[0_12px_30px_rgba(20,31,45,0.05)] md:mr-0 md:w-full md:max-w-none"
+      className="mr-4 min-h-55 w-[82vw] max-w-82.5 shrink-0 snap-center rounded-3xl border border-black/[0.07] bg-white p-5 shadow-[0_12px_30px_rgba(20,31,45,0.05)]"
     >
       <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#C9A84C]">
         {label}
@@ -108,9 +108,9 @@ export default function UniversityAcademicStrengths({
           variants={stagger}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
-          className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:gap-12"
+          className="grid gap-8 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:gap-12"
         >
-          <div>
+          <div className="min-w-0">
             <motion.div
               variants={fadeUp}
               className="mb-3 flex items-center justify-center gap-2 md:justify-start"
@@ -149,7 +149,7 @@ export default function UniversityAcademicStrengths({
             ) : null}
           </div>
 
-          <div>
+          <div className="min-w-0">
             {strengths?.standoutPrograms?.length ? (
               <motion.div
                 variants={fadeUp}
@@ -175,7 +175,7 @@ export default function UniversityAcademicStrengths({
             {cardItems.length ? (
               <motion.div
                 variants={stagger}
-                className="-mx-4 flex snap-x snap-mandatory overflow-x-auto px-4 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:grid-cols-2 md:gap-4 md:overflow-visible md:px-0 md:pb-0"
+                className="-mx-4 flex snap-x snap-mandatory overflow-x-auto px-4 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:px-0"
               >
                 {cardItems.map(({ item, label }, index) => (
                   <StrengthCard

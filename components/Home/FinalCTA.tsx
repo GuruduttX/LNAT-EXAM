@@ -75,17 +75,15 @@ export default function FinalCTA() {
         {/* Emotional Heading */}
         <motion.div variants={itemVariants}>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-[#FDFCFB] leading-[1.15] mb-5 tracking-tight">
-            Your Path to Elite Law <br className="hidden sm:block" />
-            Universities Begins Today
+            Ready to start?
           </h2>
         </motion.div>
 
         {/* Supporting Description */}
         <motion.div variants={itemVariants}>
           <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-xl mx-auto mb-10 font-light">
-            Equip yourself with the strategic insights, rigorous preparation,
-            and expert guidance required to excel in the LNAT and secure your
-            place at a top-tier UK institution.
+            Book a free consultation and we'll map your LNAT plan around your
+            target universities and deadline[cite: 1].
           </p>
         </motion.div>
 
@@ -95,11 +93,11 @@ export default function FinalCTA() {
           className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto"
         >
           <Link
-            href="/free-resources"
+            href="/contact"
             className="group relative inline-flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-3.5 bg-[#FDFCFB] text-[#070B14] overflow-hidden transition-all duration-300 hover:bg-white hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(253,252,251,0.15)]"
           >
             <span className="text-sm font-medium tracking-wide">
-              Start Preparation
+              Book a free LNAT consultation
             </span>
             <ArrowRight
               className="w-4 h-4 text-[#9A7B4F] transition-transform duration-300 group-hover:translate-x-1"

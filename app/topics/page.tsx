@@ -11,6 +11,9 @@ export const metadata = {
   title: "LNAT Topics: Format, Sections, Scoring, Universities & Prep",
   description:
     "Every LNAT topic in one place — format, Section A, Section B, scoring, registration, deadlines, universities and India/JGLS.",
+  alternates: {
+    canonical: "/topics",
+  },
 };
 
 const faqItems = [

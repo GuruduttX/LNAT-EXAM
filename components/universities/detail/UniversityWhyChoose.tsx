@@ -94,21 +94,21 @@ export default function UniversityWhyChoose({
           </motion.h2>
         </motion.div>
 
-        {/* Hybrid Layout Container (Mobile Flex Carousel -> Desktop Grid) */}
+        {/* Horizontal snap carousel on every breakpoint */}
         <motion.div
           variants={stagger}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
-          className="-mx-4 flex snap-x snap-mandatory overflow-x-auto px-4 pb-6 
-            [scrollbar-width:none] [&::-webkit-scrollbar]:hidden 
-            md:mx-0 md:grid md:grid-cols-2 md:gap-5 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-3"
+          className="-mx-4 flex snap-x snap-mandatory overflow-x-auto px-4 pt-2 pb-6
+            [scrollbar-width:none] [&::-webkit-scrollbar]:hidden
+            md:mx-0 md:px-0"
         >
           {items.map((item, index) => (
             <motion.div
               key={`${item.title}-${index}`}
               variants={fadeUp}
               custom={index * 0.1}
-              className="mr-4 w-[85vw] max-w-[320px] shrink-0 snap-center md:mr-0 md:w-auto md:max-w-none"
+              className="mr-4 w-[85vw] max-w-80 shrink-0 snap-center"
             >
               <div className="group flex h-full flex-col rounded-2xl border border-black/[0.07] bg-[#FDFBF7] p-6 shadow-[0_2px_10px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-[0_16px_40px_rgba(0,0,0,0.12)]">
                 {/* Decorative Icon / Number container */}

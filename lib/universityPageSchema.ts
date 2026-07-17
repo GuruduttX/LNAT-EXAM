@@ -94,13 +94,7 @@ export function createUniversityPageSchema(university: IUniversity) {
   const citations = (university.sourceReferences || []).map(
     (source) => source.url,
   );
-  const sameAs = Array.from(
-    new Set(
-      [university.officialWebsite, ...(university.sameAs || [])].filter(
-        (url): url is string => Boolean(url),
-      ),
-    ),
-  );
+  const sameAs = university.officialWebsite ? [university.officialWebsite] : [];
   const datePublished = toIsoDate(university.createdAt);
   const dateModified =
     toIsoDate(university.lastFactCheckedAt) ||

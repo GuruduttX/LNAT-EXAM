@@ -11,7 +11,6 @@ import {
   Lightbulb,
   TrendingUp,
   Award,
-  ArrowRight,
   Zap,
   Target,
   Users,
@@ -24,6 +23,11 @@ import {
   Shield,
   Clock,
   CheckCircle,
+  Compass,
+  User,
+  ArrowRight,
+  Landmark,
+  PenLine,
 } from "lucide-react";
 import EnquiryPopupForm from "@/utils/EnquiryForm";
 
@@ -96,15 +100,16 @@ function LNATHero() {
         }}
       />
 
-      {/* SEO & AEO Direct Answer Block - Visually hidden but extractable */}
+      {/* SEO & AEO Direct Answer Block */}
       <div className="sr-only" aria-labelledby="what-is-lnat">
         <h2 id="what-is-lnat">What is the LNAT?</h2>
         <p>
-          The Law National Aptitude Test (LNAT) is a 2-hour and 15-minute
-          computer-based admissions assessment required by top UK universities.
-          It evaluates critical reasoning and analytical thinking through 42
-          multiple-choice questions (Section A) and a 40-minute argumentative
-          essay (Section B), requiring no prior legal knowledge.
+          The LNAT (Law National Aptitude Test) is a 2-hour-15-minute,
+          computer-based admissions test used by around ten UK universities and,
+          in India, JGLS. It has two sections: 42 multiple-choice questions in
+          95 minutes (this produces your score out of 42) and one 40-minute
+          essay. It tests reading, reasoning and argument — not legal knowledge
+          — so there's no syllabus to memorise; there's a skill to build.
         </p>
       </div>
 
@@ -133,7 +138,7 @@ function LNATHero() {
               color: "#C9A84C",
             }}
           >
-            A Smarter Path to Global Law
+            Exam Overview
           </span>
         </div>
       </motion.div>
@@ -153,7 +158,7 @@ function LNATHero() {
           marginBottom: "1.5rem",
         }}
       >
-        Less Competition.{" "}
+        What is the{" "}
         <span
           style={{
             background:
@@ -163,11 +168,7 @@ function LNATHero() {
             backgroundClip: "text",
           }}
         >
-          Bigger Opportunities.
-        </span>
-        <br />
-        <span style={{ fontWeight: 300, color: "#4A5568", fontSize: "0.65em" }}>
-          LNAT Opens Doors to Global Law Schools.
+          LNAT?
         </span>
       </motion.h2>
 
@@ -181,45 +182,58 @@ function LNATHero() {
           fontSize: "clamp(0.85rem, 1.1vw, 1rem)",
           color: "#64748B",
           lineHeight: 1.9,
-          maxWidth: 600,
+          maxWidth: 1000,
           margin: "0 auto 2.5rem",
         }}
       >
-        LNAT evaluates reasoning and analytical thinking — not rote learning.
-        Accepted by the world&apos;s top law universities, it gives Indian students a
-        genuinely differentiated, globally recognised path.
+        The LNAT (Law National Aptitude Test) is a 2-hour-15-minute,
+        computer-based admissions test used by around ten UK universities and,
+        in India, JGLS. It has two sections: 42 multiple-choice questions in 95
+        minutes (this produces your score out of 42) and one 40-minute essay. It
+        tests reading, reasoning and argument — not legal knowledge — so there's
+        no syllabus to memorise; there's a skill to build.
+        <br />
+        <br />
+        New to it?{" "}
+        <a
+          href="/what-is-lnat"
+          className="font-medium text-[#C9A84C] hover:underline transition-all"
+        >
+          Start with our full guide: what is the LNAT.
+        </a>
       </motion.p>
 
-      {/* Three pillars */}
+      {/* Four pillars reflecting the new content */}
       <motion.div
         variants={stagger}
         initial="hidden"
         animate={inView ? "visible" : "hidden"}
-        className="flex flex-wrap justify-center gap-3"
+        className="flex md:flex-wrap items-center md:justify-center gap-3 overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none px-4 md:px-0 pb-4 md:pb-0 hide-scrollbar w-full"
       >
         {[
-          { icon: <Brain size={14} />, text: "Critical Thinking" },
-          { icon: <Globe size={14} />, text: "Global Recognition" },
-          { icon: <Target size={14} />, text: "No Legal Knowledge Needed" },
-          { icon: <TrendingUp size={14} />, text: "Elite University Access" },
+          { icon: <Target size={14} />, text: "42 MCQs & 1 Essay" },
+          { icon: <Globe size={14} />, text: "UK Universities & JGLS" },
+          { icon: <Brain size={14} />, text: "No Syllabus to Memorise" },
+          { icon: <TrendingUp size={14} />, text: "Tests Reading & Reasoning" },
         ].map((p, i) => (
           <motion.div
             key={i}
             variants={fadeUp}
-            className="flex items-center gap-2 px-4 py-2 rounded-full"
+            className="flex items-center gap-2 px-4 py-2 rounded-full flex-shrink-0 snap-center"
             style={{
               background: "#fff",
               border: "1px solid rgba(13,27,62,0.08)",
               boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
             }}
           >
-            <span style={{ color: "#C9A84C" }}>{p.icon}</span>
+            <span style={{ color: "#C9A84C", flexShrink: 0 }}>{p.icon}</span>
             <span
               style={{
                 fontFamily: poppins,
                 fontSize: "12px",
                 fontWeight: 600,
                 color: "#0D1B3E",
+                whiteSpace: "nowrap",
               }}
             >
               {p.text}
@@ -373,29 +387,36 @@ function DifferenceCard({
   );
 }
 
-function WhyLNATDifferent() {
+function WhyItMattersForIndia() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-8% 0px" });
 
   return (
     <div ref={ref} className="mb-20 lg:mb-28">
+      {/* 1. Narrative Intro */}
       <motion.div
-        variants={fadeUp}
+        variants={stagger}
         initial="hidden"
         animate={inView ? "visible" : "hidden"}
-        className="text-center mb-12"
+        className="text-center md:text-start mb-12 max-w-4xl mx-auto md:mx-0"
       >
-        <SectionLabel text="What Makes LNAT Different" />
-        <h3
+        <motion.div variants={fadeUp}>
+          <SectionLabel text="Why It Matters Now For Indian Students" />
+        </motion.div>
+
+        <motion.h3
+          variants={fadeUp}
           style={{
             fontFamily: poppins,
             fontWeight: 800,
             fontSize: "clamp(1.5rem, 3vw, 2.4rem)",
             color: "#0D1B3E",
             letterSpacing: "-0.025em",
+            lineHeight: 1.2,
+            marginBottom: "1rem",
           }}
         >
-          Built for the Way Great
+          One Preparation Now Works For
           <br />
           <span
             style={{
@@ -405,20 +426,151 @@ function WhyLNATDifferent() {
               backgroundClip: "text",
             }}
           >
-            Legal Minds Actually Think
+            Two Elite Routes
           </span>
-        </h3>
+        </motion.h3>
+
+        <motion.p
+          variants={fadeUp}
+          style={{
+            fontFamily: poppins,
+            fontSize: 15,
+            color: "#64748B",
+            lineHeight: 1.8,
+            maxWidth: 800,
+          }}
+        >
+          For years the LNAT mattered only to Indian students aiming at the UK.
+          That's changed. From 2026-27, JGLS made the LNAT its sole entrance
+          test, replacing CLAT and LSAT-India for its LLB programmes. So the
+          same preparation now works for two routes at once:
+        </motion.p>
       </motion.div>
 
+      {/* 2. The Two Routes (Cards) */}
       <motion.div
         variants={stagger}
         initial="hidden"
         animate={inView ? "visible" : "hidden"}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+        className="flex md:grid overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none md:grid-cols-2 gap-6 mb-6 pb-4 md:pb-0 w-full hide-scrollbar"
       >
-        {differenceCards.map((card, i) => (
-          <DifferenceCard key={i} card={card} i={i} />
-        ))}
+        {/* Route 1: UK */}
+        <motion.div
+          variants={fadeUp}
+          className="group relative bg-white p-8 rounded-2xl flex flex-col h-full transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(13,27,62,0.08)] flex-shrink-0 w-[85vw] sm:w-[400px] md:w-auto snap-center md:snap-align-none"
+          style={{ border: "1px solid rgba(13,27,62,0.08)" }}
+        >
+          <div
+            className="w-12 h-12 rounded-full flex items-center justify-center mb-6"
+            style={{ background: "rgba(201,168,76,0.1)" }}
+          >
+            <Landmark size={22} style={{ color: "#C9A84C" }} />
+          </div>
+          <h4
+            style={{
+              fontFamily: poppins,
+              fontWeight: 700,
+              fontSize: "1.2rem",
+              color: "#0D1B3E",
+              marginBottom: "0.75rem",
+            }}
+          >
+            UK law schools
+          </h4>
+          <p
+            style={{
+              fontFamily: poppins,
+              fontSize: 14,
+              color: "#4A5568",
+              lineHeight: 1.7,
+              flexGrow: 1,
+              marginBottom: "1.5rem",
+            }}
+          >
+            Oxford, Cambridge, UCL, King's, LSE, Durham, Bristol, Glasgow, SOAS.
+          </p>
+          <a
+            href="/universities"
+            className="inline-flex items-center gap-2 text-sm font-semibold transition-colors group-hover:text-[#C9A84C]"
+            style={{ color: "#0D1B3E", fontFamily: poppins }}
+          >
+            See the full list of LNAT universities <ArrowRight size={14} />
+          </a>
+        </motion.div>
+
+        {/* Route 2: JGLS */}
+        <motion.div
+          variants={fadeUp}
+          className="group relative bg-[#0D1B3E] p-8 rounded-2xl flex flex-col h-full transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(13,27,62,0.15)] flex-shrink-0 w-[85vw] sm:w-[400px] md:w-auto snap-center md:snap-align-none"
+          style={{ border: "1px solid #0D1B3E" }}
+        >
+          <div
+            className="w-12 h-12 rounded-full flex items-center justify-center mb-6"
+            style={{ background: "rgba(255,255,255,0.05)" }}
+          >
+            <GraduationCap size={22} style={{ color: "#C9A84C" }} />
+          </div>
+          <h4
+            style={{
+              fontFamily: poppins,
+              fontWeight: 700,
+              fontSize: "1.2rem",
+              color: "#fff",
+              marginBottom: "0.75rem",
+            }}
+          >
+            JGLS (India)
+          </h4>
+          <p
+            style={{
+              fontFamily: poppins,
+              fontSize: 14,
+              color: "rgba(255,255,255,0.7)",
+              lineHeight: 1.7,
+              flexGrow: 1,
+              marginBottom: "1.5rem",
+            }}
+          >
+            The LNAT is now mandatory, and only your Section A score is used.
+          </p>
+          <a
+            href="/topics/lnat-india"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-[#C9A84C] transition-colors hover:text-[#E8C96A]"
+            style={{ fontFamily: poppins }}
+          >
+            More on the LNAT in India <ArrowRight size={14} />
+          </a>
+        </motion.div>
+      </motion.div>
+
+      {/* 3. Logistics Bottom Bar */}
+      <motion.div
+        variants={fadeUp}
+        initial="hidden"
+        animate={inView ? "visible" : "hidden"}
+        className="w-full rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-5"
+        style={{
+          background:
+            "linear-gradient(to right, rgba(201,168,76,0.05), rgba(201,168,76,0.02))",
+          border: "1px solid rgba(201,168,76,0.2)",
+        }}
+      >
+        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-white border border-[#C9A84C]/20 flex items-center justify-center">
+          <MapPin size={18} style={{ color: "#C9A84C" }} />
+        </div>
+        <p
+          style={{
+            fontFamily: poppins,
+            fontSize: 14,
+            color: "#374151",
+            lineHeight: 1.7,
+          }}
+        >
+          You sit the test at one of{" "}
+          <strong>40+ Pearson VUE centres across India</strong> — Delhi, Mumbai,
+          Bengaluru, Chennai, Hyderabad, Pune — for about{" "}
+          <strong>£120 (~₹13,000)</strong>.
+        </p>
       </motion.div>
     </div>
   );
@@ -427,46 +579,54 @@ function WhyLNATDifferent() {
 // ─────────────────────────────────────────────────────────────
 // 3. WHY STUDENTS CHOOSE LNAT — Editorial comparison
 // ─────────────────────────────────────────────────────────────
-
 function WhyStudentsChoose() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-8% 0px" });
 
   const reasons = [
     {
-      stat: "12x",
-      label: "Less competition",
-      sub: "vs. major domestic law entrances with 200k+ applicants",
+      icon: <MapPin size={24} />,
+      label: "India-Specific Strategy",
+      sub: "We coach for your reality — CBSE/ISC/IB backgrounds, the JGLS route, Indian test centres, INR fees, and the UCAS steps Indian applicants get wrong[cite: 1].",
     },
     {
-      stat: "40+",
-      label: "Countries represented",
-      sub: "in LNAT test centres worldwide — you belong globally",
+      icon: <Brain size={24} />,
+      label: "Proper Skill-Building",
+      sub: "Because the LNAT can't be crammed, we train the underlying abilities — argument analysis, inference, timed essay writing — rather than handing you facts to memorise[cite: 1].",
     },
     {
-      stat: "28/42",
-      label: "Avg. qualifying score",
-      sub: "achievable with the right preparation strategy",
+      icon: <Target size={24} />,
+      label: "Accurate to the Current Test",
+      sub: "We teach the LNAT as it is today (four answer options per question, two sections, the 2027 cycle), not outdated material[cite: 1].",
     },
     {
-      stat: "TOP 10",
-      label: "Law Universites",
-      sub: "LNAT is accepted by top 10 law schools",
+      icon: <Compass size={24} />,
+      label: "The Full Journey",
+      sub: "Registration, deadlines, university targeting and application support are part of the plan, not an afterthought[cite: 1].",
     },
   ];
 
   return (
-    <div ref={ref} className="mb-20 lg:mb-28">
+    <div
+      ref={ref}
+      className="mb-20 lg:mb-28 max-w-full overflow-hidden md:overflow-visible"
+    >
       <div className="grid lg:grid-cols-2 gap-12 items-center text-center md:text-start">
         {/* Left: editorial text */}
         <motion.div
           variants={stagger}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
+          // FIX: Added min-w-0 and w-full to prevent grid blowout
+          className="max-w-full min-w-0 w-full"
         >
-          <motion.div variants={fadeUp}>
-            <SectionLabel text="Why Students Choose LNAT" />
+          <motion.div
+            variants={fadeUp}
+            className="flex justify-center md:justify-start"
+          >
+            <SectionLabel text="Built around LNAT" />
           </motion.div>
+
           <motion.h3
             variants={fadeUp}
             style={{
@@ -479,8 +639,7 @@ function WhyStudentsChoose() {
               marginBottom: "1.25rem",
             }}
           >
-            Why LNAT is a More Focused,
-            <br />
+            Why{" "}
             <span
               style={{
                 background: "linear-gradient(135deg, #C9A84C, #E8C96A)",
@@ -489,9 +648,10 @@ function WhyStudentsChoose() {
                 backgroundClip: "text",
               }}
             >
-              Globally Aligned Pathway.
+              LNAT Exam India
             </span>
           </motion.h3>
+
           <motion.p
             variants={fadeUp}
             style={{
@@ -501,53 +661,60 @@ function WhyStudentsChoose() {
               lineHeight: 1.9,
               marginBottom: "1.5rem",
             }}
+            className="px-4 md:px-0"
           >
-            Traditional law entrances are designed for domestic legal systems.
-            LNAT is designed for global legal thinking. Less noise. More signal.
-            A pathway that genuinely differentiates Indian students on the world
-            stage.
+            We're not a general law-entrance institute that added an LNAT
+            module. The LNAT is the whole point of what we do, and that focus
+            shows up in the coaching.
           </motion.p>
-          {[
-            "No rote learning — pure analytical edge",
-            "International peer cohort, not just domestic",
-            "Directly valued by Oxford & Cambridge admissions",
-            "Opens doors that traditional routes simply can't",
-          ].map((pt, i) => (
-            <motion.div
-              key={i}
-              variants={fadeUp}
-              className="flex items-center gap-3 mb-2.5 text-start"
-            >
-              <CheckCircle
-                size={14}
-                style={{ color: "#C9A84C", flexShrink: 0 }}
-              />
-              <span
-                style={{
-                  fontFamily: poppins,
-                  fontSize: 13,
-                  color: "#374151",
-                  fontWeight: 500,
-                }}
+
+          {/* Real Differentiators: Interactive Premium Pills */}
+          <motion.div
+            variants={fadeUp}
+            // Minor fix: removed 'w-full max-w-full' to prevent horizontal padding from breaking the width
+            className="flex md:flex-wrap items-center md:justify-start gap-3 mt-6 overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none pb-4 md:pb-0 hide-scrollbar px-4 md:px-0"
+          >
+            {[
+              { text: "1 To 1 Sessions", icon: <User size={14} /> },
+              {
+                text: "Mentor: Mr. Alastair Murray",
+                icon: <Award size={14} />,
+              },
+              { text: "Small Batches", icon: <Users size={14} /> },
+            ].map((pill, i) => (
+              <motion.div
+                key={i}
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.97 }}
+                className="group flex items-center gap-2 px-4 py-2 rounded-full cursor-pointer bg-white border border-[#C9A84C]/30 hover:border-[#0D1B3E] hover:bg-[#0D1B3E] hover:shadow-[0_4px_14px_rgba(13,27,62,0.15)] transition-all duration-300 flex-shrink-0 snap-center"
               >
-                {pt}
-              </span>
-            </motion.div>
-          ))}
+                <span className="text-[#C9A84C] group-hover:text-[#E8C96A] transition-colors duration-300 flex-shrink-0">
+                  {pill.icon}
+                </span>
+                <span
+                  style={{ fontFamily: poppins, whiteSpace: "nowrap" }}
+                  className="text-[12px] font-semibold text-[#0D1B3E] group-hover:text-white transition-colors duration-300"
+                >
+                  {pill.text}
+                </span>
+              </motion.div>
+            ))}
+          </motion.div>
         </motion.div>
 
-        {/* Right: stat grid */}
+        {/* Right: stat grid adapted for feature cards (Horizontally scrollable on mobile) */}
         <motion.div
           variants={stagger}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
-          className="grid grid-cols-2 gap-4"
+          className="flex sm:grid sm:grid-cols-2 gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory sm:snap-none pb-6 sm:pb-0 w-full max-w-full hide-scrollbar px-4 md:px-0"
         >
           {reasons.map((r, i) => (
             <motion.div
               key={i}
               variants={fadeUp}
               custom={i * 0.08}
+              className="flex flex-col justify-center flex-shrink-0 w-[85vw] max-w-[320px] sm:w-auto sm:max-w-none snap-center sm:snap-align-none text-left sm:text-center md:text-left"
               style={{
                 borderRadius: 16,
                 padding: "1.5rem",
@@ -557,23 +724,19 @@ function WhyStudentsChoose() {
             >
               <div
                 style={{
-                  fontFamily: poppins,
-                  fontWeight: 800,
-                  fontSize: "clamp(1.8rem, 3vw, 2.4rem)",
                   color: i % 2 === 0 ? "#C9A84C" : "#0D1B3E",
-                  lineHeight: 1,
-                  marginBottom: 6,
+                  marginBottom: 12,
                 }}
               >
-                {r.stat}
+                {r.icon}
               </div>
               <div
                 style={{
                   fontFamily: poppins,
                   fontWeight: 700,
-                  fontSize: 13,
+                  fontSize: 14,
                   color: i % 2 === 0 ? "#fff" : "#0D1B3E",
-                  marginBottom: 4,
+                  marginBottom: 8,
                 }}
               >
                 {r.label}
@@ -581,8 +744,8 @@ function WhyStudentsChoose() {
               <div
                 style={{
                   fontFamily: poppins,
-                  fontSize: 11,
-                  color: i % 2 === 0 ? "rgba(255,255,255,0.55)" : "#94A3B8",
+                  fontSize: 12,
+                  color: i % 2 === 0 ? "rgba(255,255,255,0.65)" : "#64748B",
                   lineHeight: 1.6,
                 }}
               >
@@ -1226,6 +1389,7 @@ function SkillVisualization() {
           variants={stagger}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
+          className="text-center md:text-start"
         >
           <motion.div variants={fadeUp}>
             <SectionLabel text="Skills LNAT Develops" />
@@ -1348,68 +1512,88 @@ function SkillVisualization() {
 // 7. JOURNEY ROADMAP — Cinematic timeline
 // ─────────────────────────────────────────────────────────────
 
+interface LNATJourneyProps {
+  setIsOpen: (val: boolean) => void;
+}
+
 const journey = [
   {
     step: "01",
-    title: "Discover LNAT",
-    body: "Understand the exam structure, accepted universities, and what sets LNAT apart from domestic law entrances.",
-    icon: <Lightbulb size={18} strokeWidth={1.5} />,
+    title: "Diagnostic",
+    body: "A baseline assessment of your reading, reasoning and essay writing, and a target set against your chosen universities[cite: 1].",
+    icon: <Target size={20} />,
   },
   {
     step: "02",
-    title: "Prepare Strategically",
-    body: "Build analytical reasoning, critical thinking, and essay writing skills through structured preparation.",
-    icon: <Brain size={18} strokeWidth={1.5} />,
+    title: "Skills",
+    body: "Structured work on Section A question types and Section B essay technique, with worked examples[cite: 1].",
+    icon: <BookOpen size={20} />,
   },
   {
     step: "03",
-    title: "Take the Exam",
-    body: "Sit the computer-based LNAT at an approved centre. 2h 15 mins. One chance to show your potential.",
-    icon: <Target size={18} strokeWidth={1.5} />,
+    title: "Timed Practice",
+    body: "Full-length, exam-condition mocks with detailed feedback to build accuracy and pacing[cite: 1].",
+    icon: <Clock size={20} />,
   },
   {
     step: "04",
-    title: "Apply to Universities",
-    body: "Submit UCAS applications to your chosen law schools — Oxford, Cambridge, UCL, LSE and beyond.",
-    icon: <GraduationCap size={18} strokeWidth={1.5} />,
+    title: "Essay Coaching",
+    body: "Individual feedback on timed essays to sharpen argument and structure[cite: 1].",
+    icon: <PenLine size={20} />,
   },
   {
     step: "05",
-    title: "Receive Offers",
-    body: "Interview at top universities. Receive conditional and unconditional offers to study law globally.",
-    icon: <Award size={18} strokeWidth={1.5} />,
-  },
-  {
-    step: "06",
-    title: "Begin Your Career",
-    body: "Graduate from a world-ranked law school. Enter corporate law, international practice, or public service.",
-    icon: <Star size={18} strokeWidth={1.5} />,
+    title: "Application Support",
+    body: "Registration, deadlines and university strategy so your score lands where it counts[cite: 1].",
+    icon: <GraduationCap size={20} />,
   },
 ];
-interface LNATJourneyprops {
-  setIsOpen: (isOpen: boolean) => void;
-}
-function LNATJourney({ setIsOpen }: LNATJourneyprops) {
+
+// Reusable Card Content Component with Light Theme
+const CardContent = ({ step }: { step: any }) => (
+  <div className="flex flex-col text-left">
+    <div className="flex items-center gap-3 mb-4">
+      <div className="w-10 h-10 rounded-full bg-[#0D1B3E] flex items-center justify-center text-[#C9A84C] shadow-sm flex-shrink-0">
+        {step.icon}
+      </div>
+      <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#C9A84C]">
+        Phase {step.step}
+      </span>
+    </div>
+    <h4 className="text-xl font-serif font-bold text-[#0D1B3E] mb-2 leading-tight">
+      {step.title}
+    </h4>
+    <p className="text-sm text-slate-600 font-light leading-relaxed">
+      {step.body}
+    </p>
+  </div>
+);
+
+function LNATJourney({ setIsOpen }: LNATJourneyProps) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-8% 0px" });
 
+  // Separate states for Desktop (hover) and Mobile (click)
+  const [hoveredStep, setHoveredStep] = useState<number | null>(null);
+  const [clickedStep, setClickedStep] = useState<number>(0);
+
   return (
-    <div ref={ref}>
+    <div ref={ref} className="mb-10 lg:mb-0 overflow-hidden">
+      {/* Heading Section */}
       <motion.div
-        variants={fadeUp}
-        initial="hidden"
-        animate={inView ? "visible" : "hidden"}
-        className="text-center mb-12"
+        initial={{ opacity: 0, y: 20 }}
+        animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+        transition={{ duration: 0.6 }}
+        className="text-center mb-10 md:mb-16"
       >
-        <SectionLabel text="Your LNAT Journey" />
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#C9A84C]/10 border border-[#C9A84C]/20 mb-6">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-[#C9A84C]">
+            Your LNAT Journey
+          </span>
+        </div>
         <h3
-          style={{
-            fontFamily: poppins,
-            fontWeight: 800,
-            fontSize: "clamp(1.5rem, 3vw, 2.4rem)",
-            color: "#0D1B3E",
-            letterSpacing: "-0.025em",
-          }}
+          className="text-3xl md:text-4xl lg:text-5xl font-serif text-[#0D1B3E] leading-tight max-w-3xl mx-auto"
+          style={{ letterSpacing: "-0.025em" }}
         >
           How does the LNAT pathway{" "}
           <span
@@ -1425,176 +1609,168 @@ function LNATJourney({ setIsOpen }: LNATJourneyprops) {
         </h3>
       </motion.div>
 
-      {/* Timeline */}
-      <div className="relative">
-        {/* Vertical connector line (desktop) */}
-        <div
-          className="hidden lg:block absolute left-1/2 top-6 bottom-6 w-px -translate-x-1/2"
-          style={{
-            background:
-              "linear-gradient(to bottom, transparent, rgba(201,168,76,0.3) 15%, rgba(201,168,76,0.3) 85%, transparent)",
-          }}
-        />
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={inView ? { opacity: 1 } : { opacity: 0 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+        className="w-full relative"
+      >
+        {/* MOBILE ONLY: Centralized Card Display Area (Decoupled from scroll) */}
+        <div className="md:hidden w-full max-w-sm mx-auto px-4 min-h-[220px] flex items-center justify-center mb-6">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={clickedStep}
+              initial={{ opacity: 0, x: 15 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -15 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="w-full bg-white rounded-xl p-6 shadow-[0_12px_40px_rgba(13,27,62,0.1)] border border-slate-200"
+            >
+              <CardContent step={journey[clickedStep]} />
+            </motion.div>
+          </AnimatePresence>
+        </div>
 
-        <div className="flex flex-col gap-6 lg:gap-0">
-          {journey.map((step, i) => {
-            const isRight = i % 2 !== 0;
-            return (
-              <motion.div
-                key={i}
-                variants={fadeUp}
-                custom={i * 0.1}
-                initial="hidden"
-                animate={inView ? "visible" : "hidden"}
-                className={`relative flex flex-col lg:flex-row items-start lg:items-center gap-4 lg:gap-0 ${
-                  isRight ? "lg:flex-row-reverse" : ""
-                }`}
-                style={{ marginBottom: i < journey.length - 1 ? "0.5rem" : 0 }}
-              >
-                {/* Card */}
+        {/* Scrollable Timeline */}
+        <div className="w-full overflow-x-auto pb-8 pt-4 md:pt-60 md:pb-12 px-6 sm:px-12 hide-scrollbar">
+          <div className="relative min-w-[700px] md:min-w-[900px] flex justify-between items-center mx-auto max-w-5xl">
+            {/* Solid Connecting Line */}
+            <div className="absolute left-[24px] right-[24px] h-[2px] top-1/2 -translate-y-1/2 z-0 bg-[#C9A84C]/40 pointer-events-none" />
+
+            {/* Steps */}
+            {journey.map((step, index) => {
+              const isMobileActive = clickedStep === index;
+              const isDesktopActive = hoveredStep === index;
+              const isFirst = index === 0;
+              const isLast = index === journey.length - 1;
+
+              // Tailor class names cleanly to override mobile styles with desktop hover rules
+              let nodeClasses =
+                "w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 border-2 shadow-lg ";
+
+              // Mobile base rules
+              if (isMobileActive) {
+                nodeClasses +=
+                  "bg-[#0D1B3E] border-[#C9A84C] scale-110 text-[#C9A84C] ";
+              } else {
+                nodeClasses += "bg-white border-slate-200 text-slate-400 ";
+              }
+
+              // Desktop override rules
+              if (isDesktopActive) {
+                nodeClasses +=
+                  "md:bg-[#0D1B3E] md:border-[#C9A84C] md:scale-110 md:text-[#C9A84C] md:shadow-[0_0_20px_rgba(201,168,76,0.3)] ";
+              } else {
+                nodeClasses +=
+                  "md:bg-white md:border-slate-200 md:text-slate-400 md:scale-100 md:hover:border-[#C9A84C]/50 md:hover:text-[#C9A84C] md:shadow-lg ";
+              }
+
+              return (
                 <div
-                  className={`w-full lg:w-[45%] ${
-                    isRight ? "lg:pl-12" : "lg:pr-12"
-                  }`}
+                  key={index}
+                  className="relative z-10 flex flex-col items-center group cursor-pointer"
+                  onMouseEnter={() => setHoveredStep(index)}
+                  onMouseLeave={() => setHoveredStep(null)}
+                  onClick={() => setClickedStep(index)}
                 >
-                  <div
-                    style={{
-                      borderRadius: 16,
-                      padding: "1.5rem",
-                      background: "#fff",
-                      border: "1px solid rgba(0,0,0,0.07)",
-                      boxShadow: "0 4px 16px rgba(0,0,0,0.06)",
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 10,
-                        marginBottom: 10,
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: 36,
-                          height: 36,
-                          borderRadius: 10,
-                          background: "rgba(13,27,62,0.06)",
-                          color: "#0D1B3E",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          flexShrink: 0,
-                        }}
-                      >
-                        {step.icon}
-                      </div>
-                      <span
-                        style={{
-                          fontFamily: poppins,
-                          fontSize: 10,
-                          fontWeight: 700,
-                          color: "#C9A84C",
-                          letterSpacing: "0.1em",
-                        }}
-                      >
-                        STEP {step.step}
-                      </span>
-                    </div>
-                    <h4
-                      style={{
-                        fontFamily: poppins,
-                        fontWeight: 700,
-                        fontSize: 15,
-                        color: "#0D1B3E",
-                        marginBottom: 6,
-                      }}
-                    >
-                      {step.title}
-                    </h4>
-                    <p
-                      style={{
-                        fontFamily: poppins,
-                        fontSize: 12,
-                        color: "#64748B",
-                        lineHeight: 1.75,
-                      }}
-                    >
-                      {step.body}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Centre dot */}
-                <div className="hidden lg:flex w-[10%] items-center justify-center">
-                  <div
-                    style={{
-                      width: 36,
-                      height: 36,
-                      borderRadius: "50%",
-                      background: "#0D1B3E",
-                      border: "3px solid rgba(201,168,76,0.3)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      boxShadow: "0 0 0 4px rgba(201,168,76,0.1)",
-                      flexShrink: 0,
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontFamily: poppins,
-                        fontSize: 10,
-                        fontWeight: 800,
-                        color: "#C9A84C",
-                      }}
-                    >
+                  {/* Step Node */}
+                  <div className={nodeClasses}>
+                    <span className="text-sm font-bold tracking-wider">
                       {step.step}
                     </span>
                   </div>
+
+                  {/* DESKTOP ONLY: Hover Popover Card */}
+                  <AnimatePresence>
+                    {isDesktopActive && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        transition={{
+                          duration: 0.25,
+                          ease: [0.22, 1, 0.36, 1],
+                        }}
+                        className={`hidden md:block absolute bottom-20 w-72 bg-white rounded-xl p-6 shadow-[0_20px_50px_rgba(13,27,62,0.15)] border border-slate-200 z-20 pointer-events-none ${
+                          isFirst
+                            ? "left-0"
+                            : isLast
+                            ? "right-0"
+                            : "left-1/2 -translate-x-1/2"
+                        }`}
+                      >
+                        {/* Downward pointing triangle/caret */}
+                        <div
+                          className={`absolute -bottom-2 w-4 h-4 bg-white border-b border-r border-slate-200 transform rotate-45 ${
+                            isFirst
+                              ? "left-[16px]"
+                              : isLast
+                              ? "right-[16px]"
+                              : "left-1/2 -translate-x-1/2"
+                          }`}
+                        />
+                        <CardContent step={step} />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
-
-                <div className="hidden lg:block w-[45%]" />
-              </motion.div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
-      </div>
-      <button
-        onClick={() => setIsOpen(true)}
-        className="
-          group relative overflow-hidden rounded-lg
-          border border-[#C9A227]/40
-          bg-[#0B1F3A] px-5 py-2.5
-          text-sm font-medium text-white
-          transition-all duration-300
-          hover:-translate-y-0.5
-          hover:border-[#C9A227]
-          hover:bg-[#13294B] block mx-auto
-          mt-10
-        "
-      >
-        <span
-          className="
-          absolute inset-0 -translate-x-full
-          bg-gradient-to-r from-transparent via-white/10 to-transparent
-          transition-transform duration-700
-          group-hover:translate-x-full
-        "
-        />
+      </motion.div>
 
-        <span className="relative flex items-center gap-2">
-          Get Full Guidance
+      {/* CTA Button */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+        transition={{ duration: 0.6, delay: 0.4 }}
+        className="mt-4 flex justify-center"
+      >
+        <button
+          onClick={() => setIsOpen(true)}
+          className="
+            group relative overflow-hidden rounded-sm
+            border border-[#C9A84C]/40
+            bg-[#0D1B3E] px-8 py-3.5
+            text-sm font-medium text-white
+            transition-all duration-300
+            hover:-translate-y-1
+            hover:border-[#C9A84C]
+            hover:shadow-[0_10px_20px_rgba(13,27,62,0.15)]
+          "
+        >
           <span
             className="
-              transition-transform duration-300
-              group-hover:translate-x-1
-            "
-          >
-            →
+            absolute inset-0 -translate-x-full
+            bg-gradient-to-r from-transparent via-white/10 to-transparent
+            transition-transform duration-700
+            group-hover:translate-x-full
+          "
+          />
+          <span className="relative flex items-center gap-2 tracking-wide">
+            Get Full Guidance
+            <span className="transition-transform duration-300 group-hover:translate-x-1 text-[#C9A84C]">
+              →
+            </span>
           </span>
-        </span>
-      </button>
+        </button>
+      </motion.div>
+
+      {/* CSS to hide scrollbar for horizontal scroll area */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .hide-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `,
+        }}
+      />
     </div>
   );
 }
@@ -1641,9 +1817,9 @@ export default function LNATOverview() {
           }}
         />
 
-        <div className="max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-12 py-16 lg:py-24 relative z-10">
+        <div className="max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-12 py-10 lg:py- relative z-10">
           <LNATHero />
-          <WhyLNATDifferent />
+          <WhyItMattersForIndia />
           <WhyStudentsChoose />
           <ExamSnapshot />
           <SkillVisualization />

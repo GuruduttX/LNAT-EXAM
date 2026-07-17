@@ -1,7 +1,12 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView, type Variants } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import {
+  AnimatePresence,
+  motion,
+  useInView,
+  type Variants,
+} from "framer-motion";
 import {
   CheckCircle2,
   Landmark,
@@ -9,7 +14,20 @@ import {
   Calendar,
   FileText,
   Lightbulb,
+  X,
+  type LucideIcon,
 } from "lucide-react";
+
+interface PolicyCard {
+  title: string;
+  text: string;
+  icon: LucideIcon;
+}
+
+// Policy cards are a fixed height with the text clamped to 4 lines. Anything
+// longer gets a "Read more" that opens the full text in a dialog, so a long
+// value from the CMS can never stretch a card or misalign the row.
+const READ_MORE_THRESHOLD = 120;
 
 // Simplified Type for Schema Mapping
 interface UniversityAdmissionsProps {
@@ -51,9 +69,25 @@ export default function UniversityAdmissions({
 }: UniversityAdmissionsProps) {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, margin: "-8% 0px" });
+  const [active, setActive] = useState<PolicyCard | null>(null);
+
+  // While the dialog is open: close on Escape and lock body scroll.
+  useEffect(() => {
+    if (!active) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setActive(null);
+    };
+    document.addEventListener("keydown", onKey);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [active]);
 
   const { admissions, lnatRequirement, applicationDeadline } = university;
-  const policyCards = [
+  const policyCards: PolicyCard[] = [
     {
       title: "Essay policy",
       text: admissions?.essayPolicy,
@@ -69,7 +103,7 @@ export default function UniversityAdmissions({
       text: admissions?.deadlinesNotes,
       icon: Calendar,
     },
-  ].filter((item) => item.text);
+  ].filter((item): item is PolicyCard => Boolean(item.text));
 
   // Defensive rendering: If no admissions data exists, don't render the section.
   if (
@@ -124,7 +158,7 @@ export default function UniversityAdmissions({
         </motion.div>
 
         {/* Dashboard Grid Layout */}
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-14">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-14">
           {/* =========================================
               LEFT: ADMISSIONS SNAPSHOT (DARK DASHBOARD)
               ========================================= */}
@@ -220,7 +254,7 @@ export default function UniversityAdmissions({
             variants={stagger}
             initial="hidden"
             animate={inView ? "visible" : "hidden"}
-            className="flex flex-col"
+            className="flex min-w-0 flex-col"
           >
             {/* Overview */}
             {admissions?.overview && (
@@ -259,23 +293,35 @@ export default function UniversityAdmissions({
               >
                 {policyCards.map((item, index) => {
                   const Icon = item.icon;
+                  const isLong = item.text.length > READ_MORE_THRESHOLD;
 
                   return (
                     <motion.article
                       key={item.title}
                       variants={fadeUp}
                       custom={index * 0.08}
-                      className="mr-4 min-h-[220px] w-[82vw] max-w-[320px] shrink-0 snap-center rounded-2xl border border-black/[0.07] bg-white p-5 shadow-sm md:mr-0 md:w-full md:max-w-none"
+                      className="mr-4 flex h-67.5 w-[82vw] max-w-80 shrink-0 snap-center flex-col rounded-2xl border border-black/[0.07] bg-white p-5 shadow-sm md:mr-0 md:w-full md:max-w-none"
                     >
-                      <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-2xl bg-[#C9A84C]/10 text-[#C9A84C]">
+                      <div className="mb-4 flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#C9A84C]/10 text-[#C9A84C]">
                         <Icon size={18} />
                       </div>
                       <h3 className="text-[15px] font-extrabold text-[#0D1B3E]">
                         {item.title}
                       </h3>
-                      <p className="mt-3 text-[13px] leading-7 text-slate-600">
-                        {item.text}
-                      </p>
+                      <div className="mt-3 flex-1 overflow-hidden">
+                        <p className="line-clamp-4 text-[13px] leading-7 text-slate-600">
+                          {item.text}
+                        </p>
+                      </div>
+                      {isLong && (
+                        <button
+                          type="button"
+                          onClick={() => setActive(item)}
+                          className="mt-3 self-end text-[12px] font-bold uppercase tracking-[0.12em] text-[#C9A84C] transition-colors hover:text-[#a8862f] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A84C]/50"
+                        >
+                          Read more
+                        </button>
+                      )}
                     </motion.article>
                   );
                 })}
@@ -295,13 +341,13 @@ export default function UniversityAdmissions({
                     </h3>
                   </div>
 
-                  <div className="flex flex-col gap-3">
+                  <div className="-mx-4 flex snap-x snap-mandatory overflow-x-auto px-4 pt-2 pb-4 scrollbar-none [&::-webkit-scrollbar]:hidden md:mx-0 md:px-0">
                     {admissions.applicationTips.map((tip, index) => (
                       <motion.div
                         key={index}
                         variants={fadeUp}
                         custom={index * 0.1}
-                        className="group flex items-start gap-4 rounded-xl border border-black/[0.05] bg-white p-4 transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A84C]/30 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)]"
+                        className="group mr-3 flex w-[80vw] max-w-80 shrink-0 snap-center items-start gap-4 rounded-xl border border-black/5 bg-white p-4 transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A84C]/30 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)]"
                       >
                         <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#F7F3EC] text-[12px] font-bold text-[#0D1B3E] transition-colors group-hover:bg-[#C9A84C] group-hover:text-white">
                           {index + 1}
@@ -317,6 +363,59 @@ export default function UniversityAdmissions({
           </motion.div>
         </div>
       </div>
+
+      {/* Full-text dialog — one policy card at a time, no inline expansion */}
+      <AnimatePresence>
+        {active && (
+          <motion.div
+            key="policy-card-dialog"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-80 flex items-center justify-center p-4 sm:p-6"
+            role="dialog"
+            aria-modal="true"
+            aria-label={active.title}
+          >
+            <div
+              className="absolute inset-0 bg-[#0D1B3E]/55 backdrop-blur-sm"
+              onClick={() => setActive(null)}
+            />
+            <motion.div
+              initial={{ opacity: 0, y: 18, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 18, scale: 0.97 }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              className="relative flex max-h-[82vh] w-full max-w-xl flex-col rounded-3xl border border-black/[0.07] bg-white shadow-[0_24px_60px_rgba(13,27,62,0.25)]"
+            >
+              <div className="flex items-start justify-between gap-4 border-b border-black/6 p-5 sm:p-6">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#C9A84C]/10 text-[#C9A84C]">
+                    <active.icon size={18} />
+                  </div>
+                  <h3 className="text-[15px] font-extrabold text-[#0D1B3E]">
+                    {active.title}
+                  </h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setActive(null)}
+                  aria-label="Close"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-slate-100 hover:text-[#0D1B3E] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A84C]/50"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+              <div className="overflow-y-auto p-5 sm:p-6">
+                <p className="text-[14px] leading-8 text-slate-700">
+                  {active.text}
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

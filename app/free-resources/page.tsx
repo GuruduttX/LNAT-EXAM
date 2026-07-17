@@ -11,6 +11,9 @@ export const metadata = {
   title: "Free LNAT Resources: Practice Papers, Guides & Sample Essays",
   description:
     "Free LNAT preparation resources for Indian students — official practice papers, study guides, sample essays and a reading list.",
+  alternates: {
+    canonical: "/free-resources",
+  },
 };
 
 const faqItems = [
@@ -154,6 +157,7 @@ export default async function FreeResourcesPage() {
           url: `${siteUrl}/free-resources#${resource.slug}`,
         })),
       },
+
       {
         "@type": "FAQPage",
         mainEntity: faqItems.map((faq) => ({

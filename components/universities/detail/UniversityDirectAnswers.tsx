@@ -1,12 +1,19 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView, type Variants } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import {
+  AnimatePresence,
+  motion,
+  useInView,
+  type Variants,
+} from "framer-motion";
 import {
   GraduationCap,
   ShieldCheck,
   Sparkles,
   UserCheck,
+  X,
+  type LucideIcon,
 } from "lucide-react";
 
 interface UniversityDirectAnswersProps {
@@ -21,6 +28,17 @@ interface UniversityDirectAnswersProps {
     };
   };
 }
+
+interface AnswerItem {
+  label: string;
+  answer: string;
+  icon: LucideIcon;
+}
+
+// Cards are a fixed height with the answer clamped to 4 lines. Any answer
+// longer than this gets a "Read more" that opens the full text in a dialog,
+// so one long answer can never stretch its card or misalign the row.
+const READ_MORE_THRESHOLD = 160;
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 22 },
@@ -41,9 +59,25 @@ export default function UniversityDirectAnswers({
 }: UniversityDirectAnswersProps) {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, margin: "-8% 0px" });
+  const [active, setActive] = useState<AnswerItem | null>(null);
+
+  // While the dialog is open: close on Escape and lock body scroll.
+  useEffect(() => {
+    if (!active) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setActive(null);
+    };
+    document.addEventListener("keydown", onKey);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [active]);
 
   const directAnswers = university.directAnswers;
-  const answers = [
+  const answers: AnswerItem[] = [
     {
       label: "What makes it special?",
       answer: directAnswers?.whatIsSpecial,
@@ -68,10 +102,10 @@ export default function UniversityDirectAnswers({
       answer: directAnswers?.whatKindOfStudentFits,
       icon: UserCheck,
     },
-  ].filter((item) => item.answer);
+  ].filter((item): item is AnswerItem => Boolean(item.answer));
 
   if (!answers.length) return null;
- 
+
   return (
     <section
       ref={ref}
@@ -120,28 +154,93 @@ export default function UniversityDirectAnswers({
         >
           {answers.map((item, index) => {
             const Icon = item.icon;
+            const isLong = item.answer.length > READ_MORE_THRESHOLD;
 
             return (
               <motion.article
                 key={item.label}
                 variants={fadeUp}
                 custom={index * 0.08}
-                className="mr-4 flex min-h-[230px] w-[82vw] max-w-[320px] shrink-0 snap-center flex-col rounded-[24px] border border-black/[0.07] bg-white p-5 shadow-[0_12px_30px_rgba(20,31,45,0.05)] md:mr-0 md:w-full md:max-w-none"
+                className="mr-4 flex h-72.5 w-[82vw] max-w-[320px] shrink-0 snap-center flex-col rounded-3xl border border-black/[0.07] bg-white p-5 shadow-[0_12px_30px_rgba(20,31,45,0.05)] md:mr-0 md:w-full md:max-w-none"
               >
-                <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-2xl bg-[#0D1B3E] text-[#C9A84C]">
+                <div className="mb-5 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#0D1B3E] text-[#C9A84C]">
                   <Icon size={19} strokeWidth={2.2} />
                 </div>
                 <h3 className="text-[13px] font-extrabold uppercase tracking-[0.14em] text-[#0D1B3E]">
                   {item.label}
                 </h3>
-                <p className="mt-4 text-[14px] leading-7 text-slate-600">
-                  {item.answer}
-                </p>
-              </motion.article> 
+                <div className="mt-4 flex-1 overflow-hidden">
+                  <p className="line-clamp-4 text-[14px] leading-7 text-slate-600">
+                    {item.answer}
+                  </p>
+                </div>
+                {isLong && (
+                  <button
+                    type="button"
+                    onClick={() => setActive(item)}
+                    className="mt-3 self-end text-[12px] font-bold uppercase tracking-[0.12em] text-[#C9A84C] transition-colors hover:text-[#a8862f] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A84C]/50"
+                  >
+                    Read more
+                  </button>
+                )}
+              </motion.article>
             );
           })}
         </motion.div>
       </div>
+
+      {/* Full-answer dialog — one card at a time, no inline expansion */}
+      <AnimatePresence>
+        {active && (
+          <motion.div
+            key="direct-answer-dialog"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-80 flex items-center justify-center p-4 sm:p-6"
+            role="dialog"
+            aria-modal="true"
+            aria-label={active.label}
+          >
+            <div
+              className="absolute inset-0 bg-[#0D1B3E]/55 backdrop-blur-sm"
+              onClick={() => setActive(null)}
+            />
+            <motion.div
+              initial={{ opacity: 0, y: 18, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 18, scale: 0.97 }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              className="relative flex max-h-[82vh] w-full max-w-xl flex-col rounded-3xl border border-black/[0.07] bg-white shadow-[0_24px_60px_rgba(13,27,62,0.25)]"
+            >
+              <div className="flex items-start justify-between gap-4 border-b border-black/6 p-5 sm:p-6">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#0D1B3E] text-[#C9A84C]">
+                    <active.icon size={19} strokeWidth={2.2} />
+                  </div>
+                  <h3 className="text-[14px] font-extrabold uppercase tracking-[0.14em] text-[#0D1B3E]">
+                    {active.label}
+                  </h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setActive(null)}
+                  aria-label="Close"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-slate-100 hover:text-[#0D1B3E] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A84C]/50"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+              <div className="overflow-y-auto p-5 sm:p-6">
+                <p className="text-[15px] leading-8 text-slate-700">
+                  {active.answer}
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
-} 
+}

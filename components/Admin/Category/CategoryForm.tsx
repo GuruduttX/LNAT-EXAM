@@ -69,8 +69,6 @@ function createInitialState(
     ctaLabel: initialData?.cta?.label || "",
     ctaHref: initialData?.cta?.href || "",
     ctaType: initialData?.cta?.type || "primary",
-    isIndexed: initialData?.isIndexed ?? true,
-    minPostsToIndex: String(initialData?.minPostsToIndex || 4),
     postOrder: initialData?.postOrder || "curated",
     faqs: initialData?.faqs?.length ? initialData.faqs : [emptyFaq()],
     subtopics: initialData?.subtopics?.length
@@ -238,8 +236,6 @@ export default function CategoryForm({
             type: form.ctaType as "primary" | "secondary",
           }
         : undefined,
-    isIndexed: form.isIndexed,
-    minPostsToIndex: Number(form.minPostsToIndex) || 4,
     postOrder: form.postOrder as "curated" | "recent" | "popular",
     status: statusOverride,
     lastUpdated: new Date().toISOString(),
@@ -635,28 +631,6 @@ export default function CategoryForm({
           </div>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            <label className="flex items-center gap-3 rounded-md border border-slate-800 bg-slate-900/30 px-4 py-3 text-sm text-slate-300">
-              <input
-                type="checkbox"
-                checked={form.isIndexed}
-                onChange={(event) =>
-                  updateForm("isIndexed", event.target.checked)
-                }
-              />
-              Indexed
-            </label>
-            <div>
-              <label className={labelClass}>Min Posts To Index</label>
-              <input
-                type="number"
-                min="1"
-                value={form.minPostsToIndex}
-                onChange={(event) =>
-                  updateForm("minPostsToIndex", event.target.value)
-                }
-                className={inputClass}
-              />
-            </div>
             <div>
               <label className={labelClass}>Post Order</label>
               <select

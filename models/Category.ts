@@ -95,17 +95,6 @@ const categorySchema = new Schema(
     faqs: [faqSchema],
     relatedCategorySlugs: [{ type: String, trim: true }],
     cta: ctaSchema,
-    isIndexed: {
-      type: Boolean,
-      required: true,
-      default: true,
-    },
-    minPostsToIndex: {
-      type: Number,
-      required: true,
-      default: 4,
-      min: 1,
-    },
     postOrder: {
       type: String,
       required: true,

@@ -99,16 +99,115 @@ export interface IMediaAsset {
     | "og";
 }
 
-export interface IStatItem {
-  label: string;
-  value: string;
-  note?: string;
-}
-
 export interface IFeatureBlock {
   title: string;
   description: string;
   iconName?: string;
+}
+
+export interface ICourse {
+  name?: string;
+  ucasCode?: string;
+  durationYears?: string;
+  structure?: string;
+  yearAbroadNote?: string;
+  languageRequirementNote?: string;
+}
+
+export interface IAdmissionsStats {
+  cycleLabel?: string;
+  applicants?: string;
+  offers?: string;
+  interviewed?: string;
+  avgLnatScore?: string;
+  avgEssayOffer?: string;
+}
+
+export interface IInterview {
+  answer40to60?: string;
+  format?: string;
+  whatTheyAssess?: string;
+  sampleThemes?: string[];
+  prepTips?: string[];
+}
+
+export interface ICollegeForLaw {
+  name?: string;
+  whyForLaw?: string;
+  note?: string;
+}
+
+export interface IConversionTable {
+  board?: string;
+  indianGrade?: string;
+  oxfordEquivalent?: string;
+  note?: string;
+}
+
+export interface IIndianEligibility {
+  answer40to60?: string;
+  acceptedBoards?: string[];
+  stateBoardAccepted?: boolean;
+  niosAccepted?: boolean;
+  conversionTable?: IConversionTable[];
+  predictedGradesNote?: string;
+}
+
+export interface IFeesForIndians {
+  answer40to60?: string;
+  tuitionGBPPerYear?: string;
+  tuitionINRPerYear?: string;
+  livingCostGBPPerMonth?: string;
+  totalEstimateINR?: string;
+  fxRateNote?: string;
+}
+
+export interface IScholarship {
+  name?: string;
+  level?: string;
+  coverage?: string;
+  openToIndians?: boolean;
+  eligibilityNote?: string;
+  applyNote?: string;
+  sourceUrl?: string;
+}
+
+export interface ITestCentresInIndia {
+  answer40to60?: string;
+  cities?: string[];
+  bookingNote?: string;
+  deadlineISTNote?: string;
+  sourceUrl?: string;
+}
+
+export interface ITimelineStep {
+  step?: string;
+  date?: string;
+  note?: string;
+}
+
+export interface IMoneyFunnel {
+  primaryMoneyCTA?: ICTA;
+  courseCTA?: ICTA;
+  leadMagnet?: string;
+  moneyAnchorVariants?: string[];
+}
+
+export interface IPerson {
+  name?: string;
+  role?: string;
+  bio?: string;
+  credentials?: string;
+  photoUrl?: string;
+  profileUrl?: string;
+  sameAs?: string[];
+}
+
+export interface IFactCitation {
+  claim?: string;
+  sourceName?: string;
+  sourceUrl?: string;
+  dateVerified?: Date | string;
 }
 
 export interface ICTA {
@@ -167,12 +266,15 @@ export interface IUniversity {
   // SEO / schema
   metaTitle?: string;
   metaDescription?: string;
-  focusKeyword?: string;
-  secondaryKeywords?: string[];
   schemaTitle?: string;
   schemaDescription?: string;
   schemaType?: "CollegeOrUniversity" | "EducationalOrganization";
-  sameAs?: string[];
+  schemaFlags?: {
+    emitFAQPage?: boolean;
+    emitCourseSchema?: boolean;
+    hasGenuineOnPageReviews?: boolean;
+  };
+  llmsSummary?: string;
 
   // Hero / premium storytelling
   hero?: {
@@ -181,7 +283,6 @@ export interface IUniversity {
     subheadline?: string;
     primaryCTA?: ICTA;
     secondaryCTA?: ICTA;
-    heroStats?: IStatItem[];
     carouselImages?: IMediaAsset[];
   };
 
@@ -222,6 +323,23 @@ export interface IUniversity {
     standoutPrograms?: string[];
   };
 
+  // --- NEW: Academics & Admissions Additions ---
+  courses?: ICourse[];
+  admissionsStats?: IAdmissionsStats;
+  interview?: IInterview;
+  collegesForLaw?: ICollegeForLaw[];
+  bestCollegesForLawSummary?: string;
+
+  // --- NEW: India Localization ---
+  indianEligibility?: IIndianEligibility;
+  feesForIndians?: IFeesForIndians;
+  scholarships?: IScholarship[];
+  testCentresInIndia?: ITestCentresInIndia;
+
+  // --- NEW: Funnel & Timelines ---
+  applicationTimeline?: ITimelineStep[];
+  moneyFunnel?: IMoneyFunnel;
+
   cityLife?: {
     cityOverview?: string;
     whyStudentsLoveTheCity?: IFeatureBlock[];
@@ -258,6 +376,11 @@ export interface IUniversity {
     alumniOutcomes?: string;
     internshipsAndPlacements?: string;
     reputationForLaw?: string;
+    // --- NEW: Localization Notes ---
+    sqeRouteNote?: string;
+    bciRecognitionNote?: string;
+    indiaReturnPathNote?: string;
+    ukPracticeNote?: string;
   };
 
   famousAlumni?: IFamousAlumnus[];
@@ -265,17 +388,24 @@ export interface IUniversity {
   notableAlumni?: string[];
   awardsAndRecognition?: string[];
   faqs?: IUniversityFAQ[];
+
   relatedBlogs?: string[];
   relatedResources?: string[];
   relatedUniversities?: string[];
   comparisonLinks?: IRelatedLink[];
+
+  // --- NEW & UPDATED: Governance & E-E-A-T ---
   sourceReferences?: ISourceReference[];
+  factCitations?: IFactCitation[];
+  author?: IPerson;
+  mentors?: IPerson[];
   lastFactCheckedAt?: Date;
   reviewedBy?: {
     name: string;
     role?: string;
     profileUrl?: string;
   };
+
   featured?: boolean;
   status?: "draft" | "published";
   createdAt?: Date;
@@ -307,8 +437,6 @@ export interface ICategory {
   faqs?: IUniversityFAQ[];
   relatedCategorySlugs?: string[];
   cta?: ICTA;
-  isIndexed: boolean;
-  minPostsToIndex: number;
   postOrder: CategoryPostOrder;
   status: "draft" | "published";
   lastUpdated?: Date;

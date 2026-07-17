@@ -9,6 +9,9 @@ import { getFeaturedUniversities } from "@/services/universityService";
 import { getPublishedCategoriesBySlugs } from "@/services/categoryService";
 import { createHomePageSchema } from "@/lib/homePageSchema";
 import { getSiteUrl } from "@/lib/siteUrl";
+import HowWePrepare from "@/components/Home/HowWePrepare";
+import MeetYourMentor from "@/components/Home/MeetYourMentor";
+import FreeResourcesIndex from "@/components/Home/FreeResourcesIndex";
 
 const TrustedUniversities = dynamic(
   () => import("@/components/Home/Trusteduniversities"),
@@ -136,15 +139,14 @@ export default async function Home() {
       <HomeHero />
       <TrustedUniversities />
       <LNATOverview />
+      <HowWePrepare/>
+      <FreeResourcesIndex />
+      <MeetYourMentor />
       <ExamPattern />
       <LNATTimeline />
       <FeaturedUniversities universities={universities} />
       <TopicHubsPreview topicHubs={topicHubs} />
       <WhyChooseUs />
-      <ProgrammesPreview />
-      <PreparationProcess />
-      <WhoWeHelp />
-      <MentorPreview />
       <FAQPreview />
       <FinalCTA />
     </main>

@@ -2,10 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import connectDB from "@/lib/db";
-import {
-  getCategoryPostSlugs,
-  shouldIndexCategory,
-} from "@/lib/categoryIndexing";
 import { Blog } from "@/models/Blog";
 import { University } from "@/models/University";
 import {
@@ -55,15 +51,6 @@ export async function generateMetadata({ params }: PageProps) {
     };
   }
 
-  const postSlugs = getCategoryPostSlugs(category);
-  const publishedPostCount = postSlugs.length
-    ? await Blog.countDocuments({
-        slug: { $in: postSlugs },
-        status: "published",
-      })
-    : 0;
-  const shouldIndex = shouldIndexCategory(category, publishedPostCount);
-
   return {
     title: category.metaTitle,
     description: category.metaDescription,
@@ -71,7 +58,7 @@ export async function generateMetadata({ params }: PageProps) {
       canonical: `/topics/${category.slug}`,
     },
     robots: {
-      index: shouldIndex,
+      index: category.status === "published",
       follow: true,
     },
     openGraph: {

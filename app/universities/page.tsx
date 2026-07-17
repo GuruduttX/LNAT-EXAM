@@ -13,6 +13,9 @@ export const metadata = {
   title: "LNAT Universities 2027: Full List of UK Unis + JGLS (India)",
   description:
     "Every university that requires the LNAT — Oxford, Cambridge, UCL, LSE, KCL, Durham, Bristol, Glasgow, SOAS and JGLS — with scores and guides.",
+  alternates: {
+    canonical: "/universities",
+  },
 };
 
 const faqItems = [

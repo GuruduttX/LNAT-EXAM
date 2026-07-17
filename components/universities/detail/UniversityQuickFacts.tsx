@@ -54,34 +54,39 @@ export default function UniversityQuickFacts({
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, margin: "-8% 0px" });
 
-  // Filter out any missing stats dynamically so we don't render empty cards
+  // These are compact chips, so the value must be a short rank / range / date.
+  // Strip any leftover "[VERIFY]" editorial marker and trim whitespace; a value
+  // that is empty after cleaning is dropped so we never render a blank card.
+  const formatFact = (raw?: string) =>
+    (raw ?? "").replace(/^\s*\[verify\]\s*/i, "").trim();
+
   const stats: StatItem[] = [
     {
       icon: Globe2,
       label: "Global Ranking",
-      value: university.globalRanking || "",
+      value: formatFact(university.globalRanking),
     },
     {
       icon: Trophy,
       label: "Law Ranking",
-      value: university.lawSchoolRanking || "",
+      value: formatFact(university.lawSchoolRanking),
     },
     {
       icon: Calendar,
       label: "App Deadline",
-      value: university.applicationDeadline || "",
+      value: formatFact(university.applicationDeadline),
     },
     {
       icon: GraduationCap,
       label: "Tuition Fee",
-      value: university.tuitionFee || "",
+      value: formatFact(university.tuitionFee),
     },
     {
       icon: Users,
       label: "Acceptance Rate",
-      value: university.acceptanceRate || "",
+      value: formatFact(university.acceptanceRate),
     },
-  ].filter((stat) => stat.value.trim() !== "");
+  ].filter((stat) => stat.value !== "");
 
   if (stats.length === 0) return null;
 
@@ -127,7 +132,10 @@ export default function UniversityQuickFacts({
 
                 {/* Value */}
                 <div>
-                  <p className="text-[20px] font-extrabold leading-tight text-[#0D1B3E] xl:text-[22px]">
+                  <p
+                    title={stat.value}
+                    className="line-clamp-3 wrap-break-word text-[16px] font-bold leading-snug text-[#0D1B3E] xl:text-[17px]"
+                  >
                     {stat.value}
                   </p>
                 </div>

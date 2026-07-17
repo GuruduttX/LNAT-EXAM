@@ -205,9 +205,7 @@ export default function HomeHero() {
         source="home-hero"
       />
 
-      <section
-        className="relative w-full overflow-hidden bg-[#F7F3EC] h-[100vh] max-h-[850px] min-h-[650px]"
-      >
+      <section className="relative w-full overflow-hidden bg-[#F7F3EC] h-[100vh] max-h-[850px] min-h-[650px]">
         {/* ── Background image ── */}
         <div className="absolute inset-0">
           <Image
@@ -284,13 +282,14 @@ export default function HomeHero() {
                 }}
                 className="text-white mb-4"
                 style={{
-                  fontSize: "clamp(1.9rem, 4vw, 3.4rem)",
+                  fontSize: "clamp(1.92rem, 3.5vw, 3.4rem)",
                   fontWeight: 700,
                   lineHeight: 1.18,
                   letterSpacing: "-0.02em",
                 }}
               >
-                LNAT Coaching in India for UK & JGLS Law Admissions
+                LNAT Coaching in India — Built Around the LNAT, and Only the
+                LNAT
               </motion.h1>
 
               {/* Subtext */}
@@ -301,12 +300,11 @@ export default function HomeHero() {
                 className="text-white/60 leading-[1.8] mb-6 max-w-[500px] font-light"
                 style={{ fontSize: "clamp(0.8rem, 1vw, 0.93rem)" }}
               >
-                Get the LNAT score that opens the door to law at Oxford,
-                Cambridge, UCL, LSE — and Jindal Global Law School in India. We
-                coach Indian students through every part of the Law National
-                Aptitude Test: fast, accurate Section A reasoning, a clear and
-                arguable Section B essay, and the timing discipline that
-                separates an average score from an offer-winning one.
+                One test now opens two doors from India: undergraduate law at
+                top UK universities and Jindal Global Law School. We prepare you
+                for both, with focused coaching on the reading, reasoning and
+                essay skills the LNAT actually measures — not a CLAT course with
+                an LNAT chapter bolted on.
               </motion.p>
 
               {/* CTAs */}
@@ -325,7 +323,7 @@ export default function HomeHero() {
                     boxShadow: "0 4px 20px rgba(201,168,76,0.45)",
                   }}
                 >
-                  Talk to a Mentor
+                  Free LNAT consultation
                   <ArrowRight
                     size={14}
                     className="transition-transform duration-200 group-hover:translate-x-1"
@@ -341,7 +339,7 @@ export default function HomeHero() {
                   className="group inline-flex items-center justify-center gap-2.5 px-6 py-3 rounded-xl font-semibold text-sm text-white border border-white/20 bg-white/8 backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
                 >
                   <BookOpen size={13} className="text-[#C9A84C]" />
-                  See our programmes
+                  Free Resources
                 </button>
               </motion.div>
 

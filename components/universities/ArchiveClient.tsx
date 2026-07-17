@@ -61,7 +61,6 @@ export default function ArchiveClient({ universities }: ArchiveClientProps) {
         university.city,
         university.location,
         university.locationLabel,
-        university.focusKeyword,
       ]
         .filter(Boolean)
         .join(" ")

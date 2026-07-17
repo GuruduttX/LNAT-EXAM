@@ -36,7 +36,7 @@ export default function FAQPreview() {
   };
 
   return (
-    <section className="relative overflow-hidden py-14 md:py-20 lg:py-28 px-6 lg:px-12 bg-[#FDFBF7] border-y border-[#0D1B3E]/6">
+    <section className="relative overflow-hidden py-10 md:py-10 lg:py-10 px-6 lg:px-12 bg-[#FDFBF7] border-y border-[#0D1B3E]/6">
       {/* Background Atmosphere */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-0 left-0 h-[420px] w-[420px] rounded-full bg-[#C9A84C]/6 blur-3xl" />

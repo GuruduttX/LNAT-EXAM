@@ -22,6 +22,12 @@ const CMSMediaSection = ({
 }: CMSMediaSectionProps) => {
   const [loading, setLoading] = useState(false);
 
+  // next/image calls `new URL()` on the src, which throws on a non-URL value
+  // (e.g. a leftover placeholder). Only treat absolute URLs or root-relative
+  // paths as renderable; anything else falls back to the upload prompt.
+  const isRenderableSrc =
+    /^https?:\/\//i.test(image) || image.startsWith("/");
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -82,7 +88,7 @@ const CMSMediaSection = ({
             </div>
           )}
 
-          {image ? (
+          {isRenderableSrc ? (
             <Image
               src={image}
               alt={alt}

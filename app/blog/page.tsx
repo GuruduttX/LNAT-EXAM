@@ -14,6 +14,9 @@ export const metadata = {
   title: "LNAT Blog | Guides, Analysis, and Editorial Insights",
   description:
     "Explore LNAT guides, strategy articles, and university-focused insights organised into topic hubs for easier research and smarter preparation.",
+  alternates: {
+    canonical: "/blog",
+  },
 };
 
 async function getBlogIndexData() {

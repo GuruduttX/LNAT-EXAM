@@ -104,24 +104,26 @@ export default function UniversityRelatedLinks({
           </h2>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        {/* Mobile: horizontal snap carousel | md+: equal-height grid */}
+        <div className="-mx-4 flex snap-x snap-mandatory overflow-x-auto px-4 pb-4 scrollbar-none [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:grid-cols-2 md:gap-4 md:overflow-visible md:px-0 md:pb-0 xl:grid-cols-4">
           {groups.map((group) => {
             const Icon = group.icon;
 
             return (
               <article
                 key={group.title}
-                className="rounded-[24px] border border-black/[0.07] bg-[#FDFBF7] p-5 shadow-[0_12px_30px_rgba(20,31,45,0.04)]"
+                className="mr-4 flex h-90 w-[82vw] max-w-80 shrink-0 snap-center flex-col rounded-3xl border border-black/[0.07] bg-[#FDFBF7] p-5 shadow-[0_12px_30px_rgba(20,31,45,0.04)] md:mr-0 md:w-full md:max-w-none"
               >
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#0D1B3E] text-[#C9A84C]">
+                <div className="mb-4 flex shrink-0 items-center gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#0D1B3E] text-[#C9A84C]">
                     <Icon size={18} />
                   </div>
                   <h3 className="text-[15px] font-extrabold text-[#0D1B3E]">
                     {group.title}
                   </h3>
                 </div>
-                <div className="space-y-2">
+                {/* Vertically scrollable link list inside the fixed-height card */}
+                <div className="min-h-0 flex-1 space-y-2 overflow-y-auto pr-1 scrollbar-thin [scrollbar-color:rgba(201,168,76,0.4)_transparent]">
                   {group.links.map((link) => (
                     <LinkCard
                       key={`${group.title}-${link.href}-${link.label}`}
