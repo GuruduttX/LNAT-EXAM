@@ -180,8 +180,21 @@ export default function Footer() {
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-          <p className="text-xs text-slate-500 order-2 md:order-1">
-            &copy; {currentYear} LNAT Exam India. All rights reserved.
+          <p className="text-xs text-slate-500 order-2 md:order-1 text-center flex flex-col md:block">
+            <span>&copy; {currentYear} LNAT Exam India. All rights reserved.</span>
+            <span className="block md:inline">
+              {" "}
+              Built and maintained by{" "}
+              <a
+                href="https://inventoapps.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#9A7B4F] transition-colors duration-300"
+              >
+                InventoApps
+              </a>
+              .
+            </span>
           </p>
 
           <div className="flex items-center gap-6 order-1 md:order-2 text-xs text-slate-500">

@@ -18,11 +18,14 @@ import {
   ICourse,
   IFactCitation,
   IMediaAsset,
-  IPerson,
   IScholarship,
   ITimelineStep,
   IUniversity,
 } from "@/types/backend.types";
+import {
+  UNIVERSITY_AUTHOR,
+  UNIVERSITY_REVIEWER,
+} from "@/lib/universityGovernance";
 import UniversityGallerySection from "./UniversityGallerySection";
 import GalleryImageField from "./GalleryImageField";
 
@@ -80,7 +83,6 @@ type CollegeForLawItem = ICollegeForLaw;
 type ConversionTableItem = IConversionTable;
 type ScholarshipItem = IScholarship;
 type TimelineStepItem = ITimelineStep;
-type PersonItem = Omit<IPerson, "sameAs"> & { sameAs?: string };
 type FactCitationItem = Omit<IFactCitation, "dateVerified"> & {
   dateVerified?: string;
 };
@@ -140,15 +142,6 @@ const emptyTimeline = (): TimelineStepItem => ({
   step: "",
   date: "",
   note: "",
-});
-const emptyPerson = (): PersonItem => ({
-  name: "",
-  role: "",
-  bio: "",
-  credentials: "",
-  photoUrl: "",
-  profileUrl: "",
-  sameAs: "",
 });
 const emptyCitation = (): FactCitationItem => ({
   claim: "",
@@ -464,25 +457,12 @@ function createInitialState(
             : "",
         }))
       : [emptyCitation()],
-    authorName: initialData?.author?.name || "",
-    authorRole: initialData?.author?.role || "",
-    authorBio: initialData?.author?.bio || "",
-    authorCredentials: initialData?.author?.credentials || "",
-    authorPhotoUrl: initialData?.author?.photoUrl || "",
-    authorProfileUrl: initialData?.author?.profileUrl || "",
-    authorSameAs: (initialData?.author?.sameAs || []).join("\n"),
-    mentors: initialData?.mentors?.length
-      ? initialData.mentors.map((m: any) => ({
-          ...m,
-          sameAs: (m.sameAs || []).join("\n"),
-        }))
-      : [emptyPerson()],
-
+    // Author, reviewer and mentors are NOT form state: author/reviewer are
+    // fixed constants (see lib/universityGovernance.ts) and mentors are
+    // rendered by a static component instead of CMS data.
     lastFactCheckedAt: initialData?.lastFactCheckedAt
       ? new Date(initialData.lastFactCheckedAt).toISOString().slice(0, 10)
       : "",
-    reviewedByName: initialData?.reviewedBy?.name || "",
-    reviewedByRole: initialData?.reviewedBy?.role || "",
     featured: Boolean(initialData?.featured),
     status: initialData?.status || "draft",
   };
@@ -553,7 +533,6 @@ export default function UniversityForm({
     | "indianEligibilityConversionTable"
     | "scholarships"
     | "applicationTimeline"
-    | "mentors"
     | "factCitations";
 
   const getEmptyListItem = (field: ListField) => {
@@ -579,7 +558,6 @@ export default function UniversityForm({
       indianEligibilityConversionTable: emptyConversion(),
       scholarships: emptyScholarship(),
       applicationTimeline: emptyTimeline(),
-      mentors: emptyPerson(),
       factCitations: emptyCitation(),
     };
     return emptyMap[field];
@@ -902,35 +880,13 @@ export default function UniversityForm({
             : undefined,
         })),
 
-      author: form.authorName
-        ? {
-            name: form.authorName,
-            role: form.authorRole || undefined,
-            bio: form.authorBio || undefined,
-            credentials: form.authorCredentials || undefined,
-            photoUrl: form.authorPhotoUrl || undefined,
-            profileUrl: form.authorProfileUrl || undefined,
-            sameAs: toLines(form.authorSameAs),
-          }
-        : undefined,
-
-      mentors: form.mentors
-        .filter((m: PersonItem) => m.name)
-        .map((m: PersonItem) => ({
-          ...m,
-          sameAs: toLines(m.sameAs || ""),
-        })),
+      // Predefined for every university page — not editable from the CMS.
+      author: { ...UNIVERSITY_AUTHOR },
+      reviewedBy: { ...UNIVERSITY_REVIEWER },
 
       lastFactCheckedAt: form.lastFactCheckedAt
         ? new Date(form.lastFactCheckedAt)
         : undefined,
-      reviewedBy:
-        form.reviewedByName || form.reviewedByRole
-          ? {
-              name: form.reviewedByName,
-              role: form.reviewedByRole || undefined,
-            }
-          : undefined,
       featured: form.featured,
       status: statusOverride || form.status,
     };
@@ -3104,136 +3060,24 @@ export default function UniversityForm({
           <div className="space-y-6">
             <div>
               <h3 className="text-[#C4A47C] font-medium border-b border-slate-800 pb-2 mb-4">
-                Author
+                Author & Reviewer (predefined)
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input
-                  className={inputClass}
-                  placeholder="Name"
-                  value={form.authorName}
-                  onChange={(e) => updateForm("authorName", e.target.value)}
-                />
-                <input
-                  className={inputClass}
-                  placeholder="Role"
-                  value={form.authorRole}
-                  onChange={(e) => updateForm("authorRole", e.target.value)}
-                />
-                <input
-                  className={inputClass}
-                  placeholder="Credentials"
-                  value={form.authorCredentials}
-                  onChange={(e) =>
-                    updateForm("authorCredentials", e.target.value)
-                  }
-                />
-                <input
-                  className={inputClass}
-                  placeholder="Photo URL"
-                  value={form.authorPhotoUrl}
-                  onChange={(e) => updateForm("authorPhotoUrl", e.target.value)}
-                />
-                <input
-                  className={inputClass}
-                  placeholder="Profile URL"
-                  value={form.authorProfileUrl}
-                  onChange={(e) =>
-                    updateForm("authorProfileUrl", e.target.value)
-                  }
-                />
-                <textarea
-                  rows={3}
-                  className={`${inputClass} resize-none`}
-                  placeholder="Bio"
-                  value={form.authorBio}
-                  onChange={(e) => updateForm("authorBio", e.target.value)}
-                />
-                <textarea
-                  rows={3}
-                  className={`${inputClass} resize-none`}
-                  placeholder="SameAs Links (one per line)"
-                  value={form.authorSameAs}
-                  onChange={(e) => updateForm("authorSameAs", e.target.value)}
-                />
+              <div className="space-y-2 rounded-lg border border-slate-800 bg-slate-900/40 p-4 text-sm text-slate-400">
+                <p>
+                  <span className="text-slate-500">Author:</span>{" "}
+                  {UNIVERSITY_AUTHOR.name} — {UNIVERSITY_AUTHOR.role} (
+                  {UNIVERSITY_AUTHOR.credentials})
+                </p>
+                <p>
+                  <span className="text-slate-500">Reviewed by:</span>{" "}
+                  {UNIVERSITY_REVIEWER.name} — {UNIVERSITY_REVIEWER.role}
+                </p>
+                <p className="text-xs text-slate-600">
+                  Fixed for every university page and applied automatically on
+                  save — not editable here. Mentors are rendered by a static
+                  component, not CMS data.
+                </p>
               </div>
-            </div>
-
-            <div>
-              <h3 className="text-[#C4A47C] font-medium border-b border-slate-800 pb-2 mb-4">
-                Mentors
-              </h3>
-              {form.mentors.map((item: PersonItem, index: number) => (
-                <div
-                  key={`mentor-${index}`}
-                  className="grid grid-cols-1 md:grid-cols-2 gap-4 border border-slate-800 p-4 rounded mb-4"
-                >
-                  <input
-                    className={inputClass}
-                    placeholder="Name"
-                    value={item.name}
-                    onChange={(e) =>
-                      updateListItem("mentors", index, "name", e.target.value)
-                    }
-                  />
-                  <input
-                    className={inputClass}
-                    placeholder="Role"
-                    value={item.role}
-                    onChange={(e) =>
-                      updateListItem("mentors", index, "role", e.target.value)
-                    }
-                  />
-                  <input
-                    className={inputClass}
-                    placeholder="Credentials"
-                    value={item.credentials}
-                    onChange={(e) =>
-                      updateListItem(
-                        "mentors",
-                        index,
-                        "credentials",
-                        e.target.value,
-                      )
-                    }
-                  />
-                  <input
-                    className={inputClass}
-                    placeholder="Photo URL"
-                    value={item.photoUrl}
-                    onChange={(e) =>
-                      updateListItem(
-                        "mentors",
-                        index,
-                        "photoUrl",
-                        e.target.value,
-                      )
-                    }
-                  />
-                  <textarea
-                    rows={2}
-                    className={`${inputClass} resize-none md:col-span-2`}
-                    placeholder="SameAs Links (one per line)"
-                    value={item.sameAs}
-                    onChange={(e) =>
-                      updateListItem("mentors", index, "sameAs", e.target.value)
-                    }
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removeListItem("mentors", index)}
-                    className="text-sm text-red-400 text-left"
-                  >
-                    Remove
-                  </button>
-                </div>
-              ))}
-              <button
-                type="button"
-                onClick={() => addListItem("mentors")}
-                className="text-sm text-[#C4A47C]"
-              >
-                + Add mentor
-              </button>
             </div>
 
             <div>
@@ -3432,21 +3276,11 @@ export default function UniversityForm({
                 className={inputClass}
               />
             </div>
-            <div>
-              <label className={labelClass}>Reviewed By Name</label>
-              <input
-                value={form.reviewedByName}
-                onChange={(e) => updateForm("reviewedByName", e.target.value)}
-                className={inputClass}
-              />
-            </div>
-            <div>
-              <label className={labelClass}>Reviewed By Role</label>
-              <input
-                value={form.reviewedByRole}
-                onChange={(e) => updateForm("reviewedByRole", e.target.value)}
-                className={inputClass}
-              />
+            <div className="md:col-span-2">
+              <label className={labelClass}>Reviewed By (fixed)</label>
+              <p className="px-1 text-sm text-slate-500">
+                {UNIVERSITY_REVIEWER.name} — {UNIVERSITY_REVIEWER.role}
+              </p>
             </div>
           </div>
           <div className="space-y-3 pt-4 border-t border-slate-800">

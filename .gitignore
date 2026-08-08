@@ -17,6 +17,7 @@
 /.next/
 /out/
 
+
 # production
 /build
 
@@ -39,3 +40,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local-only data & scripts (not for the repo)
+/Uni-import
+/scripts

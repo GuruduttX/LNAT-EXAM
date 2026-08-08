@@ -28,7 +28,6 @@ interface BlogDetailsHeroProps {
   displayPublishedAt: string | null;
   displayUpdatedAt: string | null;
 }
-
 // ─────────────────────────────────────────────────────────────
 // Subcomponent: BlogBreadcrumbs
 // ─────────────────────────────────────────────────────────────
@@ -169,12 +168,12 @@ function BlogHeroImage({ blog }: { blog: IBlog }) {
 
   return (
     <figure className="relative h-full w-full">
-      <div className="relative mx-auto aspect-[4/3] w-full max-w-[500px] overflow-hidden rounded-3xl border border-black/[0.06] shadow-[0_16px_40px_rgba(13,27,62,0.08)] lg:max-w-none lg:aspect-[4/3] xl:aspect-[4/3]">
+      <div className="relative mx-auto aspect-1220/820 w-full max-w-[500px] overflow-hidden rounded-3xl border border-black/[0.06] shadow-[0_16px_40px_rgba(13,27,62,0.08)] lg:max-w-none lg:aspect-1220/820 xl:aspect-1220/820">
         <Image
           src={src}
           alt={alt}
-          width={1200}
-          height={900}
+          width={1220}
+          height={820}
           priority // LCP Image
           className="h-full w-full object-cover object-center"
           sizes="(max-width: 1024px) 100vw, 50vw"

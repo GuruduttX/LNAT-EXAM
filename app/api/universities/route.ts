@@ -9,6 +9,10 @@ import {
   isMongoDuplicateSlugError,
 } from "@/lib/slugValidation";
 import { requireAdminRequest } from "@/lib/adminAuth";
+import {
+  UNIVERSITY_AUTHOR,
+  UNIVERSITY_REVIEWER,
+} from "@/lib/universityGovernance";
 
 export async function GET(request: Request) {
   try {
@@ -53,6 +57,12 @@ export async function POST(request: Request) {
     await connectDB();
     const body = await request.json();
     submittedSlug = typeof body.slug === "string" ? body.slug : "";
+
+    // Author and reviewer are predefined site-wide; mentors are rendered by a
+    // static component. Enforce here so no client payload can change them.
+    body.author = { ...UNIVERSITY_AUTHOR };
+    body.reviewedBy = { ...UNIVERSITY_REVIEWER };
+    delete body.mentors;
 
     const slugConflict = await getSlugConflictResponse(
       University,

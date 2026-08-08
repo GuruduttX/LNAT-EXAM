@@ -240,7 +240,6 @@ export default function BlogForm({ mode, initialData }: BlogFormProps) {
         ? [
             form.title,
             form.category,
-            form.primaryCategorySlug,
             form.slug,
             form.image,
             form.alt,
