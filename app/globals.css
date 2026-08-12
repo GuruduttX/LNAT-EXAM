@@ -36,6 +36,16 @@ body::-webkit-scrollbar {
   display: none;
 }
 
+/* Reusable: hides the scrollbar on any scrolling container while keeping it
+   scrollable (wheel, touch-swipe and keyboard all still work). */
+@utility no-scrollbar {
+  scrollbar-width: none;          /* Firefox */
+  -ms-overflow-style: none;       /* legacy Edge / IE */
+  &::-webkit-scrollbar {
+    display: none;                /* Chrome, Safari, Opera */
+  }
+}
+
 /* ============================================= */
 /* Rich Text Editor (Tiptap)                     */
 /* ============================================= */
@@ -402,25 +412,40 @@ body::-webkit-scrollbar {
   @apply text-[0.75em] text-slate-500;
 }
 
-/* ── 2. Headings (With Gold Side-Lines & Gradients) ── */
-.blog-content h2, 
-.blog-content h3, 
-.blog-content h4, 
-.blog-content h5 {
-  @apply font-extrabold tracking-tight text-[#0D1B3E] scroll-mt-24;
+/* ── 2. Headings (Clear Size/Weight/Style Hierarchy, H1 → H6) ── */
+.blog-content h1,
+.blog-content h2,
+.blog-content h3,
+.blog-content h4,
+.blog-content h5,
+.blog-content h6 {
+  @apply tracking-tight text-[#0D1B3E] scroll-mt-24;
 }
 
-.blog-content h2 { 
-  @apply text-[1.4rem] md:text-[1.75rem] mt-10 md:mt-14 mb-5 md:mb-6 
+/* H1: reserved for a rare in-body title; bigger and bolder than H2 so the
+   page's real <h1> (the post title in the hero) still reads as the top of
+   the hierarchy in outline, but any H1 inside the content stands out most. */
+.blog-content h1 {
+  @apply text-[1.6rem] md:text-[2rem] font-extrabold mt-10 md:mt-14 mb-5 md:mb-6
+         border-l-[5px] border-[#0D1B3E] pl-4 md:pl-5 py-1.5;
+}
+.blog-content h2 {
+  @apply text-[1.4rem] md:text-[1.75rem] font-extrabold mt-10 md:mt-14 mb-5 md:mb-6
          border-l-[4px] border-[#C9A84C] pl-4 md:pl-5 py-1.5
-         bg-gradient-to-r from-[#C9A84C]/[0.08] to-transparent; 
+         bg-gradient-to-r from-[#C9A84C]/[0.08] to-transparent;
 }
-.blog-content h3 { 
-  @apply text-[1.2rem] md:text-[1.35rem] mt-8 md:mt-10 mb-4 
-         border-l-[3px] border-[#0D1B3E] pl-4 py-1; 
+.blog-content h3 {
+  @apply text-[1.15rem] md:text-[1.3rem] font-bold mt-8 md:mt-10 mb-4
+         border-l-[3px] border-[#0D1B3E] pl-4 py-1;
 }
-.blog-content h4 { 
-  @apply text-[1.05rem] md:text-[1.15rem] mt-6 md:mt-8 mb-3 text-[#0D1B3E]; 
+.blog-content h4 {
+  @apply text-[1rem] md:text-[1.05rem] font-bold mt-6 md:mt-7 mb-2.5 text-[#0D1B3E];
+}
+.blog-content h5 {
+  @apply text-[0.85rem] md:text-[0.9rem] font-bold uppercase tracking-[0.06em] mt-5 md:mt-6 mb-2 text-[#8B6914];
+}
+.blog-content h6 {
+  @apply text-[0.75rem] font-bold uppercase tracking-[0.1em] mt-4 mb-2 text-slate-500;
 }
 
 /* ── 3. Lists (Nested & Styled) ── */
@@ -475,18 +500,47 @@ body::-webkit-scrollbar {
 
 /* ── 6. Tables (Responsive Data) ── */
 .blog-content table {
-  @apply block w-full overflow-x-auto whitespace-nowrap md:whitespace-normal 
-         text-[13px] md:text-[14px] my-8 md:my-10 border-collapse 
-         rounded-2xl border border-black/[0.07] bg-white shadow-sm;
+  @apply no-scrollbar mx-auto whitespace-nowrap md:whitespace-normal
+         text-[13px] md:text-[14px] my-8 md:my-10 border-separate border-spacing-0
+         rounded-2xl border-2 border-[#C9A84C]/60 bg-white shadow-sm;
+  /* `display: table` can never scroll — switching to a block makes the table
+     itself the scroll container, with the real table laid out inside it.
+     `fit-content` keeps narrow tables hugging their content instead of
+     stretching the border across the full column. */
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  overflow-x: auto;
+  /* Stop the horizontal swipe from triggering browser back-navigation */
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
 }
 .blog-content th {
-  @apply bg-[#0D1B3E]/[0.03] text-[#0D1B3E] font-bold p-4 text-left border-b border-black/[0.07] uppercase tracking-[0.05em] text-[11px] md:text-[12px];
+  @apply bg-[#0D1B3E] text-[#FDFCFB] font-bold p-4 text-left uppercase tracking-[0.05em] text-[11px] md:text-[12px];
+  /* Header grid: light dividers so they read against the navy fill */
+  border-right: 1px solid rgba(255, 255, 255, 0.35);
+  border-bottom: 2px solid #c9a84c;
 }
 .blog-content td {
-  @apply p-4 border-b border-black/[0.04] text-slate-600;
+  @apply p-4 text-slate-600;
+  /* Every cell draws its own right + bottom line → a full, even 1px grid.
+     The table's outer border closes the top/left edges. */
+  border-right: 1px solid rgba(13, 27, 62, 0.35);
+  border-bottom: 1px solid rgba(13, 27, 62, 0.35);
 }
-.blog-content tr:last-child td {
-  @apply border-b-0; /* Remove bottom border on last row */
+/* Outer edges are handled by the table border — drop the doubled-up lines */
+.blog-content th:last-child,
+.blog-content td:last-child {
+  border-right: 0;
+}
+.blog-content tbody tr:last-child td {
+  border-bottom: 0;
+}
+.blog-content tr:nth-child(even) td {
+  @apply bg-[#FDFBF7];
+}
+.blog-content tbody tr:hover td {
+  @apply bg-[#C9A84C]/[0.07];
 }
 
 /* ── 7. Images, Video Embeds & HR ── */

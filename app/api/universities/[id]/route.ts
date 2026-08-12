@@ -1,5 +1,6 @@
 // app/api/universities/[id]/route.ts
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import {
   deleteUniversity,
   getUniversityById,
@@ -72,6 +73,9 @@ export async function PUT(
     );
     if (slugConflict) return slugConflict;
 
+    const existingUniversity = await University.findById(id).select("slug");
+    const previousSlug = existingUniversity?.slug as string | undefined;
+
     const updatedUniversity = await updateUniversity(id, body);
 
     if (!updatedUniversity) {
@@ -79,6 +83,16 @@ export async function PUT(
         { error: "University record not found for update" },
         { status: 404 },
       );
+    }
+
+    // The public university pages are statically rendered with no
+    // time-based revalidation, so without this an edit or publish
+    // wouldn't show up until the next deploy.
+    revalidatePath("/universities");
+    revalidatePath("/");
+    revalidatePath(`/universities/${updatedUniversity.slug}`);
+    if (previousSlug && previousSlug !== updatedUniversity.slug) {
+      revalidatePath(`/universities/${previousSlug}`);
     }
 
     return NextResponse.json(updatedUniversity);
@@ -111,6 +125,10 @@ export async function DELETE(
         { status: 404 },
       );
     }
+
+    revalidatePath("/universities");
+    revalidatePath("/");
+    revalidatePath(`/universities/${deletedUniversity.slug}`);
 
     return NextResponse.json({ success: true });
   } catch {

@@ -1,5 +1,6 @@
 // app/api/blogs/route.ts
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { getBlogsArchive } from "@/services/blogService";
 import connectDB from "@/lib/db";
 import { Blog } from "@/models/Blog";
@@ -54,6 +55,16 @@ export async function POST(request: Request) {
     if (slugConflict) return slugConflict;
 
     const newBlog = await Blog.create(body);
+
+    // The public blog pages are statically rendered with no time-based
+    // revalidation, so without this they'd keep serving stale/missing
+    // content until the next deploy.
+    revalidatePath("/blog");
+    revalidatePath("/");
+    if (newBlog.status === "published") {
+      revalidatePath(`/blog/${newBlog.slug}`);
+    }
+
     return NextResponse.json(newBlog, { status: 201 });
   } catch (error) {
     if (isMongoDuplicateSlugError(error)) {

@@ -1,5 +1,6 @@
 // app/api/universities/route.ts
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { getUniversitiesArchive } from "@/services/universityService";
 import connectDB from "@/lib/db";
 import { University } from "@/models/University";
@@ -72,6 +73,16 @@ export async function POST(request: Request) {
     if (slugConflict) return slugConflict;
 
     const newUniversity = await University.create(body);
+
+    // The public university pages are statically rendered with no
+    // time-based revalidation, so without this they'd keep serving
+    // stale/missing content until the next deploy.
+    revalidatePath("/universities");
+    revalidatePath("/");
+    if (newUniversity.status === "published") {
+      revalidatePath(`/universities/${newUniversity.slug}`);
+    }
+
     return NextResponse.json(newUniversity, { status: 201 });
   } catch (error) {
     if (isMongoDuplicateSlugError(error)) {

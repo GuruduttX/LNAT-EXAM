@@ -1,6 +1,6 @@
 "use client";
 
-import { useEditor, EditorContent, type Editor } from "@tiptap/react";
+import { useEditor, useEditorState, EditorContent, type Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import Link from "@tiptap/extension-link";
@@ -153,12 +153,36 @@ export default function RichTextEditor({
     return () => document.removeEventListener("mousedown", handle);
   }, [tablePickerOpen]);
 
-  const getFormatValue = () => {
-    if (!editor) return "paragraph";
-    for (let i = 1; i <= 6; i++)
-      if (editor.isActive("heading", { level: i })) return `h${i}`;
-    return "paragraph";
-  };
+  /* Toolbar state — subscribes to every transaction (incl. pure caret moves),
+     which plain `useEditor` no longer re-renders on in Tiptap v3 */
+  const state = useEditorState({
+    editor,
+    selector: ({ editor: e }) => {
+      if (!e) return null;
+
+      let format = "paragraph";
+      for (let i = 1; i <= 6; i++)
+        if (e.isActive("heading", { level: i })) { format = `h${i}`; break; }
+
+      return {
+        format,
+        bold:        e.isActive("bold"),
+        italic:      e.isActive("italic"),
+        underline:   e.isActive("underline"),
+        strike:      e.isActive("strike"),
+        code:        e.isActive("code"),
+        bulletList:  e.isActive("bulletList"),
+        orderedList: e.isActive("orderedList"),
+        link:        e.isActive("link"),
+        alignLeft:    e.isActive({ textAlign: "left" }),
+        alignCenter:  e.isActive({ textAlign: "center" }),
+        alignRight:   e.isActive({ textAlign: "right" }),
+        alignJustify: e.isActive({ textAlign: "justify" }),
+        canUndo: e.can().undo(),
+        canRedo: e.can().redo(),
+      };
+    },
+  });
 
   const handleFormat = (val: string) => {
     if (!editor) return;
@@ -178,17 +202,17 @@ export default function RichTextEditor({
         {/* ── Toolbar ─────────────────────────────── */}
         <div className="flex flex-wrap items-center gap-0.5 px-2 py-2 bg-gray-100 border-b border-gray-300 rounded-t-xl">
 
-          <Btn onClick={() => editor.chain().focus().undo().run()} disabled={!editor.can().undo()} tooltip="Undo">
+          <Btn onClick={() => editor.chain().focus().undo().run()} disabled={!state?.canUndo} tooltip="Undo">
             <Undo2 size={14} />
           </Btn>
-          <Btn onClick={() => editor.chain().focus().redo().run()} disabled={!editor.can().redo()} tooltip="Redo">
+          <Btn onClick={() => editor.chain().focus().redo().run()} disabled={!state?.canRedo} tooltip="Redo">
             <Redo2 size={14} />
           </Btn>
 
           <Sep />
 
           <select
-            value={getFormatValue()}
+            value={state?.format ?? "paragraph"}
             onChange={(e) => handleFormat(e.target.value)}
             className="h-7 px-2 rounded-md text-xs bg-white text-gray-700 border border-gray-300 shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400/40 cursor-pointer"
           >
@@ -199,27 +223,27 @@ export default function RichTextEditor({
 
           <Sep />
 
-          <Btn onClick={() => editor.chain().focus().toggleBold().run()}      active={editor.isActive("bold")}      tooltip="Bold">         <Bold          size={14} /></Btn>
-          <Btn onClick={() => editor.chain().focus().toggleItalic().run()}    active={editor.isActive("italic")}    tooltip="Italic">       <Italic        size={14} /></Btn>
-          <Btn onClick={() => editor.chain().focus().toggleUnderline().run()} active={editor.isActive("underline")} tooltip="Underline">    <UnderlineIcon size={14} /></Btn>
-          <Btn onClick={() => editor.chain().focus().toggleStrike().run()}    active={editor.isActive("strike")}    tooltip="Strikethrough"><Strikethrough size={14} /></Btn>
-          <Btn onClick={() => editor.chain().focus().toggleCode().run()}      active={editor.isActive("code")}      tooltip="Inline Code">  <Code          size={14} /></Btn>
+          <Btn onClick={() => editor.chain().focus().toggleBold().run()}      active={state?.bold}      tooltip="Bold">         <Bold          size={14} /></Btn>
+          <Btn onClick={() => editor.chain().focus().toggleItalic().run()}    active={state?.italic}    tooltip="Italic">       <Italic        size={14} /></Btn>
+          <Btn onClick={() => editor.chain().focus().toggleUnderline().run()} active={state?.underline} tooltip="Underline">    <UnderlineIcon size={14} /></Btn>
+          <Btn onClick={() => editor.chain().focus().toggleStrike().run()}    active={state?.strike}    tooltip="Strikethrough"><Strikethrough size={14} /></Btn>
+          <Btn onClick={() => editor.chain().focus().toggleCode().run()}      active={state?.code}      tooltip="Inline Code">  <Code          size={14} /></Btn>
 
           <Sep />
 
-          <Btn onClick={() => editor.chain().focus().toggleBulletList().run()}  active={editor.isActive("bulletList")}  tooltip="Bullet List">   <List        size={14} /></Btn>
-          <Btn onClick={() => editor.chain().focus().toggleOrderedList().run()} active={editor.isActive("orderedList")} tooltip="Ordered List">  <ListOrdered size={14} /></Btn>
+          <Btn onClick={() => editor.chain().focus().toggleBulletList().run()}  active={state?.bulletList}  tooltip="Bullet List">   <List        size={14} /></Btn>
+          <Btn onClick={() => editor.chain().focus().toggleOrderedList().run()} active={state?.orderedList} tooltip="Ordered List">  <ListOrdered size={14} /></Btn>
 
           <Sep />
 
-          <Btn onClick={() => editor.chain().focus().setTextAlign("left").run()}    active={editor.isActive({ textAlign: "left" })}    tooltip="Align Left">   <AlignLeft    size={14} /></Btn>
-          <Btn onClick={() => editor.chain().focus().setTextAlign("center").run()}  active={editor.isActive({ textAlign: "center" })}  tooltip="Align Center"> <AlignCenter  size={14} /></Btn>
-          <Btn onClick={() => editor.chain().focus().setTextAlign("right").run()}   active={editor.isActive({ textAlign: "right" })}   tooltip="Align Right">  <AlignRight   size={14} /></Btn>
-          <Btn onClick={() => editor.chain().focus().setTextAlign("justify").run()} active={editor.isActive({ textAlign: "justify" })} tooltip="Justify">       <AlignJustify size={14} /></Btn>
+          <Btn onClick={() => editor.chain().focus().setTextAlign("left").run()}    active={state?.alignLeft}    tooltip="Align Left">   <AlignLeft    size={14} /></Btn>
+          <Btn onClick={() => editor.chain().focus().setTextAlign("center").run()}  active={state?.alignCenter}  tooltip="Align Center"> <AlignCenter  size={14} /></Btn>
+          <Btn onClick={() => editor.chain().focus().setTextAlign("right").run()}   active={state?.alignRight}   tooltip="Align Right">  <AlignRight   size={14} /></Btn>
+          <Btn onClick={() => editor.chain().focus().setTextAlign("justify").run()} active={state?.alignJustify} tooltip="Justify">       <AlignJustify size={14} /></Btn>
 
           <Sep />
 
-          <Btn onClick={() => setLinkOpen(true)}  active={editor.isActive("link")} tooltip="Insert Link">  <LinkIcon  size={14} /></Btn>
+          <Btn onClick={() => setLinkOpen(true)}  active={state?.link} tooltip="Insert Link">  <LinkIcon  size={14} /></Btn>
           <Btn onClick={() => setImageOpen(true)}                                   tooltip="Insert Image"> <ImageIcon size={14} /></Btn>
 
           {/* Table button with grid picker */}

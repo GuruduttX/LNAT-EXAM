@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 
 import connectDB from "@/lib/db";
 import { Blog } from "@/models/Blog";
@@ -57,6 +58,9 @@ export async function PUT(request: Request, { params }: RouteProps) {
     );
     if (slugConflict) return slugConflict;
 
+    const existingBlog = await Blog.findById(id).select("slug");
+    const previousSlug = existingBlog?.slug as string | undefined;
+
     const updatedBlog = await Blog.findByIdAndUpdate(id, body, {
       new: true,
       runValidators: true,
@@ -64,6 +68,16 @@ export async function PUT(request: Request, { params }: RouteProps) {
 
     if (!updatedBlog) {
       return NextResponse.json({ error: "Blog not found" }, { status: 404 });
+    }
+
+    // The public blog pages are statically rendered with no time-based
+    // revalidation, so without this an edit or publish wouldn't show up
+    // until the next deploy.
+    revalidatePath("/blog");
+    revalidatePath("/");
+    revalidatePath(`/blog/${updatedBlog.slug}`);
+    if (previousSlug && previousSlug !== updatedBlog.slug) {
+      revalidatePath(`/blog/${previousSlug}`);
     }
 
     return NextResponse.json(updatedBlog);
@@ -91,6 +105,10 @@ export async function DELETE(_request: Request, { params }: RouteProps) {
     if (!deleted) {
       return NextResponse.json({ error: "Blog not found" }, { status: 404 });
     }
+
+    revalidatePath("/blog");
+    revalidatePath("/");
+    revalidatePath(`/blog/${deleted.slug}`);
 
     return NextResponse.json({ success: true });
   } catch {

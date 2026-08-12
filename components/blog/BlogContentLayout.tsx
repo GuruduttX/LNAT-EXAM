@@ -1,11 +1,10 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { IBlog } from "@/types/backend.types";
 import StickySidebar from "./StickySidebar";
 import BlogFAQSection from "./BlogFAQ";
-import { ListTree, ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { ListTree } from "lucide-react";
 import FAQSection from "../universities/FAQSection";
 
 
@@ -15,10 +14,51 @@ interface TocItem {
   level: 2 | 3;
 }
 
+interface TocGroup {
+  item: TocItem;
+  children: TocItem[];
+}
+
 interface BlogContentLayoutProps {
   blog: IBlog;
   tocItems: TocItem[];
   displayUpdatedAt: string | null;
+}
+
+// Groups flat TOC items into level-2 sections with nested level-3 children,
+// so headings can be numbered 1, 2, 3… with sub-items as i, ii, iii…
+function groupTocItems(items: TocItem[]): TocGroup[] {
+  const groups: TocGroup[] = [];
+  items.forEach((item) => {
+    if (item.level === 2 || groups.length === 0) {
+      groups.push({ item, children: [] });
+    } else {
+      groups[groups.length - 1].children.push(item);
+    }
+  });
+  return groups;
+}
+
+const ROMAN_NUMERALS = [
+  "i",
+  "ii",
+  "iii",
+  "iv",
+  "v",
+  "vi",
+  "vii",
+  "viii",
+  "ix",
+  "x",
+  "xi",
+  "xii",
+  "xiii",
+  "xiv",
+  "xv",
+];
+
+function toRoman(index: number): string {
+  return ROMAN_NUMERALS[index] ?? `${index + 1}`;
 }
 
 // Inline SectionLabel component (from DS Section 6.1)
@@ -39,7 +79,7 @@ export default function BlogContentLayout({
   tocItems,
   displayUpdatedAt,
 }: BlogContentLayoutProps) {
-  const [isTocOpen, setIsTocOpen] = useState(false);
+  const tocGroups = groupTocItems(tocItems);
 
   const scrollToHeading = (id: string) => {
     const heading = document.getElementById(id);
@@ -71,79 +111,56 @@ export default function BlogContentLayout({
             }}
             className="mx-auto w-full max-w-3xl lg:mx-0"
           >
-            {tocItems.length ? (
-              <div className="rounded-2xl border border-black/[0.07] bg-white p-5 shadow-[0_2px_10px_rgba(0,0,0,0.06)] lg:p-6 mb-4 md:m-5 ">
-                {/* 1. Toggle Button Header */}
-                <button
-                  onClick={() => setIsTocOpen(!isTocOpen)}
-                  aria-expanded={isTocOpen}
-                  className="group flex w-full items-center justify-between text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A84C] rounded-xl"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#C9A84C]/10 text-[#C9A84C]">
-                      <ListTree size={18} strokeWidth={1.5} />
-                    </div>
-                    <div>
-                      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#C9A84C]">
-                        On This Page
-                      </p>
-                      <p className="mt-0.5 text-[13px] text-slate-500">
-                        Jump to the section you need most.
-                      </p>
-                    </div>
-                  </div>
+            {tocGroups.length ? (
+              <div className="rounded-2xl border border-black/[0.07] bg-white p-4 shadow-[0_2px_10px_rgba(0,0,0,0.06)] mb-4 md:m-5">
+                <div className="mb-3 flex items-center gap-2">
+                  <ListTree size={18} strokeWidth={2} className="text-[#C9A84C]" />
+                  <p className="text-[13px] font-extrabold uppercase tracking-[0.14em] text-[#C9A84C]">
+                    On This Page
+                  </p>
+                </div>
 
-                  {/* Visual Chevron Indicator */}
-                  <div
-                    className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all duration-300 ${
-                      isTocOpen
-                        ? "rotate-180 bg-[#C9A84C] text-white shadow-sm"
-                        : "bg-[#C9A84C]/10 text-[#C9A84C] group-hover:bg-[#C9A84C]/20"
-                    }`}
-                  >
-                    <ChevronDown size={16} strokeWidth={2.5} />
-                  </div>
-                </button>
+                <ol className="flex flex-col gap-0.5 text-[13px]">
+                  {tocGroups.map((group, groupIndex) => (
+                    <li key={group.item.id}>
+                      <a
+                        href={`#${group.item.id}`}
+                        onClick={(event) => {
+                          event.preventDefault();
+                          scrollToHeading(group.item.id);
+                        }}
+                        className="flex items-baseline gap-2 rounded-lg px-2 py-1.5 font-bold text-[#0D1B3E] transition-colors hover:bg-[#C9A84C]/10 hover:text-[#8B6914] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A84C]"
+                      >
+                        <span className="shrink-0 text-[#C9A84C]">
+                          {groupIndex + 1}.
+                        </span>
+                        <span>{group.item.text}</span>
+                      </a>
 
-                {/* 2. Animated Dropdown Content */}
-                <AnimatePresence initial={false}>
-                  {isTocOpen && (
-                    <motion.nav
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{
-                        duration: 0.32,
-                        ease: [0.22, 1, 0.36, 1] as const,
-                      }}
-                      className="overflow-hidden"
-                      aria-label="Table of contents"
-                    >
-                      <div className="mt-5 flex flex-col gap-1.5 border-t border-black/[0.05] pt-5">
-                        {tocItems.map((item) => (
-                          <a
-                            key={item.id}
-                            href={`#${item.id}`}
-                            onClick={(event) => {
-                              event.preventDefault();
-                              setIsTocOpen(false);
-                              window.setTimeout(() => {
-                                scrollToHeading(item.id);
-                              }, 360);
-                            }}
-                            className={`block rounded-xl px-4 py-2.5 text-[13px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A84C] ${
-                              item.level === 3
-                                ? "ml-4 border-l-2 border-black/[0.04] text-slate-500 hover:border-[#C9A84C]/40 hover:bg-[#FDFBF7] hover:text-[#0D1B3E]"
-                                : "font-bold text-[#0D1B3E] hover:bg-[#C9A84C]/10 hover:text-[#8B6914]"
-                            }`}
-                          >
-                            {item.text}
-                          </a>
-                        ))}
-                      </div>
-                    </motion.nav>
-                  )}
-                </AnimatePresence>
+                      {group.children.length > 0 && (
+                        <ol className="ml-6 flex flex-col gap-0.5">
+                          {group.children.map((child, childIndex) => (
+                            <li key={child.id}>
+                              <a
+                                href={`#${child.id}`}
+                                onClick={(event) => {
+                                  event.preventDefault();
+                                  scrollToHeading(child.id);
+                                }}
+                                className="flex items-baseline gap-2 rounded-lg px-2 py-1 text-slate-500 transition-colors hover:bg-[#FDFBF7] hover:text-[#0D1B3E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A84C]"
+                              >
+                                <span className="shrink-0 text-slate-400">
+                                  {toRoman(childIndex)}.
+                                </span>
+                                <span>{child.text}</span>
+                              </a>
+                            </li>
+                          ))}
+                        </ol>
+                      )}
+                    </li>
+                  ))}
+                </ol>
               </div>
             ) : null}
             {/* 1. Render CMS Content */}

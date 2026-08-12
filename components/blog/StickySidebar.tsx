@@ -72,7 +72,11 @@ export default function StickySidebar({
         </div>
       ) : null} */}
 
-      <StickyConsultationForm />
+      {/* Below lg this form is rendered in the hero instead (above Quick
+          Summary), since the sidebar stacks to the bottom of the page there. */}
+      <div className="hidden lg:block">
+        <StickyConsultationForm />
+      </div>
 
       <div className="rounded-2xl border border-[#C9A84C]/15 bg-[#0D1B3E] p-6 text-white shadow-[0_16px_40px_rgba(13,27,62,0.2)] overflow-hidden">
         <div className="flex items-start gap-3">

@@ -1,16 +1,30 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useId, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, ShieldCheck, Loader2 } from "lucide-react";
 import { submitEnquiry } from "@/lib/submitEnquiry";
+import { EnquirySource } from "@/types/backend.types";
 
-export default function StickyConsultationForm() {
+interface StickyConsultationFormProps {
+  /** Must be one of `enquirySources` — the API and enquiry schema validate it. */
+  source?: EnquirySource;
+}
+
+export default function StickyConsultationForm({
+  source = "blog-sidebar",
+}: StickyConsultationFormProps) {
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // The form is rendered twice (mobile hero + desktop sidebar), so the field
+  // ids must be unique or a label tap would focus the other copy's input.
+  const uid = useId();
+  const nameId = `${uid}-name`;
+  const phoneId = `${uid}-phone`;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({
@@ -27,7 +41,7 @@ export default function StickyConsultationForm() {
       await submitEnquiry({
         ...formData,
         enquiryType: "mentor-consultation",
-        source: "blog-sidebar",
+        source,
       });
       setFormData({ name: "", phone: "" });
     } catch (error) {
@@ -72,13 +86,13 @@ export default function StickyConsultationForm() {
       >
         <div>
           <label
-            htmlFor="name"
+            htmlFor={nameId}
             className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.18em] text-white/70"
           >
             Full Name <span className="text-[#C9A84C]">*</span>
           </label>
           <input
-            id="name"
+            id={nameId}
             name="name"
             type="text"
             required
@@ -91,13 +105,13 @@ export default function StickyConsultationForm() {
         </div>
         <div>
           <label
-            htmlFor="phone"
+            htmlFor={phoneId}
             className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.18em] text-white/70"
           >
             Phone Number <span className="text-[#C9A84C]">*</span>
           </label>
           <input
-            id="phone"
+            id={phoneId}
             name="phone"
             type="tel"
             required

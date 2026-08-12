@@ -13,6 +13,8 @@ import {
 
 import { IBlog } from "@/types/backend.types";
 
+import StickyConsultationForm from "./StickyConsultationForm";
+
 // ─────────────────────────────────────────────────────────────
 // Types
 // ─────────────────────────────────────────────────────────────
@@ -192,6 +194,12 @@ function BlogHeroImage({ blog }: { blog: IBlog }) {
 // Subcomponent: BlogTldrSection
 // ─────────────────────────────────────────────────────────────
 
+// CMS data sometimes already includes a leading "•"/"-"/"*" on each takeaway;
+// strip it so it doesn't double up with the bullet dot we render ourselves.
+function stripLeadingBullet(text: string) {
+  return text.replace(/^[\s]*[•\-\*]\s*/, "");
+}
+
 function BlogTldrSection({
   tldr,
   keyTakeaways,
@@ -210,9 +218,9 @@ function BlogTldrSection({
         delay: 0.3,
         ease: [0.22, 1, 0.36, 1] as const,
       }}
-      className="mt-10 rounded-3xl border border-[#C9A84C]/20 bg-[#FDFBF7] p-6 shadow-sm md:p-8 lg:mt-14"
+      className="mt-10 rounded-3xl border border-[#C9A84C]/20 bg-[#FDFBF7] p-5 shadow-sm md:p-6 lg:mt-14"
     >
-      <div className="mb-5 flex flex-col items-center justify-center gap-3 border-b border-black/[0.05] pb-5 text-center sm:flex-row sm:justify-start sm:text-left">
+      <div className="mb-4 flex flex-col items-center justify-center gap-3 border-b border-black/[0.05] pb-4 text-center sm:flex-row sm:justify-start sm:text-left">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#C9A84C]/10 text-[#C9A84C]">
           <CheckCircle2 size={20} />
         </div>
@@ -226,50 +234,30 @@ function BlogTldrSection({
         </div>
       </div>
 
-      {/* Added min-w-0 here to ensure grid children don't blow out the width */}
-      <div className="grid gap-6 min-w-0 lg:grid-cols-2 lg:gap-12">
+      {/* TL;DR on top, key takeaways below */}
+      <div className="flex flex-col gap-5">
         {tldr && (
-          <div className="flex items-start">
-            <p className="text-[14px] text-center md:text-start font-medium leading-[1.7] text-slate-700 md:text-[15px]">
-              {tldr}
-            </p>
-          </div>
+          <p className="text-[14px] text-center md:text-start font-medium leading-[1.7] text-slate-700 md:text-[15px]">
+            {tldr}
+          </p>
         )}
 
         {keyTakeaways && keyTakeaways.length > 0 && (
-          // Added min-w-0 to the wrapper to enforce containment
-          <div className="w-full min-w-0">
-            {/* Added pt-2 and pb-6 so the hover shadows don't get clipped by overflow */}
-            <ul
-              className="flex gap-4 overflow-x-auto pt-2 pb-6 px-1 -mx-1 snap-x snap-mandatory 
-              [scrollbar-width:none] [&::-webkit-scrollbar]:hidden 
-              lg:flex-col lg:overflow-visible lg:p-0 lg:mx-0"
-            >
+          <div>
+            <h3 className="mb-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
+              Takeaways
+            </h3>
+
+            {/* Plain bullet list — every takeaway is visible at once, one column
+                on mobile and two from md up. */}
+            <ul className="grid list-none grid-cols-1 gap-x-8 gap-y-2.5 md:grid-cols-2">
               {keyTakeaways.map((point, idx) => (
                 <li
                   key={idx}
-                  className="flex items-start gap-3.5 shrink-0 snap-start w-[82vw] max-w-[320px] 
-                    rounded-2xl bg-white p-4 transition-all duration-300
-                    lg:w-auto lg:max-w-none"
-                  style={{
-                    border: "1px solid rgba(0,0,0,0.07)",
-                    boxShadow: "0 2px 10px rgba(0,0,0,0.06)",
-                  }}
-                  onMouseEnter={(e) => {
-                    const el = e.currentTarget as HTMLLIElement;
-                    el.style.boxShadow = "0 16px 40px rgba(0,0,0,0.12)";
-                    el.style.transform = "translateY(-4px)";
-                  }}
-                  onMouseLeave={(e) => {
-                    const el = e.currentTarget as HTMLLIElement;
-                    el.style.boxShadow = "0 2px 10px rgba(0,0,0,0.06)";
-                    el.style.transform = "translateY(0)";
-                  }}
+                  className="flex items-start gap-2.5 text-[13.5px] leading-[1.6] text-slate-700 md:text-[14px]"
                 >
-                  <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-[#C9A84C]" />
-                  <span className="text-[14px] font-medium leading-[1.7] text-slate-700 md:text-[15px]">
-                    {point}
-                  </span>
+                  <span className="mt-1.75 h-1.5 w-1.5 shrink-0 rounded-full bg-[#C9A84C]" />
+                  <span>{stripLeadingBullet(point)}</span>
                 </li>
               ))}
             </ul>
@@ -353,6 +341,13 @@ export default function BlogDetailsHero({
               </div>
             )}
           </motion.div>
+        </div>
+
+        {/* Consultation form — below lg the sidebar stacks far down the page,
+            so the form is surfaced here instead, ahead of the Quick Summary.
+            The lg+ copy lives in StickySidebar and is unchanged. */}
+        <div className="mt-10 lg:hidden">
+          <StickyConsultationForm />
         </div>
 
         {/* TL;DR Section */}
