@@ -299,6 +299,10 @@ function Modal({ title, onClose, children }: { title: string; onClose: () => voi
       <div
         className="fixed inset-0 z-9999 flex items-center justify-center bg-black/40 backdrop-blur-sm"
         onMouseDown={(e) => e.target === e.currentTarget && onClose()}
+        /* Portals bubble through the React tree, so dialog submits/Enter would
+           otherwise reach the CMS <form> wrapping the editor and save the page */
+        onSubmit={(e) => e.stopPropagation()}
+        onKeyDown={(e) => e.key === "Enter" && e.stopPropagation()}
       >
         <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
 
@@ -344,32 +348,38 @@ function ModalActions({ onClose, submitLabel = "Submit" }: { onClose: () => void
 
 /* ── Shared input style ── */
 const inputCls =
-  "w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/40 focus:border-blue-400 transition";
+  "w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400/40 focus:border-blue-400 transition";
 
 /* ══════════════════════════════════════════════════
    LINK MODAL
 ══════════════════════════════════════════════════ */
 
 function LinkModal({ editor, onClose }: { editor: Editor; onClose: () => void }) {
-  const existing = editor.getAttributes("link").href as string | undefined;
+  const linkAttrs = editor.getAttributes("link");
+  const existing = linkAttrs.href as string | undefined;
   const { from, to } = editor.state.selection;
   const selectedText = editor.state.doc.textBetween(from, to, "");
 
   const [url,       setUrl]       = useState(existing ?? "");
   const [linkText,  setLinkText]  = useState(selectedText);
-  const [newWindow, setNewWindow] = useState(false);
+  const [newWindow, setNewWindow] = useState(linkAttrs.target === "_blank");
 
   const submit = (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (!url.trim()) {
-      editor.chain().focus().unsetLink().run();
+      /* extendMarkRange so a caret or partial selection still clears the
+         whole link instead of leaving a fragment behind */
+      editor.chain().focus().extendMarkRange("link").unsetLink().run();
       onClose();
       return;
     }
 
     const attrs = { href: url.trim(), target: newWindow ? "_blank" : "_self" };
 
-    if (selectedText) {
+    if (existing) {
+      /* Rewrite the whole existing link, else a partial selection splits it in two */
+      editor.chain().focus().extendMarkRange("link").setLink(attrs).run();
+    } else if (selectedText) {
       /* Apply link to existing selection */
       editor.chain().focus().setLink(attrs).run();
     } else if (linkText.trim()) {
@@ -579,6 +589,9 @@ function ImageModal({ editor, onClose }: { editor: Editor; onClose: () => void }
     <div
       className="fixed inset-0 z-9999 flex items-center justify-center bg-black/40 backdrop-blur-sm"
       onMouseDown={(e) => e.target === e.currentTarget && onClose()}
+      /* See Modal: keep dialog submits/Enter out of the surrounding CMS form */
+      onSubmit={(e) => e.stopPropagation()}
+      onKeyDown={(e) => e.key === "Enter" && e.stopPropagation()}
     >
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
 
