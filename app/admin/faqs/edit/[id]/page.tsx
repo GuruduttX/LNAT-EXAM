@@ -4,8 +4,11 @@ import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import toast from "react-hot-toast";
 import RichTextEditor from "@/shared/RichTextEditor";
+import FaqPasteHint from "@/components/Admin/CMS/FaqPasteHint";
+import { handleSingleFaqPaste } from "@/components/Admin/CMS/handleSingleFaqPaste";
 import { faqCategories } from "@/types/backend.types";
 import { adminFetch } from "@/lib/adminApiClient";
+import { faqAnswerToHtml } from "@/lib/faqParser";
  
 const inputClass = `
   mt-2 w-full px-4 py-3 rounded-md
@@ -60,6 +63,16 @@ export default function EditFAQPage() {
 
   const updateForm = (field: keyof typeof form, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const onQuestionPaste = (event: React.ClipboardEvent<HTMLInputElement>) => {
+    handleSingleFaqPaste(event, (pair) => {
+      setForm((prev) => ({
+        ...prev,
+        question: pair.question,
+        answer: faqAnswerToHtml(pair.answer),
+      }));
+    });
   };
 
   const submitFAQ = async (status: "draft" | "published") => {
@@ -124,6 +137,8 @@ export default function EditFAQPage() {
         className="bg-[#0B1221] p-6 md:p-8 rounded-xl border border-slate-800 shadow-sm"
       >
         <div className="space-y-6">
+          <FaqPasteHint variant="single" />
+
           {/* Category */}
           <div>
             <label className="text-sm font-medium text-slate-400">
@@ -156,6 +171,7 @@ export default function EditFAQPage() {
               type="text"
               value={form.question}
               onChange={(e) => updateForm("question", e.target.value)}
+              onPaste={onQuestionPaste}
               placeholder="e.g., What is a good LNAT score for Oxford?"
               className={inputClass}
             />

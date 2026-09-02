@@ -9,8 +9,10 @@ import CMSMediaSection from "@/components/Admin/CMS/CMSMediaSection";
 import CMSSeoSection from "@/components/Admin/CMS/CMSSeoSection";
 import CMSSchema from "@/components/Admin/CMS/CMSSchema";
 import CMSActions from "@/components/Admin/CMS/CMSActions";
+import FaqPasteHint from "@/components/Admin/CMS/FaqPasteHint";
 import { getCmsErrorMessage } from "@/components/Admin/CMS/getCmsErrorMessage";
 import { adminFetch } from "@/lib/adminApiClient";
+import { parseFaqClipboardText } from "@/lib/faqParser";
 import RichTextEditor from "@/shared/RichTextEditor";
 import {
   ICollegeForLaw,
@@ -604,6 +606,30 @@ export default function UniversityForm({
       persistDraft(next);
       return next;
     });
+  };
+
+  const handleFaqPaste = (
+    index: number,
+    event: React.ClipboardEvent<HTMLInputElement>,
+  ) => {
+    const pairs = parseFaqClipboardText(
+      event.clipboardData.getData("text/plain"),
+    );
+    if (!pairs) return;
+
+    event.preventDefault();
+    setForm((prev: typeof form) => {
+      const nextFaqs = [...prev.faqs];
+      nextFaqs.splice(index, 1, ...pairs);
+      const next = { ...prev, faqs: nextFaqs };
+      persistDraft(next);
+      return next;
+    });
+    toast.success(
+      pairs.length === 1
+        ? "Pasted 1 FAQ."
+        : `Pasted ${pairs.length} FAQs — please check the rows.`,
+    );
   };
 
   const updateCampusImage = (
@@ -2813,6 +2839,7 @@ export default function UniversityForm({
           <h2 className="text-lg font-medium text-[#FDFBF7] border-b border-slate-800 pb-3 mb-5">
             FAQs
           </h2>
+          <FaqPasteHint className="mb-5" />
           {form.faqs.map((item: FAQItem, index: number) => (
             <div
               key={`faq-${index}`}
@@ -2825,6 +2852,7 @@ export default function UniversityForm({
                 onChange={(e) =>
                   updateListItem("faqs", index, "question", e.target.value)
                 }
+                onPaste={(e) => handleFaqPaste(index, e)}
               />
               <textarea
                 rows={3}

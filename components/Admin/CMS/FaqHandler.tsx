@@ -1,5 +1,9 @@
 import React from "react";
 import { Plus, Trash2 } from "lucide-react";
+import toast from "react-hot-toast";
+
+import FaqPasteHint from "@/components/Admin/CMS/FaqPasteHint";
+import { parseFaqClipboardText } from "@/lib/faqParser";
 
 type faq = {
   id: string;
@@ -41,6 +45,34 @@ const FaqHandler = ({
     );
   };
 
+  const handleQuestionPaste = (
+    id: string,
+    event: React.ClipboardEvent<HTMLInputElement>,
+  ) => {
+    const pairs = parseFaqClipboardText(
+      event.clipboardData.getData("text/plain"),
+    );
+    if (!pairs) return;
+
+    event.preventDefault();
+    setFaqs((prev) => {
+      const index = prev.findIndex((faq) => faq.id === id);
+      if (index === -1) return prev;
+      const next = [...prev];
+      next.splice(
+        index,
+        1,
+        ...pairs.map((pair) => ({ id: crypto.randomUUID(), ...pair })),
+      );
+      return next;
+    });
+    toast.success(
+      pairs.length === 1
+        ? "Pasted 1 FAQ."
+        : `Pasted ${pairs.length} FAQs — please check the rows.`,
+    );
+  };
+
   const handleAnswerChange = (id: string, value: string) => {
     setFaqs((prev) =>
       prev.map((faq) => (faq.id === id ? { ...faq, answer: value } : faq)),
@@ -52,6 +84,8 @@ const FaqHandler = ({
       <h3 className="text-base font-semibold text-[#FDFBF7] mb-6">
         Page Specific FAQs
       </h3>
+
+      <FaqPasteHint className="mb-6" />
 
       <div className="space-y-4">
         {faqs.map((faq: faq) => (
@@ -66,6 +100,7 @@ const FaqHandler = ({
               className={inputClass}
               value={faq.question}
               onChange={(e) => handleQuestionChange(faq.id, e.target.value)}
+              onPaste={(e) => handleQuestionPaste(faq.id, e)}
             />
 
             <textarea

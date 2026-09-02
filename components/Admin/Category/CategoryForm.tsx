@@ -8,8 +8,10 @@ import CMSActions from "@/components/Admin/CMS/CMSActions";
 import CMSHeader from "@/components/Admin/CMS/CMSHeader";
 import CMSMediaSection from "@/components/Admin/CMS/CMSMediaSection";
 import CMSSeoSection from "@/components/Admin/CMS/CMSSeoSection";
+import FaqPasteHint from "@/components/Admin/CMS/FaqPasteHint";
 import { getCmsErrorMessage } from "@/components/Admin/CMS/getCmsErrorMessage";
 import { adminFetch } from "@/lib/adminApiClient";
+import { parseFaqClipboardText } from "@/lib/faqParser";
 import { ICategory } from "@/types/backend.types";
 
 const inputClass = `
@@ -135,6 +137,30 @@ export default function CategoryForm({
       persistDraft(next);
       return next;
     });
+  };
+
+  const handleFaqPaste = (
+    index: number,
+    event: React.ClipboardEvent<HTMLInputElement>,
+  ) => {
+    const pairs = parseFaqClipboardText(
+      event.clipboardData.getData("text/plain"),
+    );
+    if (!pairs) return;
+
+    event.preventDefault();
+    setForm((prev: CategoryFormState) => {
+      const nextFaqs = [...prev.faqs];
+      nextFaqs.splice(index, 1, ...pairs);
+      const next = { ...prev, faqs: nextFaqs };
+      persistDraft(next);
+      return next;
+    });
+    toast.success(
+      pairs.length === 1
+        ? "Pasted 1 FAQ."
+        : `Pasted ${pairs.length} FAQs — please check the rows.`,
+    );
   };
 
   const updateSubtopic = (
@@ -548,6 +574,8 @@ export default function CategoryForm({
             </h2>
           </div>
 
+          <FaqPasteHint />
+
           <div className="space-y-5">
             {form.faqs.map((faq: CategoryFaqItem, index: number) => (
               <div
@@ -571,6 +599,7 @@ export default function CategoryForm({
                   onChange={(event) =>
                     updateFaq(index, "question", event.target.value)
                   }
+                  onPaste={(event) => handleFaqPaste(index, event)}
                   placeholder="Question"
                   className={inputClass}
                 />

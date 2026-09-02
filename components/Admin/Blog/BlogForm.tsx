@@ -9,8 +9,10 @@ import CMSHeader from "@/components/Admin/CMS/CMSHeader";
 import CMSMediaSection from "@/components/Admin/CMS/CMSMediaSection";
 import CMSSeoSection from "@/components/Admin/CMS/CMSSeoSection";
 import CMSSchema from "@/components/Admin/CMS/CMSSchema";
+import FaqPasteHint from "@/components/Admin/CMS/FaqPasteHint";
 import { getCmsErrorMessage } from "@/components/Admin/CMS/getCmsErrorMessage";
 import { adminFetch } from "@/lib/adminApiClient";
+import { parseFaqClipboardText } from "@/lib/faqParser";
 import RichTextEditor from "@/shared/RichTextEditor";
 import { IBlog } from "@/types/backend.types";
 
@@ -146,6 +148,30 @@ export default function BlogForm({ mode, initialData }: BlogFormProps) {
       persistDraft(next);
       return next;
     });
+  };
+
+  const handleFaqPaste = (
+    index: number,
+    event: React.ClipboardEvent<HTMLInputElement>,
+  ) => {
+    const pairs = parseFaqClipboardText(
+      event.clipboardData.getData("text/plain"),
+    );
+    if (!pairs) return;
+
+    event.preventDefault();
+    setForm((prev: BlogFormState) => {
+      const nextFaqs = [...prev.faqs];
+      nextFaqs.splice(index, 1, ...pairs);
+      const next = { ...prev, faqs: nextFaqs };
+      persistDraft(next);
+      return next;
+    });
+    toast.success(
+      pairs.length === 1
+        ? "Pasted 1 FAQ."
+        : `Pasted ${pairs.length} FAQs — please check the rows.`,
+    );
   };
 
   const addFaq = () => {
@@ -498,6 +524,8 @@ export default function BlogForm({ mode, initialData }: BlogFormProps) {
             </button>
           </div>
 
+          <FaqPasteHint />
+
           <div className="space-y-5">
             {form.faqs.map((faq: FAQItem, index: number) => (
               <div
@@ -521,6 +549,7 @@ export default function BlogForm({ mode, initialData }: BlogFormProps) {
                   onChange={(event) =>
                     updateFaq(index, "question", event.target.value)
                   }
+                  onPaste={(event) => handleFaqPaste(index, event)}
                   placeholder="Question"
                   className={inputClass}
                 />
