@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 
 export interface SectionHeadingProps {
   /** Text for the premium editorial badge (e.g., "Featured Universities") */
@@ -45,7 +45,7 @@ export default function SectionHeading({
       } ${className}`}
     >
       {/* Premium Badge - Controlled bottom margin */}
-      <motion.div
+      <m.div
         custom={0}
         initial="hidden"
         whileInView="visible"
@@ -62,10 +62,10 @@ export default function SectionHeading({
         {isCenter && (
           <span className="hidden sm:block h-[1px] w-6 bg-[#C4A47C]/40"></span>
         )}
-      </motion.div>
+      </m.div>
 
       {/* Main Heading - Refined sizing and compact bottom margin */}
-      <motion.h2
+      <m.h2
         custom={0.1}
         initial="hidden"
         whileInView="visible"
@@ -76,11 +76,11 @@ export default function SectionHeading({
         }`}
       >
         {title}
-      </motion.h2>
+      </m.h2>
 
       {/* Supporting Description - No bottom margin by default to keep vertical rhythm tight */}
       {description && (
-        <motion.p
+        <m.p
           custom={0.2}
           initial="hidden"
           whileInView="visible"
@@ -89,7 +89,7 @@ export default function SectionHeading({
           className="text-sm md:text-base text-slate-500 font-light leading-relaxed max-w-2xl m-0"
         >
           {description}
-        </motion.p>
+        </m.p>
       )}
     </div>
   );

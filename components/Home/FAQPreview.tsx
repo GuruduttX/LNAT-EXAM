@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence, Variants } from "framer-motion";
+import { m, AnimatePresence, Variants } from "framer-motion";
 import {
   ArrowRight,
   ChevronDown,
@@ -50,7 +50,7 @@ export default function FAQPreview() {
           preserveAspectRatio="none"
           className="w-[120%] h-72 text-[#C9A84C]/50"
         >
-          <motion.path
+          <m.path
             initial={{ pathLength: 0, opacity: 0 }}
             whileInView={{ pathLength: 1, opacity: 1 }}
             viewport={{ once: true, margin: "-100px" }}
@@ -62,7 +62,7 @@ export default function FAQPreview() {
             strokeLinecap="round"
           />
 
-          <motion.path
+          <m.path
             initial={{ pathLength: 0, opacity: 0 }}
             whileInView={{ pathLength: 0.9, opacity: 0.3 }}
             viewport={{ once: true, margin: "-100px" }}
@@ -79,7 +79,7 @@ export default function FAQPreview() {
       <div className="relative z-10 max-w-7xl mx-auto">
         {/* Header */}
         <div className="max-w-3xl mx-auto text-center mb-14 md:mb-20">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -87,9 +87,9 @@ export default function FAQPreview() {
           >
             <MapPin size={16} />
             <span>Admissions Guidance</span>
-          </motion.div>
+          </m.div>
 
-          <motion.h2
+          <m.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -97,9 +97,9 @@ export default function FAQPreview() {
             className="text-4xl md:text-5xl lg:text-[3.4rem] font-serif tracking-[-0.04em] text-[#0D1B3E] leading-[0.95]"
           >
             Frequently Asked Questions
-          </motion.h2>
+          </m.h2>
 
-          <motion.p
+          <m.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -109,11 +109,11 @@ export default function FAQPreview() {
             Clear, structured answers covering the LNAT, UCAS applications,
             Oxbridge admissions timelines, and the broader UK law school
             application process for Indian students.
-          </motion.p>
+          </m.p>
         </div>
 
         {/* FAQ Cards */}
-        <motion.div
+        <m.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -124,7 +124,7 @@ export default function FAQPreview() {
             const isOpen = openId === faq.id;
 
             return (
-              <motion.div
+              <m.div
                 key={faq.id}
                 variants={itemVariants}
                 className="group"
@@ -178,7 +178,7 @@ export default function FAQPreview() {
                       </div>
 
                       <div className="shrink-0 pt-1">
-                        <motion.div
+                        <m.div
                           animate={{ rotate: isOpen ? 180 : 0 }}
                           transition={{ duration: 0.35 }}
                           className={`rounded-full border p-2.5 transition-all duration-300 ${
@@ -188,14 +188,14 @@ export default function FAQPreview() {
                           }`}
                         >
                           <ChevronDown size={18} />
-                        </motion.div>
+                        </m.div>
                       </div>
                     </div>
                   </button>
 
                   <AnimatePresence initial={false}>
                     {isOpen && (
-                      <motion.div
+                      <m.div
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
@@ -226,17 +226,17 @@ export default function FAQPreview() {
                             </div>
                           </div>
                         </div>
-                      </motion.div>
+                      </m.div>
                     )}
                   </AnimatePresence>
                 </div>
-              </motion.div>
+              </m.div>
             );
           })}
-        </motion.div>
+        </m.div>
 
         {/* Footer CTA */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -250,7 +250,7 @@ export default function FAQPreview() {
             Explore More Questions
             <ArrowRight className="w-4 h-4 text-[#C9A84C] transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

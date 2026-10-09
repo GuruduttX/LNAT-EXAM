@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import type { Metadata } from "next";
+import { Poppins } from "next/font/google";
 
 import HomeHero from "@/components/Home/Homehero";
 import type { FeaturedUniversityCardData } from "@/components/Home/FeaturedUniversities/UniversityGrid";
@@ -40,6 +41,14 @@ const WhoWeHelp = dynamic(() => import("@/components/Home/WhoWeHelp"));
 const MentorPreview = dynamic(() => import("@/components/Home/MentorPreview"));
 const FAQPreview = dynamic(() => import("@/components/Home/FAQPreview"));
 const FinalCTA = dynamic(() => import("@/components/Home/FinalCTA"));
+
+// Declared here rather than in the root layout so its preload hints are only
+// emitted on the homepage, the one route whose sections use Poppins.
+const poppins = Poppins({
+  variable: "--font-poppins",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+});
 
 const title = "LNAT Coaching in India | LNAT Exam Preparation & Classes";
 const description =
@@ -132,6 +141,13 @@ export default async function Home() {
 
   return (
     <main>
+      {/* Set on :root, not <main>: ExamPattern's global `*` rule reads this
+          variable for the navbar and footer too. */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `:root{--font-poppins:${poppins.style.fontFamily}}`,
+        }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
@@ -139,7 +155,7 @@ export default async function Home() {
       <HomeHero />
       <TrustedUniversities />
       <LNATOverview />
-      <HowWePrepare/>
+      <HowWePrepare />
       <FreeResourcesIndex />
       <MeetYourMentor />
       <ExamPattern />

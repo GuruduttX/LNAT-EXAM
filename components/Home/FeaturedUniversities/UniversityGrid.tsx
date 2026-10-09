@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { m, useInView } from "framer-motion";
 
 // --- Assuming UniversityCard is in the components directory ---
 import UniversityCard from "./UniversityCard";
@@ -43,7 +43,7 @@ export default function UniversityGrid({ universities }: UniversityGridProps) {
   const isInView = useInView(containerRef, { once: true, margin: "-10% 0px" });
 
   return (
-    <motion.div
+    <m.div
       ref={containerRef}
       variants={gridVariants}
       initial="hidden"
@@ -64,6 +64,6 @@ export default function UniversityGrid({ universities }: UniversityGridProps) {
           />
         </div>
       ))}
-    </motion.div>
+    </m.div>
   );
 }

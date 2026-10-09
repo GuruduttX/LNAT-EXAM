@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 import { BellRing, ArrowRight } from "lucide-react";
 
 // --- Types ---
@@ -63,7 +63,7 @@ export default function UpdatesCard({
   delay = 0,
 }: UpdatesCardProps) {
   return (
-    <motion.div
+    <m.div
       custom={delay}
       variants={cardVariants}
       initial="hidden"
@@ -97,7 +97,7 @@ export default function UpdatesCard({
       {/* Reminders List */}
       <div className="relative z-10 flex flex-col space-y-4">
         {items.map((item) => (
-          <motion.div
+          <m.div
             key={item.id}
             variants={itemVariants}
             className="flex items-start"
@@ -108,9 +108,9 @@ export default function UpdatesCard({
             <p className="text-sm md:text-base text-[#0F172A]/80 leading-relaxed font-medium">
               {item.text}
             </p>
-          </motion.div>
+          </m.div>
         ))}
       </div>
-    </motion.div>
+    </m.div>
   );
 }

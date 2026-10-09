@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 import {
   Clock,
   FileText,
@@ -71,7 +71,7 @@ export default function ExamSectionCard({
   delay = 0,
 }: ExamSectionCardProps) {
   return (
-    <motion.div
+    <m.div
       custom={delay}
       variants={cardVariant}
       initial="hidden"
@@ -110,7 +110,7 @@ export default function ExamSectionCard({
           const isLast = index === rows.length - 1;
 
           return (
-            <motion.div
+            <m.div
               key={row.id}
               variants={rowVariants}
               className={`flex flex-col sm:flex-row sm:items-start py-5 ${
@@ -133,10 +133,10 @@ export default function ExamSectionCard({
               <div className="sm:w-2/3 sm:pl-4 text-base md:text-lg font-serif text-[#0F172A] leading-relaxed">
                 {row.value}
               </div>
-            </motion.div>
+            </m.div>
           );
         })}
       </div>
-    </motion.div>
+    </m.div>
   );
 }

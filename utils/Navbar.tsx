@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
 import {
   ChevronDown,
@@ -66,9 +66,12 @@ function NavLogo() {
       <Image
         src="/images/LnatLogo.webp"
         alt="LNAT Exam India"
-        width={280}
-        height={82}
-        priority
+        // Intrinsic ratio of the source (2400×1309) at the largest rendered
+        // height (72px), so the srcset tops out near the real display size.
+        width={132}
+        height={72}
+        sizes="132px"
+        loading="eager"
         className="h-14 w-auto transition-transform duration-300 group-hover:scale-[1.02] md:h-16 lg:h-[72px]"
       />
     </Link>
@@ -83,7 +86,7 @@ function UniversityDropdown({ isOpen }: { isOpen: boolean }) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: -6, scale: 0.99 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -4, scale: 0.99 }}
@@ -108,7 +111,7 @@ function UniversityDropdown({ isOpen }: { isOpen: boolean }) {
           >
             <p
               style={{
-                fontFamily: "'Libre Baskerville', Georgia, serif",
+                fontFamily: "var(--font-baskerville), Georgia, serif",
                 fontSize: "9.5px",
                 letterSpacing: "0.18em",
                 textTransform: "uppercase",
@@ -143,7 +146,7 @@ function UniversityDropdown({ isOpen }: { isOpen: boolean }) {
               >
                 <span
                   style={{
-                    fontFamily: "'Libre Baskerville', Georgia, serif",
+                    fontFamily: "var(--font-baskerville), Georgia, serif",
                     fontSize: "12.5px",
                     color: "#1A2844",
                     fontWeight: 400,
@@ -153,7 +156,7 @@ function UniversityDropdown({ isOpen }: { isOpen: boolean }) {
                 </span>
                 <span
                   style={{
-                    fontFamily: "'Libre Baskerville', Georgia, serif",
+                    fontFamily: "var(--font-baskerville), Georgia, serif",
                     fontSize: "9px",
                     color: "#8B6914",
                     letterSpacing: "0.06em",
@@ -177,7 +180,7 @@ function UniversityDropdown({ isOpen }: { isOpen: boolean }) {
             >
               <span
                 style={{
-                  fontFamily: "'Libre Baskerville', Georgia, serif",
+                  fontFamily: "var(--font-baskerville), Georgia, serif",
                   fontSize: "11px",
                   color: "#0D1B3E",
                   fontWeight: 700,
@@ -192,7 +195,7 @@ function UniversityDropdown({ isOpen }: { isOpen: boolean }) {
               />
             </Link>
           </div>
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   );
@@ -240,7 +243,7 @@ function NavLink({
         >
           <span
             style={{
-              fontFamily: "'Libre Baskerville', Georgia, serif",
+              fontFamily: "var(--font-baskerville), Georgia, serif",
               fontSize: "13px",
               color: dropdownOpen ? "#0D1B3E" : "#2D3748",
               fontWeight: dropdownOpen ? 700 : 400,
@@ -281,7 +284,7 @@ function NavLink({
       <span
         className="transition-colors duration-200"
         style={{
-          fontFamily: "'Libre Baskerville', Georgia, serif",
+          fontFamily: "var(--font-baskerville), Georgia, serif",
           fontSize: "13px",
           color: isActive ? "#0D1B3E" : "#2D3748",
           fontWeight: isActive ? 700 : 400,
@@ -344,7 +347,7 @@ function NavbarCTA({ setIsOpen }: NavbarCTAProps) {
           <div className="w-1.5 h-1.5 rounded-full bg-[#C9A84C]" />
           <span
             style={{
-              fontFamily: "'Libre Baskerville', Georgia, serif",
+              fontFamily: "var(--font-baskerville), Georgia, serif",
               fontSize: "9px",
               color: "#8B6914",
               letterSpacing: "0.12em",
@@ -362,7 +365,7 @@ function NavbarCTA({ setIsOpen }: NavbarCTAProps) {
           style={{
             background: "linear-gradient(135deg, #0D1B3E 0%, #162447 100%)",
             color: "#F5F0E8",
-            fontFamily: "'Libre Baskerville', Georgia, serif",
+            fontFamily: "var(--font-baskerville), Georgia, serif",
             fontSize: "12.5px",
             fontWeight: 700,
             letterSpacing: "0.02em",
@@ -441,7 +444,7 @@ function MobileMenu({
       />
       <AnimatePresence>
         {isOpen && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -510,7 +513,7 @@ function MobileMenu({
                   if (link.hasDropdown) {
                     return (
                       <div key={link.href}>
-                        <motion.div
+                        <m.div
                           initial={{ opacity: 0, x: -16 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{
@@ -530,7 +533,7 @@ function MobileMenu({
                             <span
                               style={{
                                 fontFamily:
-                                  "'Cormorant Garamond', Georgia, serif",
+                                  "var(--font-cormorant), Georgia, serif",
                                 fontSize: "clamp(1.5rem, 5vw, 2rem)",
                                 fontWeight: 400,
                                 color: "#0A1628",
@@ -556,11 +559,11 @@ function MobileMenu({
                               }}
                             />
                           </button>
-                        </motion.div>
+                        </m.div>
 
                         <AnimatePresence>
                           {uniExpanded && (
-                            <motion.div
+                            <m.div
                               initial={{ height: 0, opacity: 0 }}
                               animate={{ height: "auto", opacity: 1 }}
                               exit={{ height: 0, opacity: 0 }}
@@ -582,7 +585,7 @@ function MobileMenu({
                                     <span
                                       style={{
                                         fontFamily:
-                                          "'Libre Baskerville', Georgia, serif",
+                                          "var(--font-baskerville), Georgia, serif",
                                         fontSize: "14px",
                                         color: "#1A2844",
                                       }}
@@ -599,7 +602,7 @@ function MobileMenu({
                                   <span
                                     style={{
                                       fontFamily:
-                                        "'Libre Baskerville', Georgia, serif",
+                                        "var(--font-baskerville), Georgia, serif",
                                       fontSize: "12px",
                                       color: "#0D1B3E",
                                       fontWeight: 700,
@@ -614,7 +617,7 @@ function MobileMenu({
                                   />
                                 </Link>
                               </div>
-                            </motion.div>
+                            </m.div>
                           )}
                         </AnimatePresence>
                       </div>
@@ -622,7 +625,7 @@ function MobileMenu({
                   }
 
                   return (
-                    <motion.div
+                    <m.div
                       key={link.href}
                       initial={{ opacity: 0, x: -16 }}
                       animate={{ opacity: 1, x: 0 }}
@@ -640,7 +643,7 @@ function MobileMenu({
                       >
                         <span
                           style={{
-                            fontFamily: "'Cormorant Garamond', Georgia, serif",
+                            fontFamily: "var(--font-cormorant), Georgia, serif",
                             fontSize: "clamp(1.5rem, 5vw, 2rem)",
                             fontWeight: 400,
                             color: "#0A1628",
@@ -650,14 +653,14 @@ function MobileMenu({
                           {link.label}
                         </span>
                       </Link>
-                    </motion.div>
+                    </m.div>
                   );
                 })}
               </nav>
             </div>
 
             {/* Bottom CTAs */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
@@ -682,7 +685,7 @@ function MobileMenu({
                   background:
                     "linear-gradient(135deg, #0D1B3E 0%, #162447 100%)",
                   color: "#F5F0E8",
-                  fontFamily: "'Libre Baskerville', Georgia, serif",
+                  fontFamily: "var(--font-baskerville), Georgia, serif",
                   fontSize: "13px",
                   fontWeight: 700,
                   letterSpacing: "0.02em",
@@ -700,7 +703,7 @@ function MobileMenu({
                 style={{
                   border: "1px solid rgba(13,27,62,0.18)",
                   color: "#0D1B3E",
-                  fontFamily: "'Libre Baskerville', Georgia, serif",
+                  fontFamily: "var(--font-baskerville), Georgia, serif",
                   fontSize: "13px",
                   fontWeight: 400,
                   letterSpacing: "0.02em",
@@ -714,7 +717,7 @@ function MobileMenu({
               <p
                 className="text-center mt-2"
                 style={{
-                  fontFamily: "'Libre Baskerville', Georgia, serif",
+                  fontFamily: "var(--font-baskerville), Georgia, serif",
                   fontSize: "9.5px",
                   color: "#9CA3AF",
                   letterSpacing: "0.14em",
@@ -723,8 +726,8 @@ function MobileMenu({
               >
                 Trusted LNAT Guidance for India
               </p>
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
         )}
       </AnimatePresence>
     </>
@@ -753,19 +756,19 @@ function HamburgerButton({
         background: "rgba(251,248,242,0.8)",
       }}
     >
-      <motion.span
+      <m.span
         animate={isOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
         transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
         className="block w-3.5 h-px rounded-full"
         style={{ background: "#0A1628" }}
       />
-      <motion.span
+      <m.span
         animate={isOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
         transition={{ duration: 0.18 }}
         className="block w-2.5 h-px rounded-full self-end mr-1"
         style={{ background: "#0A1628" }}
       />
-      <motion.span
+      <m.span
         animate={isOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
         transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
         className="block w-3.5 h-px rounded-full"
@@ -799,11 +802,6 @@ export default function Navbar() {
   return (
     <>
       <EnquiryPopupForm isOpen={isOpen} onClose={() => setIsOpen(false)} />
-      {/* Google Fonts */}
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
-      `}</style>
-
       <header
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-400"
         style={{

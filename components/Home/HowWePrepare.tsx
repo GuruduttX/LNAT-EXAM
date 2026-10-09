@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 import {
   Target,
   BookOpen,
@@ -72,7 +72,7 @@ export default function HowWePrepare() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Section Heading */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -81,9 +81,9 @@ export default function HowWePrepare() {
             <span className="text-[10px] font-bold uppercase tracking-widest text-[#C9A84C]">
               Our Methodology
             </span>
-          </motion.div>
+          </m.div>
 
-          <motion.h2
+          <m.h2
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -91,9 +91,9 @@ export default function HowWePrepare() {
             className="text-3xl md:text-4xl lg:text-5xl font-serif text-[#0D1B3E] leading-tight mb-6"
           >
             How We Prepare You
-          </motion.h2>
+          </m.h2>
 
-          <motion.p
+          <m.p
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -102,11 +102,11 @@ export default function HowWePrepare() {
           >
             A structured, rigorous approach designed to build underlying
             analytical skills rather than relying on rote memorisation[cite: 1].
-          </motion.p>
+          </m.p>
         </div>
 
         {/* 5-Step Grid */}
-        <motion.div
+        <m.div
           className="flex md:grid overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-16 pb-6 md:pb-0 hide-scrollbar"
           variants={containerVariants}
           initial="hidden"
@@ -114,7 +114,7 @@ export default function HowWePrepare() {
           viewport={{ once: true, margin: "-50px" }}
         >
           {steps.map((step, index) => (
-            <motion.div
+            <m.div
               key={step.id}
               variants={itemVariants}
               className={`relative bg-white p-8 border border-slate-200/80 hover:border-[#C9A84C]/40 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] w-[85vw] sm:w-[340px] md:w-auto flex-shrink-0 snap-center md:snap-align-none ${
@@ -143,12 +143,12 @@ export default function HowWePrepare() {
               <p className="text-sm text-slate-600 leading-relaxed">
                 {step.description}
               </p>
-            </motion.div>
+            </m.div>
           ))}
-        </motion.div>
+        </m.div>
 
         {/* CTA & Course Formats Bottom Bar */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -186,7 +186,7 @@ export default function HowWePrepare() {
             </span>
             <ArrowRight className="w-4 h-4 text-[#C9A84C] transition-transform duration-300 group-hover:translate-x-1" />
           </a>
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

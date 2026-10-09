@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 import { MapPin, ShieldCheck, ArrowRight, Trophy } from "lucide-react";
 
 // --- Types ---
@@ -53,7 +53,7 @@ export default function UniversityHeroCard({
   delay = 0,
 }: UniversityHeroCardProps) {
   return (
-    <motion.div
+    <m.div
       custom={delay}
       initial="hidden"
       whileInView="visible"
@@ -66,6 +66,8 @@ export default function UniversityHeroCard({
         <img
           src={imageUrl}
           alt={`${name} campus`}
+          loading="lazy"
+          decoding="async"
           className="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105"
         />
       </div>
@@ -126,6 +128,6 @@ export default function UniversityHeroCard({
           </button>
         </div>
       </div>
-    </motion.div>
+    </m.div>
   );
 }

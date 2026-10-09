@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useInView, Variants } from "framer-motion";
+import { m, useInView, Variants } from "framer-motion";
 import { ArrowUpRight, BookOpen } from "lucide-react";
 import Link from "next/link";
 
@@ -61,13 +61,13 @@ export default function FreeResourcesIndex() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-20">
           {/* Left Column: Narrative Content */}
-          <motion.div
+          <m.div
             className="lg:col-span-5 flex flex-col justify-center"
             variants={stagger}
             initial="hidden"
             animate={inView ? "visible" : "hidden"}
           >
-            <motion.div variants={fadeUp} className="mb-6 text-center md:text-start">
+            <m.div variants={fadeUp} className="mb-6 text-center md:text-start">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#C9A84C]/10 border border-[#C9A84C]/20 mb-6">
                 <BookOpen size={12} className="text-[#C9A84C]" />
                 <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#C9A84C]">
@@ -85,25 +85,25 @@ export default function FreeResourcesIndex() {
                 and our guides cover the whole exam: Section A, Section B,
                 scoring, registration and dates & deadlines.
               </p>
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
 
           {/* Right Column: Editorial Link Index */}
-          <motion.div
+          <m.div
             className="lg:col-span-7"
             variants={stagger}
             initial="hidden"
             animate={inView ? "visible" : "hidden"}
           >
-            <motion.div variants={fadeUp} className="mb-4 hidden lg:block">
+            <m.div variants={fadeUp} className="mb-4 hidden lg:block">
               <span className="text-xs font-bold uppercase tracking-widest text-slate-400">
                 Explore Library
               </span>
-            </motion.div>
+            </m.div>
 
             <div className="border-t border-[#0D1B3E]/10">
               {resourceLinks.map((link, index) => (
-                <motion.div key={link.id} variants={fadeUp}>
+                <m.div key={link.id} variants={fadeUp}>
                   <Link
                     href={link.href}
                     className="group flex flex-col sm:flex-row sm:items-center justify-between py-5 border-b border-[#0D1B3E]/10 transition-colors duration-300 hover:bg-[#0D1B3E]/[0.02] px-2 -mx-2 rounded-sm"
@@ -126,10 +126,10 @@ export default function FreeResourcesIndex() {
                       <ArrowUpRight size={20} strokeWidth={1.5} />
                     </div>
                   </Link>
-                </motion.div>
+                </m.div>
               ))}
             </div>
-          </motion.div>
+          </m.div>
         </div>
       </div>
     </section>

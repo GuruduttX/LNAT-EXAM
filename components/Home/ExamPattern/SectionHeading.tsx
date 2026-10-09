@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 // --- Types ---
 
@@ -36,7 +36,7 @@ export default function SectionHeading({
       } ${className}`}
     >
       {/* Premium Badge */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-10% 0px" }}
@@ -52,10 +52,10 @@ export default function SectionHeading({
         {isCenter && (
           <span className="hidden sm:block h-px w-8 bg-[#C4A47C]/40"></span>
         )}
-      </motion.div>
+      </m.div>
 
       {/* Main Heading */}
-      <motion.h2
+      <m.h2
         initial={{ opacity: 0, y: 15 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-10% 0px" }}
@@ -63,11 +63,11 @@ export default function SectionHeading({
         className="text-3xl md:text-4xl lg:text-5xl font-serif text-[#0F172A] tracking-tight leading-[1.15] mb-6 max-w-3xl"
       >
         {title}
-      </motion.h2>
+      </m.h2>
 
       {/* Supporting Description */}
       {description && (
-        <motion.p
+        <m.p
           initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-10% 0px" }}
@@ -75,7 +75,7 @@ export default function SectionHeading({
           className="text-base md:text-lg text-slate-500 font-light leading-relaxed max-w-2xl"
         >
           {description}
-        </motion.p>
+        </m.p>
       )}
     </div>
   );

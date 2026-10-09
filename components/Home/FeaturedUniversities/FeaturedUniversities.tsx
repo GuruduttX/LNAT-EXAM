@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
-import { motion, useInView, Variants } from "framer-motion";
+import { m, useInView, Variants } from "framer-motion";
 import { ShieldCheck, MapPin, Trophy, CalendarClock } from "lucide-react";
 
 // --- Subcomponent Imports ---
@@ -75,24 +75,24 @@ export default function FeaturedUniversities({
       {/* Delicate Architectural Top Divider Rule */}
       <div className="absolute top-0 left-6 right-6 h-px bg-[#0F172A]/5" />
 
-      <motion.div
+      <m.div
         variants={containerVariants}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
         className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12 flex flex-col"
       >
         {/* 1. Header Area - Compact positioning */}
-        <motion.div variants={fadeUpVariants} className="mb-10 md:mb-12">
+        <m.div variants={fadeUpVariants} className="mb-10 md:mb-12">
           <SectionHeading
             badge="Featured Institutions"
             title="Explore Premier LNAT Law Schools"
             description="The Law National Aptitude Test is the key benchmark used by global tier-one institutions to select exceptional talent for their highly competitive undergraduate law cohorts."
             align="center"
           />
-        </motion.div>
+        </m.div>
 
         {/* 2. Visual Centerpiece: Immersive Hero Card */}
-        <motion.div variants={fadeUpVariants} className="mb-10 md:mb-12">
+        <m.div variants={fadeUpVariants} className="mb-10 md:mb-12">
           <div className="flex flex-col gap-4">
             <UniversityHeroCard
               name="University of Oxford"
@@ -115,10 +115,10 @@ export default function FeaturedUniversities({
               />
             </div>
           </div>
-        </motion.div>
+        </m.div>
 
         {/* 3. Reusable Asymmetric Editorial Grid Showcase */}
-        <motion.div variants={fadeUpVariants}>
+        <m.div variants={fadeUpVariants}>
           <div className="flex flex-col gap-6">
             <div className="flex items-center gap-4">
               <h4 className="text-xs font-medium tracking-[0.15em] uppercase text-[#0F172A]/60">
@@ -129,8 +129,8 @@ export default function FeaturedUniversities({
 
             <UniversityGrid universities={universities} />
           </div>
-        </motion.div>
-      </motion.div>
+        </m.div>
+      </m.div>
     </section>
   );
 }

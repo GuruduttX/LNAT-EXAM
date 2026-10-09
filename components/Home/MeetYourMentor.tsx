@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useInView, Variants } from "framer-motion";
+import Image from "next/image";
+import { m, useInView, Variants } from "framer-motion";
 import { Award, Globe, BookOpen, ChevronRight } from "lucide-react";
 
 const fadeUp: Variants = {
@@ -52,7 +53,7 @@ export default function MeetYourMentor() {
         </h2>
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 items-center">
           {/* Left: Image with Premium Offset Frame */}
-          <motion.div
+          <m.div
             className="lg:col-span-5 relative max-w-md mx-auto lg:mx-0 w-full"
             initial={{ opacity: 0, x: -30 }}
             animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
@@ -63,10 +64,12 @@ export default function MeetYourMentor() {
 
             {/* Image Container */}
             <div className="relative z-10 aspect-[4/5] w-full overflow-hidden shadow-[0_20px_40px_rgba(13,27,62,0.1)] rounded-sm bg-[#0D1B3E]">
-              <img
+              <Image
                 src="/images/LNAT-mentor.webp"
                 alt="Mr. Alastair Murray"
-                className="w-full h-full object-cover object-center  hover:mix-blend-normal hover:opacity-100 transition-all duration-700"
+                fill
+                sizes="(min-width: 480px) 448px, 100vw"
+                className="object-cover object-center  hover:mix-blend-normal hover:opacity-100 transition-all duration-700"
               />
 
               {/* Subtle gradient overlay at bottom for depth */}
@@ -82,16 +85,16 @@ export default function MeetYourMentor() {
                 LNAT Exam India
               </p>
             </div>
-          </motion.div>
+          </m.div>
 
           {/* Right: Editorial Content */}
-          <motion.div
+          <m.div
             className="lg:col-span-7 flex flex-col justify-center"
             variants={stagger}
             initial="hidden"
             animate={inView ? "visible" : "hidden"}
           >
-            <motion.div variants={fadeUp} className="mb-4">
+            <m.div variants={fadeUp} className="mb-4">
               <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#C9A84C] block mb-3">
                 Who Teaches You
               </span>
@@ -104,9 +107,9 @@ export default function MeetYourMentor() {
                 writing and reasoning are guided by an expert who understands
                 the highest benchmarks of international assessment.
               </p>
-            </motion.div>
+            </m.div>
 
-            <motion.div
+            <m.div
               variants={fadeUp}
               className="w-12 h-px bg-[#C9A84C]/30 my-8"
             />
@@ -114,7 +117,7 @@ export default function MeetYourMentor() {
             {/* Credentials List */}
             <div className="space-y-6 mb-10">
               {credentials.map((item, index) => (
-                <motion.div
+                <m.div
                   key={index}
                   variants={fadeUp}
                   className="flex items-start gap-4"
@@ -130,10 +133,10 @@ export default function MeetYourMentor() {
                       {item.description}
                     </p>
                   </div>
-                </motion.div>
+                </m.div>
               ))}
             </div>
-          </motion.div>
+          </m.div>
         </div>
       </div>
     </section>

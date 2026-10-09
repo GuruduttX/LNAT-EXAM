@@ -19,6 +19,17 @@ export const metadata = {
   },
 };
 
+// getPublishedBlogs sorts cornerstone posts first, which the featured pick and
+// the hub cards rely on. The archive grid is a plain chronological list, so it
+// gets its own newest-first ordering.
+function getPublishedTime(blog: IBlog) {
+  const stamp = blog.publishedAt || blog.createdAt;
+  if (!stamp) return 0;
+
+  const time = stamp instanceof Date ? stamp.getTime() : Date.parse(stamp);
+  return Number.isNaN(time) ? 0 : time;
+}
+
 async function getBlogIndexData() {
   const [blogDocuments, categoryDocuments] = await Promise.all([
     getPublishedBlogs(30),
@@ -27,6 +38,10 @@ async function getBlogIndexData() {
 
   const blogs = JSON.parse(JSON.stringify(blogDocuments)) as IBlog[];
   const categories = JSON.parse(JSON.stringify(categoryDocuments)) as ICategory[];
+
+  const archiveBlogs = [...blogs].sort(
+    (first, second) => getPublishedTime(second) - getPublishedTime(first),
+  );
 
   const cornerstoneBlogs = blogs.filter((blog) => blog.isCornerstone).slice(0, 3);
   const featuredBlogs =
@@ -53,6 +68,7 @@ async function getBlogIndexData() {
 
   return {
     blogs,
+    archiveBlogs,
     featuredBlogs,
     latestBlogs,
     hubCards,
@@ -60,7 +76,7 @@ async function getBlogIndexData() {
 }
 
 export default async function BlogIndexPage() {
-  const { blogs, latestBlogs, hubCards } = await getBlogIndexData();
+  const { archiveBlogs, latestBlogs, hubCards } = await getBlogIndexData();
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -79,7 +95,7 @@ export default async function BlogIndexPage() {
       {
         "@type": "ItemList",
         name: "Published LNAT blog articles",
-        itemListElement: blogs.map((blog, index) => ({
+        itemListElement: archiveBlogs.map((blog, index) => ({
           "@type": "ListItem",
           position: index + 1,
           name: blog.title,
@@ -98,7 +114,7 @@ export default async function BlogIndexPage() {
 
      <BlogArchiveHero />
 
-      <BlogArchiveGrid blogs={blogs}/>
+      <BlogArchiveGrid blogs={archiveBlogs}/>
 
      <TopicHubsArchive hubCards={hubCards}/>
 

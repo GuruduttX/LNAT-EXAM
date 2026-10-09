@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { motion, useInView, AnimatePresence, Variants } from "framer-motion";
+import { m, useInView, AnimatePresence, Variants } from "framer-motion";
 import {
   Brain,
   Globe,
@@ -49,8 +49,8 @@ const stagger = {
   visible: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
 };
 
-const poppins = "'Poppins', sans-serif";
-const serif = "'Cormorant Garamond', Georgia, serif";
+const poppins = "var(--font-poppins), sans-serif";
+const serif = "var(--font-cormorant), Georgia, serif";
 
 function SectionLabel({ text }: { text: string }) {
   return (
@@ -113,7 +113,7 @@ function LNATHero() {
         </p>
       </div>
 
-      <motion.div
+      <m.div
         variants={fadeUp}
         custom={0}
         initial="hidden"
@@ -141,9 +141,9 @@ function LNATHero() {
             Exam Overview
           </span>
         </div>
-      </motion.div>
+      </m.div>
 
-      <motion.h2
+      <m.h2
         variants={fadeUp}
         custom={0.1}
         initial="hidden"
@@ -170,9 +170,9 @@ function LNATHero() {
         >
           LNAT?
         </span>
-      </motion.h2>
+      </m.h2>
 
-      <motion.p
+      <m.p
         variants={fadeUp}
         custom={0.2}
         initial="hidden"
@@ -201,10 +201,10 @@ function LNATHero() {
         >
           Start with our full guide: what is the LNAT.
         </a>
-      </motion.p>
+      </m.p>
 
       {/* Four pillars reflecting the new content */}
-      <motion.div
+      <m.div
         variants={stagger}
         initial="hidden"
         animate={inView ? "visible" : "hidden"}
@@ -216,7 +216,7 @@ function LNATHero() {
           { icon: <Brain size={14} />, text: "No Syllabus to Memorise" },
           { icon: <TrendingUp size={14} />, text: "Tests Reading & Reasoning" },
         ].map((p, i) => (
-          <motion.div
+          <m.div
             key={i}
             variants={fadeUp}
             className="flex items-center gap-2 px-4 py-2 rounded-full flex-shrink-0 snap-center"
@@ -238,9 +238,9 @@ function LNATHero() {
             >
               {p.text}
             </span>
-          </motion.div>
+          </m.div>
         ))}
-      </motion.div>
+      </m.div>
     </div>
   );
 }
@@ -297,7 +297,7 @@ function DifferenceCard({
 }) {
   const [hovered, setHovered] = useState(false);
   return (
-    <motion.div
+    <m.div
       variants={fadeUp}
       custom={i * 0.07}
       onMouseEnter={() => setHovered(true)}
@@ -383,7 +383,7 @@ function DifferenceCard({
       >
         {card.body}
       </p>
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -394,17 +394,17 @@ function WhyItMattersForIndia() {
   return (
     <div ref={ref} className="mb-20 lg:mb-28">
       {/* 1. Narrative Intro */}
-      <motion.div
+      <m.div
         variants={stagger}
         initial="hidden"
         animate={inView ? "visible" : "hidden"}
         className="text-center md:text-start mb-12 max-w-4xl mx-auto md:mx-0"
       >
-        <motion.div variants={fadeUp}>
+        <m.div variants={fadeUp}>
           <SectionLabel text="Why It Matters Now For Indian Students" />
-        </motion.div>
+        </m.div>
 
-        <motion.h3
+        <m.h3
           variants={fadeUp}
           style={{
             fontFamily: poppins,
@@ -428,9 +428,9 @@ function WhyItMattersForIndia() {
           >
             Two Elite Routes
           </span>
-        </motion.h3>
+        </m.h3>
 
-        <motion.p
+        <m.p
           variants={fadeUp}
           style={{
             fontFamily: poppins,
@@ -444,18 +444,18 @@ function WhyItMattersForIndia() {
           That's changed. From 2026-27, JGLS made the LNAT its sole entrance
           test, replacing CLAT and LSAT-India for its LLB programmes. So the
           same preparation now works for two routes at once:
-        </motion.p>
-      </motion.div>
+        </m.p>
+      </m.div>
 
       {/* 2. The Two Routes (Cards) */}
-      <motion.div
+      <m.div
         variants={stagger}
         initial="hidden"
         animate={inView ? "visible" : "hidden"}
         className="flex md:grid overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none md:grid-cols-2 gap-6 mb-6 pb-4 md:pb-0 w-full hide-scrollbar"
       >
         {/* Route 1: UK */}
-        <motion.div
+        <m.div
           variants={fadeUp}
           className="group relative bg-white p-8 rounded-2xl flex flex-col h-full transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(13,27,62,0.08)] flex-shrink-0 w-[85vw] sm:w-[400px] md:w-auto snap-center md:snap-align-none"
           style={{ border: "1px solid rgba(13,27,62,0.08)" }}
@@ -496,10 +496,10 @@ function WhyItMattersForIndia() {
           >
             See the full list of LNAT universities <ArrowRight size={14} />
           </a>
-        </motion.div>
+        </m.div>
 
         {/* Route 2: JGLS */}
-        <motion.div
+        <m.div
           variants={fadeUp}
           className="group relative bg-[#0D1B3E] p-8 rounded-2xl flex flex-col h-full transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(13,27,62,0.15)] flex-shrink-0 w-[85vw] sm:w-[400px] md:w-auto snap-center md:snap-align-none"
           style={{ border: "1px solid #0D1B3E" }}
@@ -540,11 +540,11 @@ function WhyItMattersForIndia() {
           >
             More on the LNAT in India <ArrowRight size={14} />
           </a>
-        </motion.div>
-      </motion.div>
+        </m.div>
+      </m.div>
 
       {/* 3. Logistics Bottom Bar */}
-      <motion.div
+      <m.div
         variants={fadeUp}
         initial="hidden"
         animate={inView ? "visible" : "hidden"}
@@ -571,7 +571,7 @@ function WhyItMattersForIndia() {
           Bengaluru, Chennai, Hyderabad, Pune — for about{" "}
           <strong>£120 (~₹13,000)</strong>.
         </p>
-      </motion.div>
+      </m.div>
     </div>
   );
 }
@@ -613,21 +613,21 @@ function WhyStudentsChoose() {
     >
       <div className="grid lg:grid-cols-2 gap-12 items-center text-center md:text-start">
         {/* Left: editorial text */}
-        <motion.div
+        <m.div
           variants={stagger}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
           // FIX: Added min-w-0 and w-full to prevent grid blowout
           className="max-w-full min-w-0 w-full"
         >
-          <motion.div
+          <m.div
             variants={fadeUp}
             className="flex justify-center md:justify-start"
           >
             <SectionLabel text="Built around LNAT" />
-          </motion.div>
+          </m.div>
 
-          <motion.h3
+          <m.h3
             variants={fadeUp}
             style={{
               fontFamily: poppins,
@@ -650,9 +650,9 @@ function WhyStudentsChoose() {
             >
               LNAT Exam India
             </span>
-          </motion.h3>
+          </m.h3>
 
-          <motion.p
+          <m.p
             variants={fadeUp}
             style={{
               fontFamily: poppins,
@@ -666,10 +666,10 @@ function WhyStudentsChoose() {
             We're not a general law-entrance institute that added an LNAT
             module. The LNAT is the whole point of what we do, and that focus
             shows up in the coaching.
-          </motion.p>
+          </m.p>
 
           {/* Real Differentiators: Interactive Premium Pills */}
-          <motion.div
+          <m.div
             variants={fadeUp}
             // Minor fix: removed 'w-full max-w-full' to prevent horizontal padding from breaking the width
             className="flex md:flex-wrap items-center md:justify-start gap-3 mt-6 overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none pb-4 md:pb-0 hide-scrollbar px-4 md:px-0"
@@ -682,7 +682,7 @@ function WhyStudentsChoose() {
               },
               { text: "Small Batches", icon: <Users size={14} /> },
             ].map((pill, i) => (
-              <motion.div
+              <m.div
                 key={i}
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.97 }}
@@ -697,20 +697,20 @@ function WhyStudentsChoose() {
                 >
                   {pill.text}
                 </span>
-              </motion.div>
+              </m.div>
             ))}
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
 
         {/* Right: stat grid adapted for feature cards (Horizontally scrollable on mobile) */}
-        <motion.div
+        <m.div
           variants={stagger}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
           className="flex sm:grid sm:grid-cols-2 gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory sm:snap-none pb-6 sm:pb-0 w-full max-w-full hide-scrollbar px-4 md:px-0"
         >
           {reasons.map((r, i) => (
-            <motion.div
+            <m.div
               key={i}
               variants={fadeUp}
               custom={i * 0.08}
@@ -751,9 +751,9 @@ function WhyStudentsChoose() {
               >
                 {r.sub}
               </div>
-            </motion.div>
+            </m.div>
           ))}
-        </motion.div>
+        </m.div>
       </div>
     </div>
   );
@@ -834,7 +834,7 @@ function OpportunitySection() {
 
   return (
     <div ref={ref} className="mb-20 lg:mb-28">
-      <motion.div
+      <m.div
         variants={fadeUp}
         initial="hidden"
         animate={inView ? "visible" : "hidden"}
@@ -862,18 +862,18 @@ function OpportunitySection() {
             Unlimited Destinations.
           </span>
         </h3>
-      </motion.div>
+      </m.div>
 
       <div className="grid lg:grid-cols-2 gap-8 items-start">
         {/* Left: tab list */}
-        <motion.div
+        <m.div
           variants={stagger}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
           className="flex flex-col gap-3"
         >
           {opportunities.map((opp, i) => (
-            <motion.button
+            <m.button
               key={i}
               variants={fadeUp}
               custom={i * 0.07}
@@ -942,12 +942,12 @@ function OpportunitySection() {
                   transition: "color 0.3s",
                 }}
               />
-            </motion.button>
+            </m.button>
           ))}
-        </motion.div>
+        </m.div>
 
         {/* Right: detail panel */}
-        <motion.div
+        <m.div
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
           variants={fadeUp}
@@ -955,7 +955,7 @@ function OpportunitySection() {
           className="sticky top-28"
         >
           <AnimatePresence mode="wait">
-            <motion.div
+            <m.div
               key={active}
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -1058,9 +1058,9 @@ function OpportunitySection() {
                   ))}
                 </div>
               </div>
-            </motion.div>
+            </m.div>
           </AnimatePresence>
-        </motion.div>
+        </m.div>
       </div>
     </div>
   );
@@ -1116,7 +1116,7 @@ function ExamSnapshot() {
   return (
     <div ref={ref} className="mb-20 lg:mb-28">
       {/* Dark banner */}
-      <motion.div
+      <m.div
         variants={fadeUp}
         initial="hidden"
         animate={inView ? "visible" : "hidden"}
@@ -1206,7 +1206,7 @@ function ExamSnapshot() {
         </div>
 
         {/* Spec grid */}
-        <motion.div
+        <m.div
           variants={stagger}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
@@ -1214,7 +1214,7 @@ function ExamSnapshot() {
           style={{ borderTop: "none" }}
         >
           {specs.map((s, i) => (
-            <motion.div
+            <m.div
               key={i}
               variants={fadeUp}
               custom={i * 0.06}
@@ -1262,10 +1262,10 @@ function ExamSnapshot() {
               >
                 {s.sub}
               </div>
-            </motion.div>
+            </m.div>
           ))}
-        </motion.div>
-      </motion.div>
+        </m.div>
+      </m.div>
     </div>
   );
 }
@@ -1362,7 +1362,7 @@ function SkillBar({
           overflow: "hidden",
         }}
       >
-        <motion.div
+        <m.div
           initial={{ width: 0 }}
           animate={{ width: inView ? `${skill.pct}%` : 0 }}
           transition={{ duration: 1.1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
@@ -1385,16 +1385,16 @@ function SkillVisualization() {
     <div ref={ref} className="mb-20 lg:mb-28">
       <div className="grid lg:grid-cols-2 gap-12 items-center">
         {/* Left: text */}
-        <motion.div
+        <m.div
           variants={stagger}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
           className="text-center md:text-start"
         >
-          <motion.div variants={fadeUp}>
+          <m.div variants={fadeUp}>
             <SectionLabel text="Skills LNAT Develops" />
-          </motion.div>
-          <motion.h3
+          </m.div>
+          <m.h3
             variants={fadeUp}
             style={{
               fontFamily: poppins,
@@ -1418,8 +1418,8 @@ function SkillVisualization() {
             >
               tested by the LNAT?
             </span>
-          </motion.h3>
-          <motion.p
+          </m.h3>
+          <m.p
             variants={fadeUp}
             style={{
               fontFamily: poppins,
@@ -1432,23 +1432,23 @@ function SkillVisualization() {
             Every component of LNAT preparation directly builds the cognitive
             toolkit you&apos;ll use throughout your legal career — not just to pass
             an exam.
-          </motion.p>
-          <motion.div variants={fadeUp}>
+          </m.p>
+          <m.div variants={fadeUp}>
             {skills.map((s, i) => (
               <SkillBar key={i} skill={s} inView={inView} />
             ))}
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
 
         {/* Right: hexagonal skill cards */}
-        <motion.div
+        <m.div
           variants={stagger}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
           className="grid grid-cols-2 gap-4"
         >
           {skills.map((s, i) => (
-            <motion.div
+            <m.div
               key={i}
               variants={fadeUp}
               custom={i * 0.07}
@@ -1500,9 +1500,9 @@ function SkillVisualization() {
               >
                 {s.pct}% focus
               </div>
-            </motion.div>
+            </m.div>
           ))}
-        </motion.div>
+        </m.div>
       </div>
     </div>
   );
@@ -1580,7 +1580,7 @@ function LNATJourney({ setIsOpen }: LNATJourneyProps) {
   return (
     <div ref={ref} className="mb-10 lg:mb-0 overflow-hidden">
       {/* Heading Section */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 20 }}
         animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
         transition={{ duration: 0.6 }}
@@ -1607,9 +1607,9 @@ function LNATJourney({ setIsOpen }: LNATJourneyProps) {
             lead to a global law career?
           </span>
         </h3>
-      </motion.div>
+      </m.div>
 
-      <motion.div
+      <m.div
         initial={{ opacity: 0 }}
         animate={inView ? { opacity: 1 } : { opacity: 0 }}
         transition={{ duration: 0.8, delay: 0.2 }}
@@ -1618,7 +1618,7 @@ function LNATJourney({ setIsOpen }: LNATJourneyProps) {
         {/* MOBILE ONLY: Centralized Card Display Area (Decoupled from scroll) */}
         <div className="md:hidden w-full max-w-sm mx-auto px-4 min-h-[220px] flex items-center justify-center mb-6">
           <AnimatePresence mode="wait">
-            <motion.div
+            <m.div
               key={clickedStep}
               initial={{ opacity: 0, x: 15 }}
               animate={{ opacity: 1, x: 0 }}
@@ -1627,7 +1627,7 @@ function LNATJourney({ setIsOpen }: LNATJourneyProps) {
               className="w-full bg-white rounded-xl p-6 shadow-[0_12px_40px_rgba(13,27,62,0.1)] border border-slate-200"
             >
               <CardContent step={journey[clickedStep]} />
-            </motion.div>
+            </m.div>
           </AnimatePresence>
         </div>
 
@@ -1683,7 +1683,7 @@ function LNATJourney({ setIsOpen }: LNATJourneyProps) {
                   {/* DESKTOP ONLY: Hover Popover Card */}
                   <AnimatePresence>
                     {isDesktopActive && (
-                      <motion.div
+                      <m.div
                         initial={{ opacity: 0, y: 15, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
@@ -1710,7 +1710,7 @@ function LNATJourney({ setIsOpen }: LNATJourneyProps) {
                           }`}
                         />
                         <CardContent step={step} />
-                      </motion.div>
+                      </m.div>
                     )}
                   </AnimatePresence>
                 </div>
@@ -1718,10 +1718,10 @@ function LNATJourney({ setIsOpen }: LNATJourneyProps) {
             })}
           </div>
         </div>
-      </motion.div>
+      </m.div>
 
       {/* CTA Button */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 20 }}
         animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
         transition={{ duration: 0.6, delay: 0.4 }}
@@ -1755,7 +1755,7 @@ function LNATJourney({ setIsOpen }: LNATJourneyProps) {
             </span>
           </span>
         </button>
-      </motion.div>
+      </m.div>
 
       {/* CSS to hide scrollbar for horizontal scroll area */}
       <style
@@ -1792,10 +1792,6 @@ export default function LNATOverview() {
         className="relative w-full overflow-hidden"
         style={{ background: "#FDFBF7" }}
       >
-        <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Cormorant+Garamond:wght@300;400;500&display=swap');
-      `}</style>
-
         {/* Dot grid bg */}
         <div
           className="absolute inset-0 pointer-events-none"

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { motion, AnimatePresence, useInView, Variants } from "framer-motion";
+import { m, AnimatePresence, useInView, Variants } from "framer-motion";
 import {
   BookOpen,
   Pen,
@@ -274,6 +274,8 @@ function UniCard({
         <img
           src={UNI_IMAGES[key]}
           alt={uni.name}
+          loading="lazy"
+          decoding="async"
           draggable={false}
           className="w-full h-full object-cover transition-transform duration-500"
           style={{ transform: hovered ? "scale(1.07)" : "scale(1)" }}
@@ -385,14 +387,14 @@ function OverviewPanel() {
   ];
 
   return (
-    <motion.div
+    <m.div
       variants={stagger}
       initial="hidden"
       animate="visible"
       className="space-y-5"
     >
       {/* Hero strip */}
-      <motion.div
+      <m.div
         variants={fadeUp}
         className="relative rounded-2xl p-7 overflow-hidden border border-[#C9A84C]/15"
         style={{
@@ -435,20 +437,20 @@ function OverviewPanel() {
             </div>
           ))}
         </div>
-      </motion.div>
+      </m.div>
 
       {/* Info chips grid */}
-      <motion.div
+      <m.div
         variants={fadeUp}
         className="grid grid-cols-1 sm:grid-cols-2 gap-3"
       >
         {stats.map((s, i) => (
           <InfoChip key={i} {...s} />
         ))}
-      </motion.div>
+      </m.div>
 
       {/* Universities carousel */}
-      <motion.div variants={fadeUp}>
+      <m.div variants={fadeUp}>
         <div className="rounded-2xl border border-[#C9A84C]/20 overflow-hidden">
           {/* header */}
           <div className="flex items-center justify-between px-5 py-3.5 border-b border-[#C9A84C]/12 bg-[#C9A84C]/[0.04]">
@@ -484,8 +486,8 @@ function OverviewPanel() {
             </div>
           </div>
         </div>
-      </motion.div>
-    </motion.div>
+      </m.div>
+    </m.div>
   );
 }
 
@@ -524,14 +526,14 @@ function SectionAPanel() {
   ];
 
   return (
-    <motion.div
+    <m.div
       variants={stagger}
       initial="hidden"
       animate="visible"
       className="space-y-5"
     >
       {/* Hero */}
-      <motion.div
+      <m.div
         variants={fadeUp}
         className="rounded-2xl overflow-hidden bg-[#0D1B3E]"
       >
@@ -563,7 +565,7 @@ function SectionAPanel() {
             Section Weight in Exam
           </div>
           <div className="h-2 rounded-full bg-white/[0.08] overflow-hidden">
-            <motion.div
+            <m.div
               initial={{ width: 0 }}
               animate={{ width: "70.4%" }}
               transition={{
@@ -579,10 +581,10 @@ function SectionAPanel() {
             70.4% of total exam time (95 of 135 mins)
           </div>
         </div>
-      </motion.div>
+      </m.div>
 
       {/* Structure */}
-      <motion.div variants={fadeUp}>
+      <m.div variants={fadeUp}>
         <SectionCard title="Passage Structure" accent="#0D1B3E">
           <div className="grid grid-cols-2 gap-3 mb-4">
             <div className="rounded-xl p-3.5 bg-[#0D1B3E]/[0.04] border border-[#0D1B3E]/10 text-center">
@@ -606,10 +608,10 @@ function SectionAPanel() {
             danger
           />
         </SectionCard>
-      </motion.div>
+      </m.div>
 
       {/* Question types accordion */}
-      <motion.div variants={fadeUp}>
+      <m.div variants={fadeUp}>
         <div className="text-[13px] font-bold text-[#0D1B3E] mb-3">
           Question Type Breakdown
         </div>
@@ -651,7 +653,7 @@ function SectionAPanel() {
               </button>
               <AnimatePresence>
                 {expanded === i && (
-                  <motion.div
+                  <m.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
@@ -678,15 +680,15 @@ function SectionAPanel() {
                         {q.example}
                       </div>
                     </div>
-                  </motion.div>
+                  </m.div>
                 )}
               </AnimatePresence>
             </div>
           ))}
         </div>
-      </motion.div>
+      </m.div>
 
-      <motion.div variants={fadeUp} className="space-y-0">
+      <m.div variants={fadeUp} className="space-y-0">
         <AlertBox type="warning">
           <strong>Critical rule:</strong> Bringing external knowledge into
           Section A is a trap. Work solely from information within the passage.
@@ -696,8 +698,8 @@ function SectionAPanel() {
           <strong>No negative marking</strong> — never leave a question blank.
           Eliminate known falsehoods first, then make an educated guess.
         </AlertBox>
-      </motion.div>
-    </motion.div>
+      </m.div>
+    </m.div>
   );
 }
 
@@ -755,14 +757,14 @@ function SectionBPanel() {
       : "bg-[#0D1B3E]/[0.06] border-[#0D1B3E]/12 text-[#0D1B3E]";
 
   return (
-    <motion.div
+    <m.div
       variants={stagger}
       initial="hidden"
       animate="visible"
       className="space-y-5"
     >
       {/* Hero */}
-      <motion.div
+      <m.div
         variants={fadeUp}
         className="rounded-2xl p-6 border-0"
         style={{
@@ -788,19 +790,19 @@ function SectionBPanel() {
             </div>
           ))}
         </div>
-      </motion.div>
+      </m.div>
 
-      <motion.div variants={fadeUp}>
+      <m.div variants={fadeUp}>
         <AlertBox type="warning">
           <strong>Critical distinction:</strong> Section B is NOT scored by the
           LNAT Consortium, Pearson VUE, or Edexcel. The raw essay is sent
           directly to each university's admissions tutors. Oxford independently
           scores it; UCL evaluates it rigorously alongside Section A.
         </AlertBox>
-      </motion.div>
+      </m.div>
 
       {/* Essay environment */}
-      <motion.div variants={fadeUp}>
+      <m.div variants={fadeUp}>
         <SectionCard title="Digital Essay Environment" accent="#C9A84C">
           <div className="grid grid-cols-2 gap-3 mb-4">
             {[
@@ -852,10 +854,10 @@ function SectionBPanel() {
             during the 40-minute essay.
           </AlertBox>
         </SectionCard>
-      </motion.div>
+      </m.div>
 
       {/* Word count */}
-      <motion.div variants={fadeUp}>
+      <m.div variants={fadeUp}>
         <SectionCard title="Word Count Strategy" accent="#0D1B3E">
           <div className="mb-4">
             <div className="flex justify-between mb-1.5">
@@ -885,10 +887,10 @@ function SectionBPanel() {
             danger
           />
         </SectionCard>
-      </motion.div>
+      </m.div>
 
       {/* Eval criteria */}
-      <motion.div variants={fadeUp}>
+      <m.div variants={fadeUp}>
         <SectionCard title="What Admissions Tutors Evaluate" accent="#1A5276">
           <div className="divide-y divide-black/[0.05]">
             {evalCriteria.map((c, i) => (
@@ -913,10 +915,10 @@ function SectionBPanel() {
             ))}
           </div>
         </SectionCard>
-      </motion.div>
+      </m.div>
 
       {/* Sample prompts */}
-      <motion.div variants={fadeUp}>
+      <m.div variants={fadeUp}>
         <SectionCard title="Historical Sample Essay Prompts" accent="#6C1F6E">
           <div className="flex flex-wrap gap-2 mb-4">
             {samplePrompts.map((_, i) => (
@@ -938,7 +940,7 @@ function SectionBPanel() {
             ))}
           </div>
           <AnimatePresence mode="wait">
-            <motion.div
+            <m.div
               key={activePrompt}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
@@ -952,11 +954,11 @@ function SectionBPanel() {
               <p className="text-[14px] font-semibold text-[#0D1B3E] leading-snug">
                 {samplePrompts[activePrompt]}
               </p>
-            </motion.div>
+            </m.div>
           </AnimatePresence>
         </SectionCard>
-      </motion.div>
-    </motion.div>
+      </m.div>
+    </m.div>
   );
 }
 
@@ -1008,14 +1010,14 @@ function ScoringPanel() {
   ];
 
   return (
-    <motion.div
+    <m.div
       variants={stagger}
       initial="hidden"
       animate="visible"
       className="space-y-5"
     >
       {/* Score overview */}
-      <motion.div
+      <m.div
         variants={fadeUp}
         className="rounded-2xl overflow-hidden border border-[#C9A84C]/15 bg-[#0D1B3E]"
         style={{ boxShadow: "0 16px 40px rgba(13,27,62,0.2)" }}
@@ -1056,16 +1058,16 @@ function ScoringPanel() {
             </div>
           ))}
         </div>
-      </motion.div>
+      </m.div>
 
-      <motion.div variants={fadeUp}>
+      <m.div variants={fadeUp}>
         <AlertBox type="tip">
           Scores of 30+ are considered exceptional and well above the global
           average. Target 28–32 minimum for highly competitive applications.
         </AlertBox>
-      </motion.div>
+      </m.div>
 
-      <motion.div variants={fadeUp} className="space-y-3">
+      <m.div variants={fadeUp} className="space-y-3">
         <div className="text-[13px] font-bold text-[#0D1B3E]">
           Institutional Scoring Policies
         </div>
@@ -1120,8 +1122,8 @@ function ScoringPanel() {
             </div>
           </div>
         ))}
-      </motion.div>
-    </motion.div>
+      </m.div>
+    </m.div>
   );
 }
 
@@ -1181,13 +1183,13 @@ function LogisticsPanel() {
   ];
 
   return (
-    <motion.div
+    <m.div
       variants={stagger}
       initial="hidden"
       animate="visible"
       className="space-y-5"
     >
-      <motion.div variants={fadeUp} className="grid grid-cols-2 gap-3">
+      <m.div variants={fadeUp} className="grid grid-cols-2 gap-3">
         <DarkChip
           icon={<MapPin size={16} />}
           label="India Test Centres"
@@ -1208,18 +1210,18 @@ function LogisticsPanel() {
           label="Test Delivery"
           value="Pearson VUE"
         />
-      </motion.div>
+      </m.div>
 
-      <motion.div variants={fadeUp}>
+      <m.div variants={fadeUp}>
         <AlertBox type="info">
           JGLS reportedly deducts the £120 LNAT registration fee from first-year
           tuition for admitted students, effectively making the test free for
           Indian students joining JGLS.
         </AlertBox>
-      </motion.div>
+      </m.div>
 
       {/* Cities */}
-      <motion.div variants={fadeUp}>
+      <m.div variants={fadeUp}>
         <SectionCard
           title="Indian Test Centre Cities (Major Hubs)"
           accent="#0D1B3E"
@@ -1243,10 +1245,10 @@ function LogisticsPanel() {
             </div>
           </div>
         </SectionCard>
-      </motion.div>
+      </m.div>
 
       {/* Test day rules */}
-      <motion.div variants={fadeUp}>
+      <m.div variants={fadeUp}>
         <SectionCard title="Test Day Regulations" accent="#DC2626">
           <BulletItem
             text="Personal belongings are barred from the testing room entirely."
@@ -1271,10 +1273,10 @@ function LogisticsPanel() {
           <BulletItem text="Booking is done exclusively online via the LNAT portal — not at test centres." />
           <BulletItem text="Payment via major international credit/debit cards at time of booking." />
         </SectionCard>
-      </motion.div>
+      </m.div>
 
       {/* Deadline table */}
-      <motion.div variants={fadeUp}>
+      <m.div variants={fadeUp}>
         <div className="text-[13px] font-bold text-[#0D1B3E] mb-3">
           Deadline Matrix by Target University
         </div>
@@ -1336,8 +1338,8 @@ function LogisticsPanel() {
             too late — preparation must begin 5+ months earlier.
           </AlertBox>
         </div>
-      </motion.div>
-    </motion.div>
+      </m.div>
+    </m.div>
   );
 }
 
@@ -1425,22 +1427,22 @@ function StrategyPanel() {
       : "bg-black/[0.04] border-black/10 text-slate-500";
 
   return (
-    <motion.div
+    <m.div
       variants={stagger}
       initial="hidden"
       animate="visible"
       className="space-y-5"
     >
-      <motion.div variants={fadeUp}>
+      <m.div variants={fadeUp}>
         <AlertBox type="warning">
           The LNAT Consortium firmly disavows commercial coaching and paid
           preparatory courses. Third-party simulators often misrepresent the
           interface and create false security.
         </AlertBox>
-      </motion.div>
+      </m.div>
 
       {/* Indian-specific challenges */}
-      <motion.div variants={fadeUp}>
+      <m.div variants={fadeUp}>
         <SectionCard
           title="Indian Student Cognitive Pivot Required"
           accent="#DC2626"
@@ -1470,10 +1472,10 @@ function StrategyPanel() {
             ))}
           </div>
         </SectionCard>
-      </motion.div>
+      </m.div>
 
       {/* Active reading */}
-      <motion.div variants={fadeUp}>
+      <m.div variants={fadeUp}>
         <SectionCard
           title="Active Reading Method (Daily Practice)"
           accent="#C9A84C"
@@ -1511,10 +1513,10 @@ function StrategyPanel() {
             ))}
           </div>
         </SectionCard>
-      </motion.div>
+      </m.div>
 
       {/* Resources */}
-      <motion.div variants={fadeUp}>
+      <m.div variants={fadeUp}>
         <div className="text-[13px] font-bold text-[#0D1B3E] mb-3">
           Preparation Resources (Priority Order)
         </div>
@@ -1545,10 +1547,10 @@ function StrategyPanel() {
             </div>
           ))}
         </div>
-      </motion.div>
+      </m.div>
 
       {/* JGLS advantage */}
-      <motion.div variants={fadeUp}>
+      <m.div variants={fadeUp}>
         <div
           className="rounded-2xl p-5 border border-[#C9A84C]/20"
           style={{
@@ -1571,8 +1573,8 @@ function StrategyPanel() {
             </div>
           </div>
         </div>
-      </motion.div>
-    </motion.div>
+      </m.div>
+    </m.div>
   );
 }
 
@@ -1599,7 +1601,7 @@ export default function LNATExamPattern() {
       ref={ref}
       className="relative w-full overflow-hidden bg-[#F7F3EC]"
     >
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap'); * { font-family: 'Poppins', sans-serif; }`}</style>
+      <style>{`* { font-family: var(--font-poppins), sans-serif; }`}</style>
 
       {/* Dot grid */}
       <div className="absolute inset-0 pointer-events-none [background-image:radial-gradient(circle,rgba(13,27,62,0.04)_1px,transparent_1px)] [background-size:26px_26px]" />
@@ -1652,7 +1654,7 @@ export default function LNATExamPattern() {
         </div>
 
         {/* Heading */}
-        <motion.div
+        <m.div
           variants={fadeUp}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
@@ -1679,10 +1681,10 @@ export default function LNATExamPattern() {
             scoring policies, logistics for Indian students, and preparation
             strategy.
           </p>
-        </motion.div>
+        </m.div>
 
         {/* Tab bar */}
-        <motion.div
+        <m.div
           variants={fadeUp}
           custom={0.15}
           initial="hidden"
@@ -1711,12 +1713,12 @@ export default function LNATExamPattern() {
               {tab.label}
             </button>
           ))}
-        </motion.div>
+        </m.div>
 
         {/* Panel */}
         <div className="max-w-3xl lg:max-w-5xl mx-auto">
           <AnimatePresence mode="wait">
-            <motion.div
+            <m.div
               key={activeTab}
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -1724,7 +1726,7 @@ export default function LNATExamPattern() {
               transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
             >
               {panels[activeTab]}
-            </motion.div>
+            </m.div>
           </AnimatePresence>
         </div>
       </div>

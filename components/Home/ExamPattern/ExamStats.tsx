@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 import { Clock, ListChecks, PenTool, Landmark } from "lucide-react";
 
 // --- Types & Data ---
@@ -77,7 +77,7 @@ export default function ExamStats() {
     <section className="relative w-full bg-[#FDFBF7] py-12 md:py-16">
       <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12">
         {/* Stats Grid */}
-        <motion.div
+        <m.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -88,7 +88,7 @@ export default function ExamStats() {
             const Icon = stat.icon;
 
             return (
-              <motion.div
+              <m.div
                 key={stat.id}
                 variants={itemVariants}
                 whileHover={{ y: -4 }}
@@ -119,10 +119,10 @@ export default function ExamStats() {
                     {stat.description}
                   </p>
                 </div>
-              </motion.div>
+              </m.div>
             );
           })}
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

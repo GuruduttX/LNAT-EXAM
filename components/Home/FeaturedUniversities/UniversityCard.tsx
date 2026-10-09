@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 import { MapPin, ShieldCheck, ArrowRight, Trophy } from "lucide-react";
 
 // --- Types ---
@@ -54,7 +54,7 @@ export default function UniversityCard({
   delay = 0,
 }: UniversityCardProps) {
   return (
-    <motion.a
+    <m.a
       href={href}
       custom={delay}
       initial="hidden"
@@ -134,6 +134,6 @@ export default function UniversityCard({
 
       {/* Top Accent Line (Subtle premium detail that appears on hover) */}
       <div className="absolute top-0 left-0 w-full h-[3px] bg-[#C4A47C] opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out z-20" />
-    </motion.a>
+    </m.a>
   );
 }

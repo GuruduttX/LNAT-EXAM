@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 import { BookOpen, ListChecks, PenTool, Landmark } from "lucide-react";
 
 // --- Types & Data ---
@@ -89,7 +89,7 @@ export default function ExamTimeline() {
         {/* Background track */}
         <div className="absolute inset-0 bg-slate-200/60" />
         {/* Animated fill */}
-        <motion.div
+        <m.div
           initial={{ scaleY: 0 }}
           whileInView={{ scaleY: 1 }}
           viewport={{ once: true, margin: "-10% 0px" }}
@@ -103,7 +103,7 @@ export default function ExamTimeline() {
         {/* Background track */}
         <div className="absolute inset-0 bg-slate-200/60" />
         {/* Animated fill */}
-        <motion.div
+        <m.div
           initial={{ scaleX: 0 }}
           whileInView={{ scaleX: 1 }}
           viewport={{ once: true, margin: "-10% 0px" }}
@@ -113,7 +113,7 @@ export default function ExamTimeline() {
       </div>
 
       {/* Timeline Items Grid */}
-      <motion.div
+      <m.div
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
@@ -124,7 +124,7 @@ export default function ExamTimeline() {
           const Icon = step.icon;
 
           return (
-            <motion.div
+            <m.div
               key={step.id}
               variants={itemVariants}
               className="group flex flex-row md:flex-col items-start md:items-center relative flex-1 gap-5 md:gap-4"
@@ -150,10 +150,10 @@ export default function ExamTimeline() {
                   {step.description}
                 </p>
               </div>
-            </motion.div>
+            </m.div>
           );
         })}
-      </motion.div>
+      </m.div>
     </div>
   );
 }

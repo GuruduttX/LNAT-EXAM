@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 import { Clock, FileSignature, Brain, Landmark } from "lucide-react";
 
 // --- Types & Data ---
@@ -69,7 +69,7 @@ const itemVariants: Variants = {
 
 export default function ExamSnapshot() {
   return (
-    <motion.div
+    <m.div
       variants={panelVariants}
       initial="hidden"
       whileInView="visible"
@@ -96,7 +96,7 @@ export default function ExamSnapshot() {
           const isLast = index === snapshotData.length - 1;
 
           return (
-            <motion.div
+            <m.div
               key={item.id}
               variants={itemVariants}
               className={`group flex items-center py-5 ${
@@ -119,7 +119,7 @@ export default function ExamSnapshot() {
                   {item.value}
                 </span>
               </div>
-            </motion.div>
+            </m.div>
           );
         })}
       </div>
@@ -130,6 +130,6 @@ export default function ExamSnapshot() {
           Updated for 2026 Admissions
         </p>
       </div>
-    </motion.div>
+    </m.div>
   );
 }

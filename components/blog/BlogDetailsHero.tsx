@@ -1,8 +1,5 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import {
   CalendarDays,
   Clock3,
@@ -12,6 +9,7 @@ import {
 } from "lucide-react";
 
 import { IBlog } from "@/types/backend.types";
+import { heroRise } from "@/lib/heroRise";
 
 import StickyConsultationForm from "./StickyConsultationForm";
 
@@ -176,7 +174,9 @@ function BlogHeroImage({ blog }: { blog: IBlog }) {
           alt={alt}
           width={1220}
           height={820}
-          priority // LCP Image
+          preload
+          fetchPriority="high"
+          quality={70}
           className="h-full w-full object-cover object-center"
           sizes="(max-width: 1024px) 100vw, 50vw"
         />
@@ -210,15 +210,9 @@ function BlogTldrSection({
   if (!tldr && (!keyTakeaways || keyTakeaways.length === 0)) return null;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: 0.6,
-        delay: 0.3,
-        ease: [0.22, 1, 0.36, 1] as const,
-      }}
-      className="mt-10 rounded-3xl border border-[#C9A84C]/20 bg-[#FDFBF7] p-5 shadow-sm md:p-6 lg:mt-14"
+    <div
+      className="hero-rise mt-10 rounded-3xl border border-[#C9A84C]/20 bg-[#FDFBF7] p-5 shadow-sm md:p-6 lg:mt-14"
+      style={heroRise(0.3, { y: 20 })}
     >
       <div className="mb-4 flex flex-col items-center justify-center gap-3 border-b border-black/[0.05] pb-4 text-center sm:flex-row sm:justify-start sm:text-left">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#C9A84C]/10 text-[#C9A84C]">
@@ -264,7 +258,7 @@ function BlogTldrSection({
           </div>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -295,32 +289,26 @@ export default function BlogDetailsHero({
         */}
         <div className="flex flex-col gap-8 lg:grid lg:grid-cols-12 lg:items-center lg:gap-12 xl:gap-16">
           {/* 1. Meta (Top on Mobile, Left on Desktop) */}
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="order-1 flex w-full flex-col lg:col-span-7 lg:col-start-1 lg:row-start-1"
+          <div
+            style={heroRise(0, { y: 15 })}
+            className="hero-rise order-1 flex w-full flex-col lg:col-span-7 lg:col-start-1 lg:row-start-1"
           >
             <BlogBreadcrumbs items={breadcrumbItems} />
             <BlogHeroMeta blog={blog} />
-          </motion.div>
+          </div>
 
           {/* 2. Image (Middle on Mobile, Right on Desktop spanning 2 rows) */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="order-2 w-full lg:col-span-5 lg:col-start-8 lg:row-span-2 lg:row-start-1"
+          <div
+            style={heroRise(0.1, { y: 0, scale: 0.96 })}
+            className="hero-rise order-2 w-full lg:col-span-5 lg:col-start-8 lg:row-span-2 lg:row-start-1"
           >
             <BlogHeroImage blog={blog} />
-          </motion.div>
+          </div>
 
           {/* 3. Trust Strip & Tags (Bottom on Mobile, Left on Desktop under Meta) */}
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="order-3 flex w-full flex-col items-center lg:col-span-7 lg:col-start-1 lg:row-start-2 lg:items-start"
+          <div
+            style={heroRise(0.2, { y: 15 })}
+            className="hero-rise order-3 flex w-full flex-col items-center lg:col-span-7 lg:col-start-1 lg:row-start-2 lg:items-start"
           >
             <BlogTrustStrip
               blog={blog}
@@ -340,7 +328,7 @@ export default function BlogDetailsHero({
                 ))}
               </div>
             )}
-          </motion.div>
+          </div>
         </div>
 
         {/* Consultation form — below lg the sidebar stacks far down the page,

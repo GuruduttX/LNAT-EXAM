@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 
 // --- Types ---
 
@@ -51,7 +51,7 @@ export default function SectionHeading({
       } ${className}`}
     >
       {/* Premium Editorial Badge */}
-      <motion.div
+      <m.div
         custom={0}
         initial="hidden"
         whileInView="visible"
@@ -68,10 +68,10 @@ export default function SectionHeading({
         {isCenter && (
           <span className="hidden sm:block h-[1px] w-10 bg-[#C4A47C]/40"></span>
         )}
-      </motion.div>
+      </m.div>
 
       {/* Main Heading */}
-      <motion.h2
+      <m.h2
         custom={0.1}
         initial="hidden"
         whileInView="visible"
@@ -80,11 +80,11 @@ export default function SectionHeading({
         className="text-3xl md:text-4xl lg:text-5xl font-serif text-[#0F172A] tracking-tight leading-[1.15] mb-6 max-w-3xl"
       >
         {title}
-      </motion.h2>
+      </m.h2>
 
       {/* Supporting Description */}
       {description && (
-        <motion.p
+        <m.p
           custom={0.2}
           initial="hidden"
           whileInView="visible"
@@ -93,7 +93,7 @@ export default function SectionHeading({
           className="text-base md:text-lg text-slate-500 font-light leading-relaxed max-w-2xl"
         >
           {description}
-        </motion.p>
+        </m.p>
       )}
     </div>
   );

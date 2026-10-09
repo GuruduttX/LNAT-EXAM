@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { m, useInView } from "framer-motion";
 import {
   UserPlus,
   PlayCircle,
@@ -106,7 +106,7 @@ export default function TimelineTrack() {
         - Desktop: Horizontal flex with overflow scroll (snap points for elegance)
         - Mobile: Vertical stacked flex
       */}
-      <motion.div
+      <m.div
         ref={containerRef}
         variants={trackVariants}
         initial="hidden"
@@ -137,7 +137,7 @@ export default function TimelineTrack() {
             </div>
           );
         })}
-      </motion.div>
+      </m.div>
 
       {/* Global styles to hide webkit scrollbar for the horizontal swipe area */}
       <style

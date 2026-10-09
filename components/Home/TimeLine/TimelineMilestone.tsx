@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 import { Calendar } from "lucide-react";
 
 // --- Types ---
@@ -50,7 +50,7 @@ export default function TimelineMilestone({
   delay = 0,
 }: TimelineMilestoneProps) {
   return (
-    <motion.div
+    <m.div
       custom={delay}
       variants={itemVariants}
       initial="hidden"
@@ -109,6 +109,6 @@ export default function TimelineMilestone({
           {description}
         </p>
       </div>
-    </motion.div>
+    </m.div>
   );
 }

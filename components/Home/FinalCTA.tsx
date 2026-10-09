@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 import {
   ArrowRight,
   BookOpen,
@@ -8,7 +8,9 @@ import {
   MessageCircle,
   ShieldCheck,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
+import { unsplashLoader } from "@/lib/unsplashLoader";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -34,25 +36,29 @@ export default function FinalCTA() {
   return (
     <section className="relative w-full overflow-hidden bg-[#070B14] flex items-center justify-center py-20 md:py-28 min-h-120">
       {/* Cinematic Background Image */}
-      <motion.div
+      <m.div
         initial={{ scale: 1.05 }}
         animate={{ scale: 1 }}
         transition={{ duration: 1.5, ease: "easeOut" }}
         className="absolute inset-0 z-0"
       >
-        <img
-          src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=2070&auto=format&fit=crop"
+        <Image
+          loader={unsplashLoader}
+          src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f"
           alt="Historic university architecture"
-          className="w-full h-full object-cover object-center opacity-40"
+          fill
+          quality={50}
+          sizes="100vw"
+          className="object-cover object-center opacity-40"
         />
-      </motion.div>
+      </m.div>
 
       {/* Premium Deep Navy Overlay */}
       <div className="absolute inset-0 z-0 bg-linear-to-t from-[#070B14] via-[#070B14]/80 to-[#070B14]/60 mix-blend-multiply" />
       <div className="absolute inset-0 z-0 bg-linear-to-b from-transparent via-[#070B14]/20 to-[#070B14] opacity-90" />
 
       {/* Content Container */}
-      <motion.div
+      <m.div
         className="relative z-10 w-full max-w-3xl mx-auto px-4 sm:px-6 flex flex-col items-center text-center"
         variants={containerVariants}
         initial="hidden"
@@ -60,7 +66,7 @@ export default function FinalCTA() {
         viewport={{ once: true, margin: "-100px" }}
       >
         {/* Editorial Badge */}
-        <motion.div variants={itemVariants} className="mb-6">
+        <m.div variants={itemVariants} className="mb-6">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#9A7B4F]/30 bg-[#9A7B4F]/10 backdrop-blur-sm">
             <GraduationCap
               className="w-3.5 h-3.5 text-[#C8AA76]"
@@ -70,25 +76,25 @@ export default function FinalCTA() {
               Your Future Starts Here
             </span>
           </div>
-        </motion.div>
+        </m.div>
 
         {/* Emotional Heading */}
-        <motion.div variants={itemVariants}>
+        <m.div variants={itemVariants}>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-[#FDFCFB] leading-[1.15] mb-5 tracking-tight">
             Ready to start?
           </h2>
-        </motion.div>
+        </m.div>
 
         {/* Supporting Description */}
-        <motion.div variants={itemVariants}>
+        <m.div variants={itemVariants}>
           <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-xl mx-auto mb-10 font-light">
             Book a free consultation and we'll map your LNAT plan around your
             target universities and deadline[cite: 1].
           </p>
-        </motion.div>
+        </m.div>
 
         {/* CTA Buttons */}
-        <motion.div
+        <m.div
           variants={itemVariants}
           className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto"
         >
@@ -129,10 +135,10 @@ export default function FinalCTA() {
               WhatsApp an Expert
             </span>
           </a>
-        </motion.div>
+        </m.div>
 
         {/* Trust Anchors immediately adjacent to CTA */}
-        <motion.div
+        <m.div
           variants={itemVariants}
           className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 opacity-75"
         >
@@ -144,8 +150,8 @@ export default function FinalCTA() {
             <ShieldCheck size={14} className="text-[#C8AA76]" /> 95% Top-Tier
             Placement Rate
           </div>
-        </motion.div>
-      </motion.div>
+        </m.div>
+      </m.div>
     </section>
   );
 }

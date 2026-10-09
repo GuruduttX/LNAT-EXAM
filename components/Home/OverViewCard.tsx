@@ -1,7 +1,7 @@
 "use client";
 
 import React, { ReactNode } from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 // --- Types ---
 
@@ -31,7 +31,7 @@ export default function OverviewCard({
   className = "",
 }: OverviewCardProps) {
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-10% 0px" }}
@@ -75,6 +75,6 @@ export default function OverviewCard({
           {description}
         </p>
       </div>
-    </motion.div>
+    </m.div>
   );
 }

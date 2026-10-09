@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 import { FiMail, FiInstagram, FiLinkedin, FiTwitter } from "react-icons/fi";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -67,7 +67,7 @@ export default function Footer() {
     <footer className="bg-[#070B14] border-t border-white/5 pt-12 pb-6 text-slate-300">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Main Footer Content */}
-        <motion.div
+        <m.div
           className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8 lg:gap-12 mb-12"
           variants={containerVariants}
           initial="hidden"
@@ -75,7 +75,7 @@ export default function Footer() {
           viewport={{ once: true, margin: "-50px" }}
         >
           {/* Brand Section */}
-          <motion.div
+          <m.div
             variants={itemVariants}
             className="md:col-span-5 lg:col-span-4"
           >
@@ -103,10 +103,10 @@ export default function Footer() {
                 </a>
               ))}
             </div>
-          </motion.div>
+          </m.div>
 
           {/* Navigation Links */}
-          <motion.div
+          <m.div
             variants={itemVariants}
             className="md:col-span-2 lg:col-span-2 lg:col-start-6"
           >
@@ -125,10 +125,10 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-          </motion.div>
+          </m.div>
 
           {/* Institutions Links */}
-          <motion.div
+          <m.div
             variants={itemVariants}
             className="md:col-span-3 lg:col-span-3"
           >
@@ -147,10 +147,10 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-          </motion.div>
+          </m.div>
 
           {/* Resources Links */}
-          <motion.div
+          <m.div
             variants={itemVariants}
             className="md:col-span-2 lg:col-span-2"
           >
@@ -169,11 +169,11 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
 
         {/* Bottom Bar */}
-        <motion.div
+        <m.div
           className="pt-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -211,7 +211,7 @@ export default function Footer() {
               Terms of Service
             </a>
           </div>
-        </motion.div>
+        </m.div>
       </div>
     </footer>
   );

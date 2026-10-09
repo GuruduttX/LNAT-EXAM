@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, type FormEventHandler } from "react";
-import { motion, AnimatePresence, Variants } from "framer-motion";
+import { m, AnimatePresence, Variants } from "framer-motion";
 import { X, ArrowRight } from "lucide-react";
 import { submitEnquiry } from "@/lib/submitEnquiry";
 import type { EnquirySource } from "@/types/backend.types";
@@ -121,14 +121,14 @@ export default function EnquiryPopupForm({
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
+        <m.div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
           initial="hidden"
           animate="visible"
           exit="hidden"
         >
           {/* Backdrop */}
-          <motion.div
+          <m.div
             variants={backdropVariants}
             className="absolute inset-0 bg-[#070B14]/40 backdrop-blur-sm"
             onClick={onClose}
@@ -136,7 +136,7 @@ export default function EnquiryPopupForm({
           />
 
           {/* Modal Container */}
-          <motion.div
+          <m.div
             variants={modalVariants}
             className="relative w-full max-w-105 bg-[#FDFCFB] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)] rounded-sm overflow-hidden flex flex-col"
             role="dialog"
@@ -266,8 +266,8 @@ export default function EnquiryPopupForm({
                 )}
               </button>
             </form>
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
       )}
     </AnimatePresence>
   );

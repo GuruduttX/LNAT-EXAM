@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 import { BookOpen, BrainCircuit, Scale, PenTool } from "lucide-react";
 
 // --- Types & Data ---
@@ -77,7 +77,7 @@ export default function SkillsGrid() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Editorial Section Header */}
         <div className="flex flex-col items-center text-center mb-16 lg:mb-20">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
@@ -89,9 +89,9 @@ export default function SkillsGrid() {
               Core Competencies
             </span>
             <span className="h-[1px] w-8 bg-[#C4A47C]/40"></span>
-          </motion.div>
+          </m.div>
 
-          <motion.h2
+          <m.h2
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -103,9 +103,9 @@ export default function SkillsGrid() {
             <span className="text-slate-400 italic font-light">
               not memorization.
             </span>
-          </motion.h2>
+          </m.h2>
 
-          <motion.p
+          <m.p
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -115,11 +115,11 @@ export default function SkillsGrid() {
             The LNAT does not test your knowledge of the law. It is designed to
             rigorously assess the underlying cognitive skills required to excel
             in premier legal studies.
-          </motion.p>
+          </m.p>
         </div>
 
         {/* 2x2 Skills Grid */}
-        <motion.div
+        <m.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -129,7 +129,7 @@ export default function SkillsGrid() {
           {skillsData.map((skill) => {
             const Icon = skill.icon;
             return (
-              <motion.div
+              <m.div
                 key={skill.id}
                 variants={cardVariants}
                 whileHover={{ y: -4 }}
@@ -154,10 +154,10 @@ export default function SkillsGrid() {
                     </p>
                   </div>
                 </div>
-              </motion.div>
+              </m.div>
             );
           })}
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

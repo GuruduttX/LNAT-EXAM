@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useState } from "react";
 import {
   ArrowRight,
@@ -12,6 +12,8 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import EnquiryPopupForm from "@/utils/EnquiryForm";
+import { heroRise } from "@/lib/heroRise";
+import { unsplashLoader } from "@/lib/unsplashLoader";
 
 // ─────────────────────────────────────────────────────────────
 // Data
@@ -43,8 +45,10 @@ const TIMELINE = [
   { phase: "UCAS Deadline", date: "Mid-Oct", done: false },
 ];
 
-const BG_IMAGE =
-  "https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?w=1400&q=80&auto=format&fit=crop";
+// Self-hosted (rather than hotlinked from Unsplash) because it is the mobile
+// LCP element: serving it from our own origin skips a cross-origin DNS + TLS
+// handshake before the most important image on the page can start loading.
+const BG_IMAGE = "/images/home-hero-bg.webp";
 const STUDENT_IMAGE =
   "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&q=80&auto=format&fit=crop";
 
@@ -75,7 +79,7 @@ const GlassCard = ({
   className?: string;
   delay?: number;
 }) => (
-  <motion.div
+  <m.div
     initial={{ opacity: 0, y: 18, scale: 0.96 }}
     animate={{ opacity: 1, y: 0, scale: 1 }}
     transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
@@ -90,12 +94,12 @@ const GlassCard = ({
     }}
   >
     {children}
-  </motion.div>
+  </m.div>
 );
 
 const TimelineFloatCard = () => (
   <GlassCard className="-top-10 -left-30 w-48 hidden lg:block" delay={1.0}>
-    <motion.div
+    <m.div
       animate={{ y: [0, -5, 0] }}
       transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
       className="p-3.5"
@@ -125,13 +129,13 @@ const TimelineFloatCard = () => (
           </span>
         </div>
       ))}
-    </motion.div>
+    </m.div>
   </GlassCard>
 );
 
 const ExamCard = () => (
   <GlassCard className="-bottom-10 -right-35 w-44 hidden lg:block" delay={1.2}>
-    <motion.div
+    <m.div
       animate={{ y: [0, -7, 0] }}
       transition={{
         duration: 4.5,
@@ -166,13 +170,13 @@ const ExamCard = () => (
           </span>
         </div>
       ))}
-    </motion.div>
+    </m.div>
   </GlassCard>
 );
 
 const UniversitiesMarquee = () => (
   <div className="overflow-hidden">
-    <motion.div
+    <m.div
       animate={{ x: ["0%", "-50%"] }}
       transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
       className="flex gap-6 whitespace-nowrap"
@@ -186,7 +190,7 @@ const UniversitiesMarquee = () => (
           <span className="text-[#C9A84C]/30 mx-1">·</span>
         </div>
       ))}
-    </motion.div>
+    </m.div>
   </div>
 );
 
@@ -210,9 +214,11 @@ export default function HomeHero() {
         <div className="absolute inset-0">
           <Image
             src={BG_IMAGE}
-            alt="Oxford University"
+            alt=""
             fill
-            priority
+            preload
+            fetchPriority="high"
+            quality={45}
             sizes="100vw"
             className="object-cover object-center"
           />
@@ -235,11 +241,9 @@ export default function HomeHero() {
         {/* ── Content wrapper ── */}
         <div className="relative z-10 md:h-[94%] gap-5 md:gap-10 mx-auto max-w-325 px-6 lg:px-14 xl:px-20 flex flex-col">
           {/* Nav accent */}
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="pt-5 flex items-center gap-3 shrink-0"
+          <div
+            className="hero-rise pt-5 flex items-center gap-3 shrink-0"
+            style={heroRise(0, { y: -10 })}
           >
             <div className="w-7 h-7 rounded-lg bg-[#C9A84C] flex items-center justify-center">
               <GraduationCap size={14} className="text-[#0D1B3E]" />
@@ -253,35 +257,24 @@ export default function HomeHero() {
                 Updated June 2026
               </Pill>
             </div>
-          </motion.div>
+          </div>
 
           {/* Main body */}
           <div className="flex-1 flex flex-col lg:flex-row items-center gap-8 lg:gap-0 py-4 lg:py-0">
             {/* LEFT */}
             <div className="lg:w-[55%] text-center md:text-start flex flex-col justify-center lg:pr-14">
               {/* Tag */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="mb-4"
-              >
+              <div className="hero-rise mb-4" style={heroRise(0.1, { x: -20, y: 0 })}>
                 <Pill className="bg-white/10 text-white/70 border border-white/15 backdrop-blur-sm">
                   Specialist LNAT coaching for India
                 </Pill>
-              </motion.div>
+              </div>
 
               {/* Headline */}
-              <motion.h1
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.8,
-                  delay: 0.3,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-                className="text-white mb-4"
+              <h1
+                className="hero-rise text-white mb-4"
                 style={{
+                  ...heroRise(0.15, { y: 24 }),
                   fontSize: "clamp(1.92rem, 3.5vw, 3.4rem)",
                   fontWeight: 700,
                   lineHeight: 1.18,
@@ -290,29 +283,27 @@ export default function HomeHero() {
               >
                 LNAT Coaching in India — Built Around the LNAT, and Only the
                 LNAT
-              </motion.h1>
+              </h1>
 
               {/* Subtext */}
-              <motion.p
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.42 }}
-                className="text-white/60 leading-[1.8] mb-6 max-w-[500px] font-light"
-                style={{ fontSize: "clamp(0.8rem, 1vw, 0.93rem)" }}
+              <p
+                className="hero-rise text-white/60 leading-[1.8] mb-6 max-w-[500px] font-light"
+                style={{
+                  ...heroRise(0.25),
+                  fontSize: "clamp(0.8rem, 1vw, 0.93rem)",
+                }}
               >
                 One test now opens two doors from India: undergraduate law at
                 top UK universities and Jindal Global Law School. We prepare you
                 for both, with focused coaching on the reading, reasoning and
                 essay skills the LNAT actually measures — not a CLAT course with
                 an LNAT chapter bolted on.
-              </motion.p>
+              </p>
 
               {/* CTAs */}
-              <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.54 }}
-                className="flex flex-col sm:flex-row gap-3 mb-6"
+              <div
+                className="hero-rise flex flex-col sm:flex-row gap-3 mb-6"
+                style={heroRise(0.35)}
               >
                 <button
                   onClick={() => setIsOpen(true)}
@@ -341,14 +332,12 @@ export default function HomeHero() {
                   <BookOpen size={13} className="text-[#C9A84C]" />
                   Free Resources
                 </button>
-              </motion.div>
+              </div>
 
               {/* Trust */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.7 }}
-                className="flex items-center gap-2 flex-wrap"
+              <div
+                className="hero-rise flex items-center gap-2 flex-wrap"
+                style={heroRise(0.45, { y: 0 })}
               >
                 <div className="flex h-7 w-7 items-center justify-center rounded-full border border-[#C9A84C]/30 bg-[#C9A84C]/15">
                   <CheckCircle2 size={14} className="text-[#C9A84C]" />
@@ -356,12 +345,12 @@ export default function HomeHero() {
                 <span className="text-white/50 text-[11px] font-medium ml-1">
                   Live classes, timed mocks, essay feedback and mentor support
                 </span>
-              </motion.div>
+              </div>
             </div>
 
             {/* RIGHT */}
             <div className="lg:w-[45%] relative w-full hidden md:flex items-center justify-center ">
-              <motion.div
+              <m.div
                 initial={{ opacity: 0, scale: 0.93, y: 30 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 transition={{
@@ -380,10 +369,11 @@ export default function HomeHero() {
                   }}
                 >
                   <Image
+                    loader={unsplashLoader}
                     src={STUDENT_IMAGE}
                     alt="Students studying for LNAT"
                     fill
-                    priority
+                    quality={70}
                     sizes="(min-width: 1024px) 360px, 45vw"
                     className="object-cover object-top"
                   />
@@ -424,7 +414,7 @@ export default function HomeHero() {
                 <ExamCard />
 
                 {/* Pill top-right */}
-                <motion.div
+                <m.div
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 1.3, duration: 0.6 }}
@@ -441,17 +431,15 @@ export default function HomeHero() {
                   <span className="text-[10px] font-bold text-[#0D1B3E]">
                     One attempt per cycle
                   </span>
-                </motion.div>
-              </motion.div>
+                </m.div>
+              </m.div>
             </div>
           </div>
 
           {/* Stats bar */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.85 }}
-            className="pb-4 grid grid-cols-2 sm:grid-cols-4 gap-3 shrink-0"
+          <div
+            className="hero-rise pb-4 grid grid-cols-2 sm:grid-cols-4 gap-3 shrink-0"
+            style={heroRise(0.5, { y: 20 })}
           >
             {STATS.map((s, i) => (
               <div
@@ -479,7 +467,7 @@ export default function HomeHero() {
                 </span>
               </div>
             ))}
-          </motion.div>
+          </div>
         </div>
 
         {/* Universities marquee */}

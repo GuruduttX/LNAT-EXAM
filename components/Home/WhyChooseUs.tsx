@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion, type Variants } from "framer-motion";
+import { m, type Variants } from "framer-motion";
 import {
   GraduationCap,
   FileText,
@@ -134,7 +134,7 @@ export default function WhyChooseUs() {
             Refined Functional Pillar Container
             Mobile: Horizontal Scroll | Desktop: Grid 
         */}
-        <motion.div
+        <m.div
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
@@ -144,7 +144,7 @@ export default function WhyChooseUs() {
           {pillars.map((pillar) => {
             const Icon = pillar.icon;
             return (
-              <motion.div
+              <m.div
                 key={pillar.id}
                 variants={fadeUpItem}
                 className="group mr-4 flex w-[85vw] max-w-[320px] shrink-0 snap-center flex-col rounded-xl border border-black/[0.05] bg-white p-5 transition-all duration-500 hover:-translate-y-1 hover:border-[#C9A84C]/30 hover:shadow-[0_12px_30px_-4px_rgba(13,27,62,0.08)] md:mr-0 md:w-auto md:max-w-none"
@@ -160,13 +160,13 @@ export default function WhyChooseUs() {
                 <p className="pl-[54px] text-[13px] font-medium leading-relaxed text-slate-500">
                   {pillar.description}
                 </p>
-              </motion.div>
+              </m.div>
             );
           })}
-        </motion.div>
+        </m.div>
 
         {/* CTA Button Added Here */}
-        <motion.div 
+        <m.div 
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -185,7 +185,7 @@ export default function WhyChooseUs() {
             Get Expert Guidance
             <ArrowRight size={16} className="transition-transform duration-200 group-hover:translate-x-1" />
           </button>
-        </motion.div>
+        </m.div>
 
         {/* Muted Editorial Trust Strip (Mobile Optimized) */}
         <div className="mt-10 flex flex-col gap-6 border-t border-black/[0.05] pt-6 md:mt-12 md:flex-row md:items-center md:justify-between md:gap-4">

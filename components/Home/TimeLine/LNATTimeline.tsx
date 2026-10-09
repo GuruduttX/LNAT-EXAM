@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useRef, useState } from "react";
-import { motion, useInView, type Variants } from "framer-motion";
+import { m, useInView, type Variants } from "framer-motion";
 import {
   CalendarClock,
   ChevronDown,
@@ -213,14 +213,14 @@ export default function LNATTimeline() {
         [background-size:26px_26px]"
       />
 
-      <motion.div
+      <m.div
         variants={sectionVariants}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
         className="relative z-10 mx-auto max-w-[1280px]"
       >
         {/* 1. Header Section (Inlined SectionHeading) */}
-        <motion.div
+        <m.div
           variants={fadeUp}
           className="mb-10 flex flex-col items-center text-center px-4 md:mb-16"
         >
@@ -243,10 +243,10 @@ export default function LNATTimeline() {
             admissions cycle. Missing a deadline can invalidate your entire
             application.
           </p>
-        </motion.div>
+        </m.div>
 
         {/* 2. Interactive Timeline Experience */}
-        <motion.div variants={fadeUp} className="mb-16 md:mb-24">
+        <m.div variants={fadeUp} className="mb-16 md:mb-24">
           <div className="mx-auto max-w-5xl">
             {/* Top Overview Rail (Mobile Horizontal Scroll) */}
             <div className="-mx-4 mb-8 flex snap-x snap-mandatory overflow-x-auto px-4 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:mb-10 md:px-0">
@@ -325,7 +325,7 @@ export default function LNATTimeline() {
                   const Icon = item.icon;
 
                   return (
-                    <motion.div
+                    <m.div
                       key={`main-${item.id}`}
                       ref={(node) => {
                         timelineCardRefs.current[item.id] = node;
@@ -388,19 +388,19 @@ export default function LNATTimeline() {
                                 >
                                   {item.urgency}
                                 </div>
-                                <motion.div
+                                <m.div
                                   animate={{ rotate: expanded ? 180 : 0 }}
                                   transition={{ duration: 0.3 }}
                                   className="rounded-full bg-slate-100 p-1.5 text-slate-500"
                                 >
                                   <ChevronDown size={14} />
-                                </motion.div>
+                                </m.div>
                               </div>
                             </div>
                           </button>
 
                           {/* Expanded Content (In DOM for AEO) */}
-                          <motion.div
+                          <m.div
                             initial={false}
                             animate={{
                               height: expanded ? "auto" : 0,
@@ -445,19 +445,19 @@ export default function LNATTimeline() {
                                 </div>
                               </div>
                             </div>
-                          </motion.div>
+                          </m.div>
                         </div>
                       </div>
-                    </motion.div>
+                    </m.div>
                   );
                 })}
               </div>
             </div>
           </div>
-        </motion.div>
+        </m.div>
 
         {/* 3. Updates & Advisory Notes Area */}
-        <motion.div variants={fadeUp} className="px-4 md:px-0">
+        <m.div variants={fadeUp} className="px-4 md:px-0">
           <div className="mx-auto grid max-w-5xl grid-cols-1 items-start gap-6 lg:grid-cols-12 lg:gap-8">
             {/* Updates Card (Inlined Premium Dark Card) */}
             <div className="flex h-full flex-col overflow-hidden rounded-3xl border border-[#C9A84C]/15 bg-[#0D1B3E] p-6 shadow-[0_16px_48px_rgba(13,27,62,0.2)] lg:col-span-5 md:p-8">
@@ -575,8 +575,8 @@ export default function LNATTimeline() {
               </div>
             </div>
           </div>
-        </motion.div>
-      </motion.div>
+        </m.div>
+      </m.div>
     </section>
   );
 }

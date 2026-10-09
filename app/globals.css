@@ -8,8 +8,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-lato);
+  --font-serif: var(--font-playfair);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,7 +22,7 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-lato), Arial, Helvetica, sans-serif;
 }
 
 /* Hide scrollbar for Firefox */
@@ -43,6 +43,27 @@ body::-webkit-scrollbar {
   -ms-overflow-style: none;       /* legacy Edge / IE */
   &::-webkit-scrollbar {
     display: none;                /* Chrome, Safari, Opera */
+  }
+}
+
+/* Hero entrance (homepage + blog posts), driven by heroRise() in
+   lib/heroRise.ts. Done in CSS rather than framer-motion so above-the-fold
+   content animates from the server HTML on first paint, instead of sitting at
+   opacity 0 until the JS bundle has downloaded and hydrated. */
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(var(--hero-x, 0), var(--hero-y, 16px), 0)
+      scale(var(--hero-scale, 1));
+  }
+}
+.hero-rise {
+  animation: hero-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--hero-delay, 0s);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-rise {
+    animation: none;
   }
 }
 

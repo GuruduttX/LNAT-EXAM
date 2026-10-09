@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import Image from "next/image";
+import { m, useInView } from "framer-motion";
 import { ShieldCheck, MapPin, ArrowUpRight } from "lucide-react";
 
 // ─────────────────────────────────────────────────────────────
@@ -16,7 +17,7 @@ interface University {
   founded: string;
   rank: string;
   accent: string; // card top-border accent colour
-  img: string; // Unsplash image
+  img: string; // local, pre-cropped to 2× the card size where possible
   bg: string; // subtle card bg tint
 }
 
@@ -29,7 +30,7 @@ const universities: University[] = [
     founded: "Est. 1096",
     rank: "#1 in UK",
     accent: "#0D1B3E",
-    img: "https://images.unsplash.com/photo-1612563958093-2c3bcfbd8760?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8T3hmb3JkfGVufDB8fDB8fHww",
+    img: "/images/universities/oxford.webp",
     bg: "rgba(13,27,62,0.03)",
   },
   {
@@ -40,7 +41,7 @@ const universities: University[] = [
     founded: "Est. 1209",
     rank: "#2 in UK",
     accent: "#C9A84C",
-    img: "https://images.unsplash.com/photo-1605470207062-b72b5cbe2a87?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    img: "/images/universities/cambridge.webp",
     bg: "rgba(201,168,76,0.04)",
   },
   {
@@ -62,7 +63,7 @@ const universities: University[] = [
     founded: "Est. 1895",
     rank: "Top 50 Global",
     accent: "#0D1B3E",
-    img: "https://upload.wikimedia.org/wikipedia/commons/f/f7/The_Land_Registry_Offices%2C_Lincoln_Inn_Fields.jpg",
+    img: "/images/universities/lse.webp",
     bg: "rgba(13,27,62,0.03)",
   },
   {
@@ -73,7 +74,7 @@ const universities: University[] = [
     founded: "Est. 1829",
     rank: "Top 40 Global",
     accent: "#C9A84C",
-    img: "https://indiaeducationdiary.in/wp-content/uploads/2021/06/1599206690133.jpg",
+    img: "/images/universities/kcl.webp",
     bg: "rgba(201,168,76,0.03)",
   },
   {
@@ -84,7 +85,7 @@ const universities: University[] = [
     founded: "Est. 1909",
     rank: "Top 60 Global",
     accent: "#0D1B3E",
-    img: "https://ambitio-django-backend-media.s3.ap-south-1.amazonaws.com/programs/university/gallery-images/1-University%20of%20Bristol.jpeg",
+    img: "/images/universities/bristol.webp",
     bg: "rgba(13,27,62,0.03)",
   },
   {
@@ -95,7 +96,7 @@ const universities: University[] = [
     founded: "Est. 1832",
     rank: "Top 100 Global",
     accent: "#C9A84C",
-    img: "https://i.guim.co.uk/img/media/ebdaa16ca9f2fb831b3a2fa0dadb47858f805c03/0_256_5197_3118/master/5197.jpg?width=1200&quality=85&auto=format&fit=max&s=ba8597865551f50edec86a59fe562e18",
+    img: "/images/universities/durham.webp",
     bg: "rgba(201,168,76,0.03)",
   },
   {
@@ -106,7 +107,7 @@ const universities: University[] = [
     founded: "Est. 1451",
     rank: "Top 100 Global",
     accent: "#0D1B3E",
-    img: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/45/1c/9d/university-of-glasgow.jpg?w=900&h=500&s=1",
+    img: "/images/universities/glasgow.webp",
     bg: "rgba(13,27,62,0.03)",
   },
 ];
@@ -143,10 +144,16 @@ const UniversityCard = ({ university }: { university: University }) => (
 
     {/* Image */}
     <div className="relative w-full h-27.5 overflow-hidden">
-      <img
+      <Image
         src={university.img}
         alt={university.name}
-        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        fill
+        sizes="260px"
+        quality={60}
+        // uclpress.co.uk refuses server-side fetches, so it can't go through
+        // the optimizer and is requested straight from the browser instead.
+        unoptimized={university.img.startsWith("http")}
+        className="object-cover transition-transform duration-700 group-hover:scale-105"
         draggable={false}
       />
       {/* Overlay gradient */}
@@ -163,7 +170,7 @@ const UniversityCard = ({ university }: { university: University }) => (
         style={{
           background: "rgba(0,0,0,0.45)",
           backdropFilter: "blur(6px)",
-          fontFamily: "'Poppins', sans-serif",
+          fontFamily: "var(--font-poppins), sans-serif",
         }}
       >
         {university.founded}
@@ -196,7 +203,7 @@ const UniversityCard = ({ university }: { university: University }) => (
             className="text-[9px] font-bold uppercase tracking-wider"
             style={{
               color: university.accent,
-              fontFamily: "'Poppins', sans-serif",
+              fontFamily: "var(--font-poppins), sans-serif",
             }}
           >
             LNAT Required
@@ -206,7 +213,7 @@ const UniversityCard = ({ university }: { university: University }) => (
           className="text-[10px] font-semibold"
           style={{
             color: university.accent,
-            fontFamily: "'Poppins', sans-serif",
+            fontFamily: "var(--font-poppins), sans-serif",
           }}
         >
           {university.rank}
@@ -216,7 +223,7 @@ const UniversityCard = ({ university }: { university: University }) => (
       {/* Name */}
       <h3
         className="font-bold text-[#0F172A] mb-1.5 leading-snug"
-        style={{ fontSize: "14px", fontFamily: "'Poppins', sans-serif" }}
+        style={{ fontSize: "14px", fontFamily: "var(--font-poppins), sans-serif" }}
       >
         {university.name}
       </h3>
@@ -226,7 +233,7 @@ const UniversityCard = ({ university }: { university: University }) => (
         <MapPin size={11} className="text-gray-400" />
         <span
           className="text-[11px] text-gray-400"
-          style={{ fontFamily: "'Poppins', sans-serif" }}
+          style={{ fontFamily: "var(--font-poppins), sans-serif" }}
         >
           {university.location}
         </span>
@@ -264,7 +271,7 @@ const CarouselRow = ({
           "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
       }}
     >
-      <motion.div
+      <m.div
         className="flex gap-5"
         animate={{ x: direction === 1 ? [-totalWidth, 0] : [0, -totalWidth] }}
         transition={{
@@ -278,7 +285,7 @@ const CarouselRow = ({
         {repeated.map((uni, i) => (
           <UniversityCard key={`${uni.id}-${i}`} university={uni} />
         ))}
-      </motion.div>
+      </m.div>
     </div>
   );
 };
@@ -293,7 +300,7 @@ const SectionHeading = () => {
 
   return (
     <div ref={ref} className="flex flex-col items-center text-center mb-7">
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 10 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.6 }}
@@ -302,14 +309,14 @@ const SectionHeading = () => {
         <div className="h-px w-10 bg-[#C9A84C]/40" />
         <span
           className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#C9A84C]"
-          style={{ fontFamily: "'Poppins', sans-serif" }}
+          style={{ fontFamily: "var(--font-poppins), sans-serif" }}
         >
           Institutional Trust
         </span>
         <div className="h-px w-10 bg-[#C9A84C]/40" />
-      </motion.div>
+      </m.div>
 
-      <motion.h2
+      <m.h2
         initial={{ opacity: 0, y: 14 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.7, delay: 0.1 }}
@@ -317,7 +324,7 @@ const SectionHeading = () => {
         style={{
           fontSize: "clamp(1.3rem, 2.4vw, 1.9rem)",
           fontWeight: 700,
-          fontFamily: "'Poppins', sans-serif",
+          fontFamily: "var(--font-poppins), sans-serif",
         }}
       >
         Who accepts{" "}
@@ -332,19 +339,19 @@ const SectionHeading = () => {
           LNAT scores
         </span>{" "}
         in India and the UK?
-      </motion.h2>
+      </m.h2>
 
-      <motion.p
+      <m.p
         initial={{ opacity: 0, y: 10 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.7, delay: 0.2 }}
         className="text-slate-500 max-w-lg leading-relaxed"
-        style={{ fontSize: "14px", fontFamily: "'Poppins', sans-serif" }}
+        style={{ fontSize: "14px", fontFamily: "var(--font-poppins), sans-serif" }}
       >
         Your LNAT score unlocks the most prestigious undergraduate law programs
         globally. Each of these universities requires it as a core admission
         criterion.
-      </motion.p>
+      </m.p>
     </div>
   );
 };
@@ -359,10 +366,6 @@ export default function TrustedUniversities() {
       className="relative py-8 lg:py-10 overflow-hidden"
       style={{ background: "#FDFBF7" }}
     >
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-      `}</style>
-
       {/* Subtle dot grid bg */}
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.025]"
@@ -402,7 +405,7 @@ export default function TrustedUniversities() {
 
         {/* Bottom stat strip */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-7">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -428,7 +431,7 @@ export default function TrustedUniversities() {
                   className="font-bold text-[#0D1B3E]"
                   style={{
                     fontSize: "18px",
-                    fontFamily: "'Poppins', sans-serif",
+                    fontFamily: "var(--font-poppins), sans-serif",
                   }}
                 >
                   {s.value}
@@ -437,14 +440,14 @@ export default function TrustedUniversities() {
                   className="text-slate-500"
                   style={{
                     fontSize: "11px",
-                    fontFamily: "'Poppins', sans-serif",
+                    fontFamily: "var(--font-poppins), sans-serif",
                   }}
                 >
                   {s.label}
                 </span>
               </div>
             ))}
-          </motion.div>
+          </m.div>
         </div>
       </div>
     </section>

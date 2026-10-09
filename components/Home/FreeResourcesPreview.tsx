@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { m, Variants } from "framer-motion";
 import {
   BookOpen,
   FileText,
@@ -87,7 +87,7 @@ export default function FreeResourcesPreview() {
         </div>
 
         {/* Resource Grid */}
-        <motion.div
+        <m.div
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
           variants={containerVariants}
           initial="hidden"
@@ -95,7 +95,7 @@ export default function FreeResourcesPreview() {
           viewport={{ once: true, margin: "-50px" }}
         >
           {resources.map((resource) => (
-            <motion.div
+            <m.div
               key={resource.id}
               variants={itemVariants}
               className="h-full"
@@ -136,9 +136,9 @@ export default function FreeResourcesPreview() {
                   </span>
                 </div>
               </a>
-            </motion.div>
+            </m.div>
           ))}
-        </motion.div>
+        </m.div>
 
         {/* Mobile CTA */}
         <div className="mt-8 flex justify-center md:hidden">

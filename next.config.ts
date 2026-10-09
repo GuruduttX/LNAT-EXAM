@@ -14,6 +14,11 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
+    // Next 16 only serves qualities on this allowlist (default [75]); anything
+    // else passed to <Image quality> is snapped to the nearest entry.
+    qualities: [45, 60, 70, 75],
+    // AVIF is typically 30-50% smaller than WebP at the same visual quality.
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
         protocol: "https",
